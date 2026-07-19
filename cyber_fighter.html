@@ -935,6 +935,123 @@
       }
     }
 
+    /* ==========================================
+       NEW GAME FEATURES: SKILLS, COMBO, AP, SHIELD
+       ========================================== */
+    .skills-action-bar {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 10px;
+      padding: 8px 20px;
+      width: 100%;
+      background: rgba(10, 12, 16, 0.85);
+      border-top: 1px solid rgba(0, 240, 255, 0.15);
+      border-bottom: 1px solid rgba(0, 240, 255, 0.15);
+      z-index: 5;
+    }
+    
+    .skill-btn {
+      flex: 1;
+      padding: 8px 12px;
+      background: rgba(16, 20, 30, 0.8);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      color: #fff;
+      font-family: 'Chakra Petch', sans-serif;
+      font-weight: 600;
+      font-size: 0.8rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+    
+    .skill-btn:hover:not(:disabled) {
+      background: rgba(0, 240, 255, 0.15);
+      border-color: var(--neon-cyan);
+      box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+      transform: translateY(-2px);
+    }
+    
+    .skill-btn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    .skill-cost {
+      font-size: 0.7rem;
+      color: var(--neon-yellow);
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.55rem;
+    }
+    
+    #player-sprite-wrapper.has-shield {
+      filter: drop-shadow(0 0 20px #00f0ff);
+      box-shadow: inset 0 0 15px rgba(0, 240, 255, 0.4);
+      border: 2px solid #00f0ff;
+      border-radius: 12px;
+    }
+
+    .combo-indicator {
+      position: absolute;
+      top: 30%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.6);
+      background: rgba(10, 12, 16, 0.9);
+      border: 2px solid var(--neon-yellow);
+      box-shadow: 0 0 15px var(--neon-yellow);
+      border-radius: 8px;
+      padding: 10px 20px;
+      z-index: 100;
+      text-align: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .combo-indicator.show {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1.1);
+    }
+
+    .combo-title {
+      font-family: 'Press Start 2P', cursive;
+      font-size: 0.9rem;
+      color: var(--neon-yellow);
+      text-shadow: 0 0 6px rgba(255, 234, 0, 0.5);
+    }
+
+    .combo-sub {
+      font-size: 0.75rem;
+      color: var(--neon-green);
+      margin-top: 4px;
+      font-weight: bold;
+    }
+
+    .projectile {
+      position: absolute;
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      z-index: 50;
+      pointer-events: none;
+      transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .projectile.player-laser {
+      background: var(--neon-cyan);
+      box-shadow: 0 0 15px var(--neon-cyan), 0 0 30px var(--neon-cyan);
+    }
+
+    .projectile.enemy-laser {
+      background: var(--neon-magenta);
+      box-shadow: 0 0 15px var(--neon-magenta), 0 0 30px var(--neon-magenta);
+    }
+
     /* ==========================================================================
        8. PRINT/PDF STYLE OVERLAY (HIDDEN IN SCREEN)
        ========================================================================== */
@@ -1088,6 +1205,16 @@
           <div class="hp-bar-bg">
             <div class="hp-bar-fill" id="bar-player-hp"></div>
           </div>
+          <!-- Action Points (AP) Bar -->
+          <div style="margin-top: 5px;">
+            <div style="font-size: 0.6rem; color: var(--neon-cyan); display: flex; justify-content: space-between;">
+              <span>AP (Action Points)</span>
+              <span id="txt-hud-player-ap">0/100 AP</span>
+            </div>
+            <div style="height: 6px; background: rgba(0, 240, 255, 0.1); border: 1px solid rgba(0, 240, 255, 0.2); border-radius: 3px; overflow: hidden; margin-top: 2px;">
+              <div id="bar-player-ap" style="width: 0%; height: 100%; background: var(--neon-cyan); box-shadow: 0 0 8px var(--neon-cyan); transition: width 0.3s ease;"></div>
+            </div>
+          </div>
         </div>
 
         <!-- Score/Middle separator -->
@@ -1133,8 +1260,27 @@
           </svg>
         </div>
 
+        <!-- Combo Indicator -->
+        <div class="combo-indicator" id="combo-indicator-ui">
+          <div class="combo-title" id="combo-title-text">2 COMBO!</div>
+          <div class="combo-sub" id="combo-sub-text">DAMAGE x1.2</div>
+        </div>
+
         <!-- Neon Grid Floor -->
         <div class="arena-floor"></div>
+      </div>
+
+      <!-- Skills Action Bar -->
+      <div class="skills-action-bar">
+        <button class="skill-btn" id="skill-shield-btn" onclick="useSkill('shield')" disabled>
+          <i class="fa-solid fa-shield-halved"></i> <span>เกราะป้องกัน (Shield)</span> <span class="skill-cost">40 AP</span>
+        </button>
+        <button class="skill-btn" id="skill-heal-btn" onclick="useSkill('heal')" disabled>
+          <i class="fa-solid fa-heart-pulse"></i> <span>ฟื้นฟู HP (Patch Repair)</span> <span class="skill-cost">50 AP</span>
+        </button>
+        <button class="skill-btn" id="skill-decrypt-btn" onclick="useSkill('decrypt')" disabled>
+          <i class="fa-solid fa-key"></i> <span>ถอดรหัส (50/50 Key)</span> <span class="skill-cost">60 AP</span>
+        </button>
       </div>
 
       <!-- Question and buttons -->
@@ -1770,7 +1916,10 @@
         enemyHp: 100,
         attempts: 1, // ติดตามจำนวนครั้งที่เล่นทั้งหมดรวมถึงรีสตาร์ท
         currentSessionMistakes: 0,
-        score: 0
+        score: 0,
+        comboCount: 0,
+        ap: 0,
+        shieldActive: false
       };
 
       // ตัวแปรสำหรับระบบจับเวลา
@@ -1849,6 +1998,9 @@
         gameState.enemyHp = 100;
         gameState.currentSessionMistakes = 0;
         gameState.score = 0;
+        gameState.comboCount = 0;
+        gameState.ap = 0;
+        gameState.shieldActive = false;
 
         // อัปเดตข้อมูลบน HUD
         document.getElementById('txt-hud-player-name').innerText = `${gameState.name} [${gameState.room}]`;
@@ -1896,18 +2048,150 @@
         if (gameState.playerHp <= 30) playerBar.classList.add('danger');
         else if (gameState.playerHp <= 60) playerBar.classList.add('warning');
 
+        // Player AP bar
+        const playerApBar = document.getElementById('bar-player-ap');
+        if (playerApBar) {
+          playerApBar.style.width = `${gameState.ap}%`;
+          document.getElementById('txt-hud-player-ap').innerText = `${gameState.ap}/100 AP`;
+        }
+
         // Enemy HP bar
         const enemyBar = document.getElementById('bar-enemy-hp');
-        const activeStage = currentSessionStages[gameState.stageIndex];
-        const maxQuestions = activeStage.questions.length;
-
-        const currentEnemyHp = Math.max(0, Math.round(100 - (gameState.questionIndex * (100 / maxQuestions))));
-        enemyBar.style.width = `${currentEnemyHp}%`;
-        document.getElementById('txt-hud-enemy-hp').innerText = `${currentEnemyHp}/100 HP`;
+        enemyBar.style.width = `${gameState.enemyHp}%`;
+        document.getElementById('txt-hud-enemy-hp').innerText = `${gameState.enemyHp}/100 HP`;
 
         enemyBar.className = 'hp-bar-fill';
-        if (currentEnemyHp <= 30) enemyBar.classList.add('danger');
-        else if (currentEnemyHp <= 60) enemyBar.classList.add('warning');
+        if (gameState.enemyHp <= 30) enemyBar.classList.add('danger');
+        else if (gameState.enemyHp <= 60) enemyBar.classList.add('warning');
+
+        // Enable/Disable Skill Buttons based on AP
+        const shieldBtn = document.getElementById('skill-shield-btn');
+        const healBtn = document.getElementById('skill-heal-btn');
+        const decryptBtn = document.getElementById('skill-decrypt-btn');
+        
+        if (shieldBtn) shieldBtn.disabled = (gameState.ap < 40 || gameState.shieldActive);
+        if (healBtn) healBtn.disabled = (gameState.ap < 50 || gameState.playerHp >= 100);
+        if (decryptBtn) decryptBtn.disabled = (gameState.ap < 60);
+
+        // Update player shield visual wrapper class
+        const playerWrapper = document.getElementById('player-sprite-wrapper');
+        if (playerWrapper) {
+          if (gameState.shieldActive) {
+            playerWrapper.classList.add('has-shield');
+          } else {
+            playerWrapper.classList.remove('has-shield');
+          }
+        }
+      }
+
+      /* ==========================================================================
+         SKILLS, PROJECTILES & COMBO LOGIC FUNCTIONS
+         ========================================================================== */
+      function useSkill(type) {
+        if (type === 'shield') {
+          if (gameState.ap >= 40 && !gameState.shieldActive) {
+            gameState.ap -= 40;
+            gameState.shieldActive = true;
+            createDamagePopup("SHIELD ACTIVATED! 🛡️", true, true);
+            playPlayerAttackSound();
+            updateHpBars();
+            saveActiveSession();
+          }
+        } else if (type === 'heal') {
+          if (gameState.ap >= 50 && gameState.playerHp < 100) {
+            gameState.ap -= 50;
+            gameState.playerHp = Math.min(100, gameState.playerHp + 25);
+            createDamagePopup("+25 HP ❤️", true, true);
+            playPlayerAttackSound();
+            updateHpBars();
+            saveActiveSession();
+          }
+        } else if (type === 'decrypt') {
+          if (gameState.ap >= 60) {
+            gameState.ap -= 60;
+            updateHpBars();
+            
+            // 50/50 Key: Find 2 incorrect choices and disable them
+            const activeStage = currentSessionStages[gameState.stageIndex];
+            const qData = activeStage.questions[gameState.questionIndex];
+            const allButtons = document.querySelectorAll('.choice-btn');
+            
+            let disabledCount = 0;
+            for (let i = 0; i < allButtons.length; i++) {
+              if (i !== qData.answer && !allButtons[i].disabled) {
+                allButtons[i].disabled = true;
+                allButtons[i].style.opacity = '0.35';
+                disabledCount++;
+                if (disabledCount >= 2) break;
+              }
+            }
+            createDamagePopup("50/50 KEY DEPLOYED! 🔑", true, true);
+            saveActiveSession();
+          }
+        }
+      }
+
+      function fireProjectile(fromPlayer) {
+        const battleView = document.getElementById('battle-view-container');
+        const playerWrapper = document.getElementById('player-sprite-wrapper');
+        const enemyWrapper = document.getElementById('enemy-sprite-wrapper');
+        
+        if (!battleView || !playerWrapper || !enemyWrapper) return;
+        
+        const playerRect = playerWrapper.getBoundingClientRect();
+        const enemyRect = enemyWrapper.getBoundingClientRect();
+        const arenaRect = battleView.getBoundingClientRect();
+        
+        const proj = document.createElement('div');
+        proj.className = fromPlayer ? 'projectile player-laser' : 'projectile enemy-laser';
+        
+        const startX = fromPlayer 
+          ? (playerRect.left + playerRect.width / 2) - arenaRect.left
+          : (enemyRect.left + enemyRect.width / 2) - arenaRect.left;
+        const startY = fromPlayer
+          ? (playerRect.top + playerRect.height / 2) - arenaRect.top
+          : (enemyRect.top + enemyRect.height / 2) - arenaRect.top;
+          
+        const targetX = fromPlayer
+          ? (enemyRect.left + enemyRect.width / 2) - arenaRect.left
+          : (playerRect.left + playerRect.width / 2) - arenaRect.left;
+        const targetY = fromPlayer
+          ? (enemyRect.top + enemyRect.height / 2) - arenaRect.top
+          : (playerRect.top + playerRect.height / 2) - arenaRect.top;
+          
+        proj.style.left = `${startX}px`;
+        proj.style.top = `${startY}px`;
+        
+        battleView.appendChild(proj);
+        
+        setTimeout(() => {
+          proj.style.left = `${targetX}px`;
+          proj.style.top = `${targetY}px`;
+        }, 20);
+        
+        setTimeout(() => {
+          proj.remove();
+        }, 360);
+      }
+
+      function showComboIndicator(comboCount, multiplier) {
+        const comboUI = document.getElementById('combo-indicator-ui');
+        if (!comboUI) return;
+        
+        if (comboCount < 2) {
+          comboUI.classList.remove('show');
+          return;
+        }
+        
+        document.getElementById('combo-title-text').innerText = `${comboCount} COMBO!`;
+        document.getElementById('combo-sub-text').innerText = `DAMAGE x${multiplier.toFixed(1)}`;
+        
+        comboUI.classList.add('show');
+        
+        if (window.comboTimeout) clearTimeout(window.comboTimeout);
+        window.comboTimeout = setTimeout(() => {
+          comboUI.classList.remove('show');
+        }, 1500);
       }
 
       function loadQuestion() {
@@ -1959,21 +2243,38 @@
         const overlay = document.getElementById('feedback-overlay');
         const activeStage = currentSessionStages[gameState.stageIndex];
 
+        // Increment Combo and Calculate Multiplier
+        gameState.comboCount = (gameState.comboCount || 0) + 1;
+        let multiplier = 1.0;
+        if (gameState.comboCount >= 2) {
+          multiplier = 1.0 + (gameState.comboCount - 1) * 0.2; // 2 Combo = 1.2x, 3 Combo = 1.4x, etc.
+          if (multiplier > 2.0) multiplier = 2.0; // Cap multiplier at 2.0x
+        }
+
+        // Accumulate AP (Action Points): Gain 25 AP per correct answer (max 100)
+        gameState.ap = Math.min(100, (gameState.ap || 0) + 25);
+
         playerWrapper.classList.add('attacker-player');
         playPlayerAttackSound();
+        fireProjectile(true); // Shoot laser/projectile to enemy!
+
+        showComboIndicator(gameState.comboCount, multiplier);
 
         setTimeout(() => {
           enemyWrapper.classList.add('damaged');
           createHitSplash(false);
 
-          const damage = Math.round(100 / activeStage.questions.length);
+          const baseDamage = Math.round(100 / activeStage.questions.length);
+          const damage = Math.round(baseDamage * multiplier);
+          
+          gameState.enemyHp = Math.max(0, gameState.enemyHp - damage);
           createDamagePopup(`-${damage} HP`, false);
 
           overlay.classList.add('success-green');
           overlay.style.opacity = 1;
 
           gameState.questionIndex++;
-          gameState.score += 150;
+          gameState.score += Math.round(150 * multiplier);
           updateHpBars();
           saveActiveSession();
         }, 150);
@@ -1984,7 +2285,11 @@
           overlay.style.opacity = 0;
           overlay.classList.remove('success-green');
 
-          loadQuestion();
+          if (gameState.enemyHp <= 0) {
+            stageClearedTransition();
+          } else {
+            loadQuestion();
+          }
         }, 700);
       }
 
@@ -1995,8 +2300,13 @@
         const arcadeWrapper = document.getElementById('arcade-wrapper');
         const allButtons = document.querySelectorAll('.choice-btn');
 
+        // Reset Combo Streak on failure
+        gameState.comboCount = 0;
+        showComboIndicator(0, 1.0);
+
         enemyWrapper.classList.add('attacker-enemy');
         playEnemyAttackSound();
+        fireProjectile(false); // Shoot laser/projectile to player!
 
         setTimeout(() => {
           playerWrapper.classList.add('damaged');
@@ -2007,13 +2317,19 @@
           allButtons[correctIdx].style.borderColor = 'var(--neon-green)';
           allButtons[correctIdx].style.background = '#0b4a1b';
 
-          const damageTaken = 10;
-          gameState.playerHp = Math.max(0, gameState.playerHp - damageTaken);
-          gameState.currentSessionMistakes++;
+          // Shield Gating check
+          let damageTaken = 10;
+          if (gameState.shieldActive) {
+            damageTaken = 0;
+            gameState.shieldActive = false;
+            createDamagePopup("BLOCKED! 🛡️", true, true);
+          } else {
+            gameState.playerHp = Math.max(0, gameState.playerHp - damageTaken);
+            gameState.currentSessionMistakes++;
+            createDamagePopup(`-${damageTaken} HP`, true);
+            if (arcadeWrapper) arcadeWrapper.classList.add('shake-screen');
+          }
 
-          createDamagePopup(`-${damageTaken} HP`, true);
-
-          arcadeWrapper.classList.add('shake-screen');
           overlay.classList.add('error-red');
           overlay.style.opacity = 1;
 
@@ -2024,7 +2340,7 @@
         setTimeout(() => {
           enemyWrapper.classList.remove('attacker-enemy');
           playerWrapper.classList.remove('damaged');
-          arcadeWrapper.classList.remove('shake-screen');
+          if (arcadeWrapper) arcadeWrapper.classList.remove('shake-screen');
           overlay.style.opacity = 0;
           overlay.classList.remove('error-red');
 
@@ -2318,6 +2634,9 @@
           attempts: gameState.attempts,
           currentSessionMistakes: gameState.currentSessionMistakes,
           score: gameState.score,
+          comboCount: gameState.comboCount || 0,
+          ap: gameState.ap || 0,
+          shieldActive: gameState.shieldActive || false,
           currentSessionStages: currentSessionStages, // บันทึกคำถามที่สุ่มเรียงไว้แล้ว
           elapsedTime: elapsedTime, // บันทึกเวลาที่เดินไปแล้ว
           inProgress: true
@@ -2371,6 +2690,9 @@
             gameState.attempts = session.attempts;
             gameState.currentSessionMistakes = session.currentSessionMistakes;
             gameState.score = session.score;
+            gameState.comboCount = session.comboCount || 0;
+            gameState.ap = session.ap || 0;
+            gameState.shieldActive = session.shieldActive || false;
             currentSessionStages = session.currentSessionStages; // คืนค่าตารางคำถามที่สุ่มเรียงไว้
             elapsedTime = session.elapsedTime || 0; // คืนค่าเวลาสะสม
 
