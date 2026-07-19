@@ -1273,13 +1273,13 @@
       <!-- Skills Action Bar -->
       <div class="skills-action-bar">
         <button class="skill-btn" id="skill-shield-btn" onclick="useSkill('shield')" disabled>
-          <i class="fa-solid fa-shield-halved"></i> <span>เกราะป้องกัน (Shield)</span> <span class="skill-cost">40 AP</span>
+          <i class="fa-solid fa-shield-halved"></i> <span>เกราะป้องกัน (Shield)</span> <span class="skill-cost">50 AP</span>
         </button>
         <button class="skill-btn" id="skill-heal-btn" onclick="useSkill('heal')" disabled>
-          <i class="fa-solid fa-heart-pulse"></i> <span>ฟื้นฟู HP (Patch Repair)</span> <span class="skill-cost">50 AP</span>
+          <i class="fa-solid fa-heart-pulse"></i> <span>ฟื้นฟู HP (Patch Repair)</span> <span class="skill-cost">60 AP</span>
         </button>
         <button class="skill-btn" id="skill-decrypt-btn" onclick="useSkill('decrypt')" disabled>
-          <i class="fa-solid fa-key"></i> <span>ถอดรหัส (50/50 Key)</span> <span class="skill-cost">60 AP</span>
+          <i class="fa-solid fa-key"></i> <span>ถอดรหัส (50/50 Key)</span> <span class="skill-cost">75 AP</span>
         </button>
       </div>
 
@@ -2069,9 +2069,9 @@
         const healBtn = document.getElementById('skill-heal-btn');
         const decryptBtn = document.getElementById('skill-decrypt-btn');
         
-        if (shieldBtn) shieldBtn.disabled = (gameState.ap < 40 || gameState.shieldActive);
-        if (healBtn) healBtn.disabled = (gameState.ap < 50 || gameState.playerHp >= 100);
-        if (decryptBtn) decryptBtn.disabled = (gameState.ap < 60);
+        if (shieldBtn) shieldBtn.disabled = (gameState.ap < 50 || gameState.shieldActive);
+        if (healBtn) healBtn.disabled = (gameState.ap < 60 || gameState.playerHp >= 100);
+        if (decryptBtn) decryptBtn.disabled = (gameState.ap < 75);
 
         // Update player shield visual wrapper class
         const playerWrapper = document.getElementById('player-sprite-wrapper');
@@ -2089,8 +2089,8 @@
          ========================================================================== */
       function useSkill(type) {
         if (type === 'shield') {
-          if (gameState.ap >= 40 && !gameState.shieldActive) {
-            gameState.ap -= 40;
+          if (gameState.ap >= 50 && !gameState.shieldActive) {
+            gameState.ap -= 50;
             gameState.shieldActive = true;
             createDamagePopup("SHIELD ACTIVATED! 🛡️", true, true);
             playPlayerAttackSound();
@@ -2098,8 +2098,8 @@
             saveActiveSession();
           }
         } else if (type === 'heal') {
-          if (gameState.ap >= 50 && gameState.playerHp < 100) {
-            gameState.ap -= 50;
+          if (gameState.ap >= 60 && gameState.playerHp < 100) {
+            gameState.ap -= 60;
             gameState.playerHp = Math.min(100, gameState.playerHp + 25);
             createDamagePopup("+25 HP ❤️", true, true);
             playPlayerAttackSound();
@@ -2107,8 +2107,8 @@
             saveActiveSession();
           }
         } else if (type === 'decrypt') {
-          if (gameState.ap >= 60) {
-            gameState.ap -= 60;
+          if (gameState.ap >= 75) {
+            gameState.ap -= 75;
             updateHpBars();
             
             // 50/50 Key: Find 2 incorrect choices and disable them
@@ -2251,8 +2251,8 @@
           if (multiplier > 2.0) multiplier = 2.0; // Cap multiplier at 2.0x
         }
 
-        // Accumulate AP (Action Points): Gain 25 AP per correct answer (max 100)
-        gameState.ap = Math.min(100, (gameState.ap || 0) + 25);
+        // Accumulate AP (Action Points): Gain 10 AP per correct answer (max 100)
+        gameState.ap = Math.min(100, (gameState.ap || 0) + 10);
 
         playerWrapper.classList.add('attacker-player');
         playPlayerAttackSound();
