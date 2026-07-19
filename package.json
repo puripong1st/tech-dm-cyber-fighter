@@ -1,0 +1,12 @@
+{
+  "name": "tech-dm-cyber-fighter",
+  "version": "1.0.0",
+  "description": "Cyber Fighter Portal with env injection",
+  "main": "build.js",
+  "scripts": {
+    "build": "node build.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

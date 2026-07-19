@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="logo.png">
+  <title>CYBER FIGHTER PORTAL: ศึกประลองวิชาดิจิทัล ม.3</title>
+  <!-- Google Fonts & FontAwesome -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=Press+Start+2P&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    /* DESIGN SYSTEM & VARIABLES */
+    :root {
+      --bg-dark: #0a0c10;
+      --bg-card: rgba(16, 20, 30, 0.7);
+      --border-color: rgba(0, 240, 255, 0.2);
+      
+      --neon-cyan: #00f0ff;
+      --neon-magenta: #ff007f;
+      --neon-yellow: #ffea00;
+      --neon-green: #39ff14;
+      --text-main: #f0f4f8;
+      --text-gray: #8b9bb4;
+      
+      --glow-cyan: 0 0 15px rgba(0, 240, 255, 0.4);
+      --glow-magenta: 0 0 15px rgba(255, 0, 127, 0.4);
+      --glow-green: 0 0 15px rgba(57, 255, 20, 0.4);
+      --glow-yellow: 0 0 15px rgba(255, 234, 0, 0.4);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(0, 240, 255, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(255, 0, 127, 0.05) 0%, transparent 40%),
+        linear-gradient(rgba(255, 255, 255, 0.01) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.01) 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+      color: var(--text-main);
+      font-family: 'Chakra Petch', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Moving scanlines */
+    body::after {
+      content: " ";
+      display: block;
+      position: fixed;
+      top: 0; left: 0; bottom: 0; right: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+      z-index: 999;
+      background-size: 100% 4px, 6px 100%;
+      pointer-events: none;
+    }
+
+    /* HEADER */
+    header {
+      width: 100%;
+      padding: 35px 20px;
+      text-align: center;
+      position: relative;
+      z-index: 5;
+    }
+
+    .main-title {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      font-size: 3.5rem;
+      letter-spacing: 2px;
+      background: linear-gradient(135deg, #fff 30%, var(--neon-cyan) 70%, var(--neon-magenta) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-transform: uppercase;
+      margin-bottom: 5px;
+      position: relative;
+      display: inline-block;
+      filter: drop-shadow(0 2px 10px rgba(0, 240, 255, 0.2));
+    }
+
+    .subtitle {
+      font-size: 1.2rem;
+      color: var(--neon-yellow);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      font-family: 'Press Start 2P', cursive;
+      font-size: 0.8rem;
+      text-shadow: 0 0 8px rgba(255, 234, 0, 0.5);
+    }
+
+    /* PORTAL GRID */
+    .portal-container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 30px;
+      flex: 1;
+      align-content: center;
+      z-index: 5;
+    }
+
+    /* GATEWAY CARDS */
+    .portal-card {
+      background: var(--bg-card);
+      border: 2px solid var(--border-color);
+      border-radius: 16px;
+      padding: 40px 30px;
+      text-decoration: none;
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .portal-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 4px;
+      background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
+      transition: all 0.4s ease;
+      opacity: 0.5;
+    }
+
+    .portal-card:hover {
+      transform: translateY(-10px);
+      border-color: var(--neon-cyan);
+      box-shadow: var(--glow-cyan), 0 15px 40px rgba(0, 0, 0, 0.6);
+    }
+
+    .portal-card:hover::before {
+      opacity: 1;
+      background: linear-gradient(90deg, transparent, var(--neon-cyan), var(--neon-magenta), transparent);
+    }
+
+    /* Card Themes */
+    .card-presentation:hover {
+      border-color: var(--neon-green);
+      box-shadow: var(--glow-green), 0 15px 40px rgba(0, 0, 0, 0.6);
+    }
+    .card-presentation::before {
+      background: linear-gradient(90deg, transparent, var(--neon-green), transparent);
+    }
+
+    .card-dashboard:hover {
+      border-color: var(--neon-magenta);
+      box-shadow: var(--glow-magenta), 0 15px 40px rgba(0, 0, 0, 0.6);
+    }
+    .card-dashboard::before {
+      background: linear-gradient(90deg, transparent, var(--neon-magenta), transparent);
+    }
+
+    .card-instructions:hover {
+      border-color: var(--neon-yellow);
+      box-shadow: var(--glow-yellow), 0 15px 40px rgba(0, 0, 0, 0.6);
+    }
+    .card-instructions::before {
+      background: linear-gradient(90deg, transparent, var(--neon-yellow), transparent);
+    }
+
+    /* Icon Container */
+    .icon-container {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.03);
+      border: 2px dashed rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 25px;
+      font-size: 2.5rem;
+      color: var(--neon-cyan);
+      transition: all 0.4s ease;
+    }
+
+    .portal-card:hover .icon-container {
+      transform: scale(1.1) rotate(5deg);
+      border-color: var(--neon-cyan);
+      background: rgba(0, 240, 255, 0.05);
+      color: #fff;
+      text-shadow: 0 0 10px var(--neon-cyan);
+    }
+
+    .card-presentation:hover .icon-container {
+      border-color: var(--neon-green);
+      background: rgba(57, 255, 20, 0.05);
+      color: #fff;
+      text-shadow: 0 0 10px var(--neon-green);
+    }
+
+    .card-dashboard:hover .icon-container {
+      border-color: var(--neon-magenta);
+      background: rgba(255, 0, 127, 0.05);
+      color: #fff;
+      text-shadow: 0 0 10px var(--neon-magenta);
+    }
+
+    .card-instructions:hover .icon-container {
+      border-color: var(--neon-yellow);
+      background: rgba(255, 234, 0, 0.05);
+      color: #fff;
+      text-shadow: 0 0 10px var(--neon-yellow);
+    }
+    .card-instructions:hover .btn-portal-action {
+      background: var(--neon-yellow);
+      border-color: var(--neon-yellow);
+      color: #000;
+      box-shadow: 0 0 15px rgba(255, 234, 0, 0.5);
+    }
+
+    /* Card Details */
+    .card-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .card-description {
+      font-size: 0.95rem;
+      color: var(--text-gray);
+      line-height: 1.5;
+      margin-bottom: 25px;
+      flex-grow: 1;
+    }
+
+    .btn-portal-action {
+      font-family: 'Chakra Petch', sans-serif;
+      font-weight: 700;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      padding: 10px 24px;
+      border-radius: 8px;
+      background: transparent;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.3s ease;
+    }
+
+    .portal-card:hover .btn-portal-action {
+      background: var(--neon-cyan);
+      border-color: var(--neon-cyan);
+      color: #000;
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
+    }
+
+    .card-presentation:hover .btn-portal-action {
+      background: var(--neon-green);
+      border-color: var(--neon-green);
+      color: #000;
+      box-shadow: 0 0 15px rgba(57, 255, 20, 0.5);
+    }
+
+    .card-dashboard:hover .btn-portal-action {
+      background: var(--neon-magenta);
+      border-color: var(--neon-magenta);
+      color: #fff;
+      box-shadow: 0 0 15px rgba(255, 0, 127, 0.5);
+    }
+
+    /* FOOTER */
+    footer {
+      width: 100%;
+      padding: 25px;
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--text-gray);
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      z-index: 5;
+    }
+
+    footer a {
+      color: var(--neon-cyan);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* Particles/Glow bugs animation */
+    .grid-glow-bug {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 1;
+      filter: blur(5px);
+      animation: floatBug 12s infinite linear;
+      opacity: 0.15;
+    }
+
+    @keyframes floatBug {
+      0% { transform: translate(0, 0) scale(1); opacity: 0; }
+      10% { opacity: 0.3; }
+      90% { opacity: 0.3; }
+      100% { transform: translate(100px, -200px) scale(1.5); opacity: 0; }
+    }
+
+    @media (max-width: 768px) {
+      .main-title {
+        font-size: 2.5rem;
+      }
+      .portal-container {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Floating Glow Particles -->
+  <div class="grid-glow-bug" style="background: var(--neon-cyan); top: 20%; left: 15%; animation-duration: 15s;"></div>
+  <div class="grid-glow-bug" style="background: var(--neon-magenta); top: 60%; left: 80%; animation-duration: 18s;"></div>
+  <div class="grid-glow-bug" style="background: var(--neon-green); top: 80%; left: 30%; animation-duration: 20s;"></div>
+
+  <header>
+    <h1 class="main-title">Cyber Fighter</h1>
+    <p class="subtitle">ระบบวิชาการใช้เทคโนโลยีสารสนเทศอย่างปลอดภัย ม.3</p>
+  </header>
+
+  <!-- Portal Navigation Grid -->
+  <main class="portal-container">
+
+    <!-- Card 1: Student Slides Presentation -->
+    <a href="presentation" class="portal-card card-presentation">
+      <div class="icon-container">
+        <i class="fa-solid fa-chalkboard-user"></i>
+      </div>
+      <h2 class="card-title" style="color: var(--neon-green);">1. สื่อการเรียนรู้ดิจิทัล</h2>
+      <p class="card-description">
+        บทเรียนแบบโต้ตอบ (Interactive Slides) สไตล์ Roblox ภารกิจเอาชีวิตรอดในโลกออนไลน์ ค้นหาคำตอบและสรุปความรู้เรื่องความปลอดภัยไอทีในห้องเรียน
+      </p>
+      <div class="btn-portal-action">
+        เข้าสู่บทเรียน <i class="fa-solid fa-chevron-right"></i>
+      </div>
+    </a>
+
+    <!-- Card 2: Student RPG Quiz Game -->
+    <a href="cyber_fighter" class="portal-card">
+      <div class="icon-container">
+        <i class="fa-solid fa-gamepad"></i>
+      </div>
+      <h2 class="card-title" style="color: var(--neon-cyan);">2. เกมทดสอบสายลับ</h2>
+      <p class="card-description">
+        เกมอาร์เคด RPG ต่อสู้กับบอสไวรัสในด่านต่าง ๆ ตอบคำถามผ่านด่านเพื่อทำคะแนนสูงสุด พร้อมระบบบันทึกคะแนนสะสมแบบเรียลไทม์
+      </p>
+      <div class="btn-portal-action">
+        เริ่มการประลอง ⚔️
+      </div>
+    </a>
+
+    <!-- Card 3: Teacher Control Panel -->
+    <a href="teacher_dashboard" class="portal-card card-dashboard">
+      <div class="icon-container">
+        <i class="fa-solid fa-user-shield"></i>
+      </div>
+      <h2 class="card-title" style="color: var(--neon-magenta);">3. หลังบ้านคุณครู</h2>
+      <p class="card-description">
+        ระบบตรวจสอบคะแนนนักเรียน ม.3/1 - ม.3/15 แบบเรียลไทม์ มีการกรองห้อง จัดเรียงคะแนนเก็บเต็ม 10 คะแนน และส่งออกรายงานผลเป็นไฟล์ PDF
+      </p>
+      <div class="btn-portal-action">
+        แผงควบคุมระบบ <i class="fa-solid fa-lock"></i>
+      </div>
+    </a>
+
+    <!-- Card 4: Instructions Guide -->
+    <a href="instructions" class="portal-card card-instructions">
+      <div class="icon-container">
+        <i class="fa-solid fa-book-open"></i>
+      </div>
+      <h2 class="card-title" style="color: var(--neon-yellow);">4. คู่มือการใช้งานระบบ</h2>
+      <p class="card-description">
+        เอกสารอธิบายวิธีการประลองบอส RPG การฟื้นพลัง HP การตอบคำถามสำหรับนักเรียน และขั้นตอนเรียกดู/พิมพ์ผลคะแนนสำหรับครูพร้อมภาพประกอบ
+      </p>
+      <div class="btn-portal-action">
+        ดูคู่มือระบบ <i class="fa-solid fa-chevron-right"></i>
+      </div>
+    </a>
+
+  </main>
+
+  <footer>
+    <p>© 2026 CYBER FIGHTER | วิชาการใช้เทคโนโลยีสารสนเทศอย่างปลอดภัย ม.3 | โครงการพัฒนาสื่อการสอนดิจิทัล</p>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="logo.png">
+  <title>CYBER FIGHTER: คู่มือการเรียนรู้และการใช้งานระบบ</title>
+  <!-- Google Fonts & FontAwesome -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=Press+Start+2P&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    /* DESIGN SYSTEM & VARIABLES */
+    :root {
+      --bg-dark: #07090e;
+      --bg-card: rgba(16, 22, 35, 0.85);
+      --border-color: rgba(0, 240, 255, 0.2);
+      
+      --neon-cyan: #00f0ff;
+      --neon-magenta: #ff007f;
+      --neon-yellow: #ffea00;
+      --neon-green: #39ff14;
+      --text-main: #f0f4f8;
+      --text-gray: #8b9bb4;
+      
+      --glow-cyan: 0 0 15px rgba(0, 240, 255, 0.4);
+      --glow-magenta: 0 0 15px rgba(255, 0, 127, 0.4);
+      --glow-green: 0 0 15px rgba(57, 255, 20, 0.4);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(0, 240, 255, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(255, 0, 127, 0.05) 0%, transparent 40%),
+        linear-gradient(rgba(255, 255, 255, 0.005) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.005) 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 30px 30px, 30px 30px;
+      color: var(--text-main);
+      font-family: 'Chakra Petch', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    /* HEADER */
+    header {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 30px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid var(--border-color);
+    }
+
+    .header-title-area {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .header-logo-icon {
+      font-size: 2.2rem;
+      color: var(--neon-cyan);
+      text-shadow: var(--glow-cyan);
+    }
+
+    .main-title {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      font-size: 2rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, #fff, var(--neon-cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .btn-back-portal {
+      font-family: 'Chakra Petch', sans-serif;
+      font-weight: 700;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      padding: 10px 20px;
+      border-radius: 8px;
+      background: transparent;
+      border: 2px solid var(--neon-cyan);
+      color: var(--neon-cyan);
+      text-decoration: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 10px rgba(0, 240, 255, 0.1);
+    }
+
+    .btn-back-portal:hover {
+      background: var(--neon-cyan);
+      color: #000;
+      box-shadow: var(--glow-cyan);
+    }
+
+    /* CONTAINER */
+    .content-container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 50px;
+      flex: 1;
+    }
+
+    /* SECTION LAYOUT */
+    .section-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 35px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+    }
+
+    .section-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 25px;
+      text-transform: uppercase;
+      border-left: 5px solid var(--neon-cyan);
+      padding-left: 15px;
+      letter-spacing: 0.5px;
+    }
+
+    .section-title.teacher-theme {
+      border-left-color: var(--neon-magenta);
+    }
+
+    .grid-info {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      align-items: center;
+    }
+
+    @media (max-width: 868px) {
+      .grid-info {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .info-text-area {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .info-text-area p {
+      font-size: 1rem;
+      color: var(--text-main);
+      line-height: 1.6;
+    }
+
+    .info-list {
+      list-style-type: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .info-list li {
+      position: relative;
+      padding-left: 28px;
+      font-size: 0.95rem;
+      color: var(--text-gray);
+      line-height: 1.5;
+    }
+
+    .info-list li::before {
+      content: '\f105';
+      font-family: 'Font Awesome 6 Free';
+      font-weight: 900;
+      position: absolute;
+      left: 5px;
+      top: 2px;
+      color: var(--neon-cyan);
+    }
+
+    .section-card.teacher-theme .info-list li::before {
+      color: var(--neon-magenta);
+    }
+
+    /* VISUAL MOCKUP DRAWS (CSS / SVG) */
+    .visual-mockup {
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      background: #0d0f16;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    /* HUD DRAW COMPONENTS */
+    .mock-hud {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(0, 240, 255, 0.2);
+      border-radius: 8px;
+      padding: 10px 15px;
+      font-size: 0.8rem;
+    }
+
+    .mock-hp-box {
+      width: 42%;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .mock-hp-title {
+      display: flex;
+      justify-content: space-between;
+      font-weight: bold;
+    }
+
+    .mock-hp-bar {
+      height: 10px;
+      background: #222;
+      border-radius: 5px;
+      overflow: hidden;
+      border: 1px solid #000;
+    }
+
+    .mock-hp-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #ff0055, #ff007f);
+      box-shadow: 0 0 8px rgba(255, 0, 127, 0.5);
+    }
+
+    .mock-hp-fill.player {
+      background: linear-gradient(90deg, #00ffaa, var(--neon-green));
+      box-shadow: 0 0 8px rgba(57, 255, 20, 0.5);
+    }
+
+    .mock-center-vs {
+      text-align: center;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.6rem;
+      color: var(--neon-yellow);
+    }
+
+    /* BATTLEVIEW DRAW */
+    .mock-battle-view {
+      height: 160px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      background: radial-gradient(circle, #1a2233 0%, #0d0f16 100%);
+      border-radius: 8px;
+      position: relative;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      padding: 20px;
+    }
+
+    .mock-boss-label {
+      position: absolute;
+      top: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid var(--neon-magenta);
+      color: #fff;
+      font-weight: bold;
+      padding: 4px 14px;
+      font-size: 0.75rem;
+      border-radius: 4px;
+    }
+
+    .mock-sprite {
+      width: 60px;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .popup-heal {
+      position: absolute;
+      left: 40px;
+      bottom: 90px;
+      color: var(--neon-green);
+      font-weight: bold;
+      font-size: 0.9rem;
+      animation: floatUp 1.5s infinite ease-out;
+      text-shadow: 0 0 5px rgba(57, 255, 20, 0.5);
+    }
+
+    .popup-damage {
+      position: absolute;
+      right: 40px;
+      bottom: 90px;
+      color: var(--neon-magenta);
+      font-weight: bold;
+      font-size: 0.9rem;
+      animation: floatUp 1.5s infinite ease-out;
+      text-shadow: 0 0 5px rgba(255, 0, 127, 0.5);
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(0); opacity: 0; }
+      20% { opacity: 1; }
+      80% { opacity: 1; }
+      100% { transform: translateY(-25px); opacity: 0; }
+    }
+
+    /* SCALING FORMULA DRAW */
+    .mock-formula-box {
+      background: rgba(0,0,0,0.5);
+      border: 1px dashed rgba(255, 234, 0, 0.3);
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .formula-step {
+      font-size: 1.1rem;
+      font-weight: bold;
+      margin: 10px 0;
+      color: var(--neon-yellow);
+    }
+
+    /* IMAGE GALLERY SLIDER */
+    .screenshot-gallery {
+      margin-top: 40px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      padding-top: 30px;
+    }
+
+    .gallery-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: var(--neon-yellow);
+      text-transform: uppercase;
+      text-align: center;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+    }
+
+    .gallery-item {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .gallery-item:hover {
+      transform: translateY(-5px);
+      border-color: var(--neon-cyan);
+      box-shadow: 0 5px 15px rgba(0, 240, 255, 0.2);
+    }
+
+    .gallery-image-container {
+      height: 150px;
+      background: #111;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .gallery-image-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .image-fallback {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-gray);
+      background: linear-gradient(135deg, #101422, #0d0f16);
+      font-size: 0.8rem;
+      padding: 15px;
+      text-align: center;
+      gap: 10px;
+    }
+
+    .image-fallback i {
+      font-size: 2rem;
+      color: rgba(255, 255, 255, 0.15);
+    }
+
+    .gallery-caption {
+      padding: 12px 15px;
+      font-size: 0.85rem;
+      color: var(--text-main);
+      text-align: center;
+      font-weight: 600;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    /* FOOTER */
+    footer {
+      padding: 25px;
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--text-gray);
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      margin-top: auto;
+    }
+
+    footer a {
+      color: var(--neon-cyan);
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-title-area">
+      <div class="header-logo-icon"><i class="fa-solid fa-book-open"></i></div>
+      <div>
+        <h1 class="main-title">คู่มือระบบ & วิธีการเล่น</h1>
+      </div>
+    </div>
+    <a href="index" class="btn-back-portal">
+      <i class="fa-solid fa-arrow-left"></i> กลับหน้าพอร์ทัลหลัก
+    </a>
+  </header>
+
+  <main class="content-container">
+
+    <!-- ==========================================
+       SECTION 1: STUDENT MANUAL
+       ========================================== -->
+    <section class="section-card">
+      <h2 class="section-title"><i class="fa-solid fa-gamepad"></i> ฝั่งนักเรียน: วิธีเล่นและการคำนวณคะแนน</h2>
+      
+      <div class="grid-info">
+        
+        <!-- Texts -->
+        <div class="info-text-area">
+          <p><strong>กติกาและการประลองบอส RPG:</strong></p>
+          <p>
+            นักเรียนจะได้รับบทเป็น "สายลับดิจิทัล" ที่จะต้องออกเดินทางปราบไวรัสคอมพิวเตอร์และมัลแวร์ในห้องเรียน ทั้งหมด 5 ด่าน (Stages) โดยในแต่ละด่านจะมีบอสประจำตำแหน่งรอสู้
+          </p>
+          
+          <ul class="info-list">
+            <li><strong>การตอบคำถามเพื่อสร้างดาเมจ:</strong> เมื่อโจทย์คำถามปรากฏ ให้สลับอ่านและเลือกคำตอบที่ถูกต้องที่สุด หากตอบถูกจะสร้างความเสียหายใส่บอสและบอสจะเสีย HP เมื่อบอส HP หมด (0 HP) จะผ่านด่าน</li>
+            <li><strong>ระบบสลับคำถามและตัวเลือก (Anti-Cheat):</strong> ลำดับข้อคำถามและตำแหน่งปุ่ม A, B, C, D จะถูกสุ่มเรียงใหม่ทุกครั้งของแต่ละหน้าจอ ทำให้นักเรียนแถวข้างเคียงกันไม่สามารถดูและลอกตำแหน่งคำตอบกันได้</li>
+            <li><strong>วิธีดูพลังชีวิต (Player HP):</strong> ผู้เล่นมีพลังชีวิตเริ่มต้น 100 HP หากผู้เล่นตอบผิดจะถูกบอสไวรัสโจมตีหักพลังชีวิตลง <strong>-10 HP</strong> หากพลังชีวิตหมดลง (0 HP) ระบบจะยุติเกม (System Fail) ทันที</li>
+            <li><strong>การฟื้นฟู HP (Stage Clear Healing):</strong> เมื่อผู้เล่นเอาชนะบอสผ่านด่านได้สำเร็จ ระบบจะฟื้นฟูพลังชีวิตเพิ่มขึ้น <strong>+30 HP</strong> (สูงสุดไม่เกิน 100 HP) เพื่อช่วยให้ลุยต่อในด่านถัดไปได้ง่ายขึ้น</li>
+          </ul>
+        </div>
+
+        <!-- Mockup Visual Display (HP and Combat) -->
+        <div class="visual-mockup">
+          
+          <!-- Mock HUD -->
+          <div class="mock-hud">
+            <div class="mock-hp-box">
+              <div class="mock-hp-title">
+                <span style="color: var(--neon-green);">PLAYER (สายลับ)</span>
+                <span>80/100 HP</span>
+              </div>
+              <div class="mock-hp-bar">
+                <div class="mock-hp-fill player" style="width: 80%;"></div>
+              </div>
+            </div>
+            <div class="mock-center-vs">VS</div>
+            <div class="mock-hp-box" style="text-align: right;">
+              <div class="mock-hp-title">
+                <span>40/100 HP</span>
+                <span style="color: var(--neon-magenta);">BOSS VIRUS</span>
+              </div>
+              <div class="mock-hp-bar">
+                <div class="mock-hp-fill" style="width: 40%;"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mock Battle Screen -->
+          <div class="mock-battle-view">
+            <div class="mock-boss-label">STAGE 3: PHISHING MONSTER</div>
+            
+            <!-- Player sprite mockup -->
+            <div class="mock-sprite">
+              <svg viewBox="0 0 100 100" style="width: 100%; height: 100%;">
+                <circle cx="50" cy="50" r="30" fill="none" stroke="#39ff14" stroke-width="6"/>
+                <path d="M35,45 Q50,30 65,45 M50,45 L50,80" stroke="#39ff14" stroke-width="6" fill="none"/>
+              </svg>
+            </div>
+            
+            <!-- Heal Popup -->
+            <span class="popup-heal">+30 HP</span>
+
+            <!-- Damage Popup -->
+            <span class="popup-damage">-20 HP</span>
+
+            <!-- Enemy sprite mockup -->
+            <div class="mock-sprite">
+              <svg viewBox="0 0 100 100" style="width: 100%; height: 100%;">
+                <polygon points="50,20 80,80 20,80" fill="none" stroke="#ff007f" stroke-width="6"/>
+                <circle cx="50" cy="55" r="10" fill="#ff007f"/>
+              </svg>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ==========================================
+       SECTION 2: TEACHER MANUAL
+       ========================================== -->
+    <section class="section-card teacher-theme">
+      <h2 class="section-title teacher-theme"><i class="fa-solid fa-user-shield"></i> ฝั่งคุณครู: แดชบอร์ดคะแนนและการแปลงเกรด</h2>
+      
+      <div class="grid-info">
+
+        <!-- Mockup Visual Display (Scaling Formula) -->
+        <div class="visual-mockup">
+          
+          <div class="mock-formula-box">
+            <h3 style="color: var(--neon-yellow); font-size: 1.1rem; margin-bottom: 10px;">
+              <i class="fa-solid fa-calculator"></i> สูตรแปลงสัดส่วนคะแนนเก็บ
+            </h3>
+            <p style="font-size: 0.85rem; color: var(--text-gray);">
+              คะแนนเกมสะสมทั้งหมดจะถูกหารและคูณแปลงเป็นสัดส่วนเต็ม 10 คะแนนให้โดยอัตโนมัติ
+            </p>
+            <div class="formula-step">
+              ( คะแนนดิบของเกม ÷ 5,000 ) × 10
+            </div>
+            <p style="font-size: 0.85rem; color: var(--neon-cyan);">
+              ตัวอย่าง: สอบได้ 4,500 คะแนน ➔ แสดงผลใน PDF: 9.0 / 10
+            </p>
+          </div>
+
+          <!-- Mock Table Row -->
+          <div style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255, 0, 127, 0.2); border-radius: 8px; padding: 12px 15px;">
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); text-align: center; font-size: 0.8rem; font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px; margin-bottom: 5px;">
+              <span>ชื่อนักเรียน</span>
+              <span>คะแนนดิบ</span>
+              <span>คะแนนเก็บ</span>
+              <span>รอบที่เล่น</span>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); text-align: center; font-size: 0.85rem; color: var(--text-gray);">
+              <span style="color:#fff;">ภูริพงศ์</span>
+              <span style="color:var(--neon-green)">4,000</span>
+              <span style="color:var(--neon-cyan)">8.0 / 10</span>
+              <span style="color:var(--neon-magenta)">2</span>
+            </div>
+          </div>
+
+        </div>
+        
+        <!-- Texts -->
+        <div class="info-text-area">
+          <p><strong>แผงควบคุมสถิติหลังบ้าน (Live Score Dashboard):</strong></p>
+          <p>
+            คุณครูสามารถเข้าใช้งานแผงตรวจสอบผลคะแนนได้จากไฟล์ `teacher_dashboard.html` แยกต่างหากโดยระบุรหัสผ่านเพื่อความปลอดภัย ซึ่งมีคุณสมบัติดังนี้
+          </p>
+          
+          <ul class="info-list">
+            <li><strong>ระบบคัดกรองห้องเรียนรายบุคคล:</strong> เลือกกรองเจาะจงข้อมูลเฉพาะห้องเรียน เช่น ม.3/1 ถึง ม.3/15 เพื่อเช็กจำนวนนักเรียนที่ประลองจบได้อย่างรวดเร็ว</li>
+            <li><strong>ปุ่มส่งออกรายงาน (EXPORT PDF):</strong> ดึงข้อมูลนักเรียนรายห้องที่คัดกรองไว้ มาวาดเป็นเอกสาร PDF ในรูปแบบรายงานการศึกษาภาษาไทย จัดเลขที่ ชื่อ และคะแนนปัดเศษอย่างสวยงามเพื่อดาวน์โหลดเก็บหรือพิมพ์ส่งฝ่ายวิชาการ</li>
+            <li><strong>การจัดกลุ่มรายชื่อเด็กซ้ำซ้อน (Deduplication):</strong> หากฐานข้อมูลตรวจพบคะแนนของนักเรียนชื่อซ้ำเนื่องจากเข้าเล่นหลายครั้ง แดชบอร์ดจะทำการ **ยุบรวมแถวให้เหลือเพียงชื่อเดียวอัตโนมัติ** โดยแสดงสถิติคะแนนที่ดีที่สุดและจำนวนรอบที่เล่นสะสมสูงสุด</li>
+            <li><strong>การจัดเรียงหลายรูปแบบ:</strong> เรียงเด็กตามลำดับเลขที่, เรียงหาเด็กที่ทำคะแนนสูงสุด, เรียงหาผู้ประลองเสร็จไวที่สุด หรือเรียงรายชื่อตามพจนานุกรม ก-ฮ</li>
+          </ul>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ==========================================
+       SECTION 3: SCREENSHOTS WITH DESCRIPTIONS
+       ========================================== -->
+    <section class="screenshot-gallery">
+      <h2 class="gallery-title"><i class="fa-regular fa-image"></i> แกลเลอรีจำลองภาพประกอบการใช้งานระบบ</h2>
+      
+      <div class="gallery-grid">
+        
+        <!-- Gallery Item 1 -->
+        <div class="gallery-item">
+          <div class="gallery-image-container">
+            <!-- Loads 1.png if exists -->
+            <img src="./1.png" alt="หน้าแรกเกมลงทะเบียน" onerror="this.style.display='none'">
+            <div class="image-fallback">
+              <i class="fa-solid fa-user-pen"></i>
+              <span>1. หน้าลงทะเบียนสายลับ</span>
+            </div>
+          </div>
+          <div class="gallery-caption">ป้อนข้อมูล ชื่อ นามสกุล เลขที่ ห้องเรียนเพื่อยืนยันตัวตนก่อนสู้</div>
+        </div>
+
+        <!-- Gallery Item 2 -->
+        <div class="gallery-item">
+          <div class="gallery-image-container">
+            <img src="./2.png" alt="หน้าจอประลองบอส RPG" onerror="this.style.display='none'">
+            <div class="image-fallback">
+              <i class="fa-solid fa-shield-virus"></i>
+              <span>2. หน้าจอประลองตอบคำถาม</span>
+            </div>
+          </div>
+          <div class="gallery-caption">ต่อสู้กับบอส ตอบถูกโจมตีบอส ตอบผิดถูกบอสหักพลังชีวิตครั้งละ 10 HP</div>
+        </div>
+
+        <!-- Gallery Item 3 -->
+        <div class="gallery-item">
+          <div class="gallery-image-container">
+            <img src="./3.png" alt="บอร์ดคะแนนเรียลไทม์หลังบ้านครู" onerror="this.style.display='none'">
+            <div class="image-fallback">
+              <i class="fa-solid fa-rectangle-list"></i>
+              <span>3. แผงควบคุม Teacher Dashboard</span>
+            </div>
+          </div>
+          <div class="gallery-caption">แดชบอร์ดคุณครู คัดกรองห้องเรียน ค้นหา จัดเรียงคะแนนเก็บสะสมเต็ม 10 คะแนน</div>
+        </div>
+
+        <!-- Gallery Item 4 -->
+        <div class="gallery-item">
+          <div class="gallery-image-container">
+            <img src="./4.png" alt="รายงานผล PDF ภาษาไทย" onerror="this.style.display='none'">
+            <div class="image-fallback">
+              <i class="fa-solid fa-file-invoice"></i>
+              <span>4. รายงานสรุปคะแนนรูปแบบ PDF</span>
+            </div>
+          </div>
+          <div class="gallery-caption">กด Export เพื่อแปลงสถิติคะแนนห้องเรียนออกมาเป็นไฟล์รายงาน PDF ที่เรียงไว้อย่างสมบูรณ์</div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>© 2026 CYBER FIGHTER | คู่มือการเรียนรู้และการใช้ระบบประเมินผลอย่างปลอดภัย | หน้าหลัก: <a href="index">พอร์ทัลหลัก</a></p>
+  </footer>
+
+</body>
+</html>

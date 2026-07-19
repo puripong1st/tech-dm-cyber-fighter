@@ -1,0 +1,1920 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="logo.png">
+  <title>IT SURVIVAL MISSION: เอาชีวิตรอดในโลกดิจิทัล!</title>
+  <!-- Import Roblox-styled fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+  
+  <style>
+    /* RESET & BASE STYLES */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    body {
+      background-color: #191B1D;
+      background-image: linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 30px 30px;
+      color: #F2F4F5;
+      font-family: 'Chakra Petch', sans-serif;
+      overflow: hidden;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px;
+    }
+
+    /* CUSTOM SCROLLBARS FOR INTERNAL TEXTS */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #232527;
+      border: 2px solid #000;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #393B3D;
+      border: 2px solid #000;
+    }
+
+    /* UTILITIES */
+    .press-start {
+      font-family: 'Press Start 2P', cursive;
+    }
+
+    /* ROBLOX UI STYLES */
+    .blocky-box {
+      background-color: #2C2F33;
+      border: 4px solid #000;
+      box-shadow: 6px 6px 0px #000;
+      padding: 20px;
+      position: relative;
+    }
+
+    .roblox-btn {
+      font-family: 'Chakra Petch', sans-serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      text-transform: uppercase;
+      color: #fff;
+      background-color: #00A2FF; /* Roblox Blue */
+      border: 4px solid #000;
+      box-shadow: 0 4px 0 #000;
+      padding: 10px 20px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: transform 0.05s ease, box-shadow 0.05s ease;
+      position: relative;
+    }
+
+    .roblox-btn:hover {
+      filter: brightness(1.1);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 0 #000;
+    }
+
+    .roblox-btn:active {
+      transform: translateY(4px);
+      box-shadow: 0 0 0 #000;
+    }
+
+    .roblox-btn.green {
+      background-color: #00E676; /* Roblox Green */
+    }
+
+    .roblox-btn.red {
+      background-color: #F13B3B; /* Roblox Red */
+    }
+
+    .roblox-btn.orange {
+      background-color: #FF5722;
+    }
+
+    .roblox-btn.yellow {
+      background-color: #FFD600;
+      color: #000;
+    }
+
+    .roblox-btn.disabled {
+      background-color: #555 !important;
+      color: #888 !important;
+      cursor: not-allowed;
+      box-shadow: 0 4px 0 #000 !important;
+      transform: none !important;
+      filter: none !important;
+    }
+
+    /* APP HUD HEADER */
+    header {
+      width: 100%;
+      max-width: 1200px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #232527;
+      border: 4px solid #000;
+      padding: 10px 20px;
+      box-shadow: 4px 4px 0 #000;
+      z-index: 10;
+    }
+
+    .header-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .roblox-tilt-logo {
+      width: 28px;
+      height: 28px;
+      background-color: #F13B3B;
+      border: 4px solid #000;
+      transform: rotate(-15deg);
+      display: inline-block;
+      position: relative;
+    }
+
+    .roblox-tilt-logo::after {
+      content: '';
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background-color: #232527;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border: 2px solid #000;
+    }
+
+    .header-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-shadow: 2px 2px 0 #000;
+    }
+
+    .header-info {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .level-badge {
+      background-color: #FFD600;
+      color: #000;
+      font-weight: 700;
+      padding: 4px 10px;
+      border: 2px solid #000;
+      font-size: 0.85rem;
+    }
+
+    .mute-btn {
+      background: none;
+      border: none;
+      color: #F2F4F5;
+      font-size: 1.3rem;
+      cursor: pointer;
+      transition: transform 0.1s ease;
+    }
+
+    .mute-btn:hover {
+      transform: scale(1.1);
+    }
+
+    /* GAME BOARD (SLIDE VIEW) */
+    .game-viewport {
+      flex: 1;
+      width: 100%;
+      max-width: 1200px;
+      margin: 15px 0;
+      display: grid;
+      grid-template-columns: 1fr 280px;
+      gap: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    @media (max-width: 900px) {
+      .game-viewport {
+        grid-template-columns: 1fr;
+      }
+      .avatar-sidebar {
+        display: none !important;
+      }
+    }
+
+    /* SLIDE STAGES */
+    .slides-container {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      background-color: #1F2124;
+      border: 4px solid #000;
+      box-shadow: 6px 6px 0 #000;
+      overflow: hidden;
+    }
+
+    .slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      padding: 20px 25px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateX(100px);
+      transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+    }
+
+    .slide.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(0);
+      z-index: 2;
+    }
+
+    .slide.exit-left {
+      transform: translateX(-100px);
+      opacity: 0;
+      z-index: 1;
+    }
+
+    .slide.enter-left {
+      transform: translateX(-100px);
+      opacity: 0;
+    }
+
+    /* SLIDE CONTENTS styling */
+    .slide-header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 15px;
+      margin-bottom: 10px;
+      border-bottom: 3px solid #000;
+      padding-bottom: 10px;
+    }
+
+    .slide-header-text {
+      flex: 1;
+    }
+
+    .slide-level-lbl {
+      font-size: 0.75rem;
+      color: #FFD600;
+      margin-bottom: 3px;
+      letter-spacing: 1px;
+    }
+
+    .slide-title {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #fff;
+      text-shadow: 2px 2px 0 #000;
+      line-height: 1.2;
+    }
+
+    .question-panel {
+      background-color: #2C2F33;
+      border: 3px solid #000;
+      border-left: 8px solid #FFD600;
+      padding: 10px 15px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .question-panel .q-icon {
+      font-size: 1.6rem;
+    }
+
+    .question-text {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: #FFD600;
+    }
+
+    .content-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      position: relative;
+      overflow-y: auto;
+      padding-right: 5px;
+    }
+
+    /* LOOT BOX / ACCORDION GRID SYSTEM */
+    .loot-grid {
+      display: grid;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .grid-3-cols {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .grid-2-cols {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: 768px) {
+      .grid-3-cols, .grid-2-cols {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .loot-box {
+      background-color: #2C2F33;
+      border: 3px solid #000;
+      box-shadow: 3px 3px 0 #000;
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+      overflow: hidden;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+    }
+
+    .loot-box:hover {
+      transform: translateY(-2px);
+      box-shadow: 3px 5px 0 #000;
+      border-color: #555;
+    }
+
+    .loot-box-header {
+      padding: 10px 12px;
+      background-color: #232527;
+      font-weight: 700;
+      font-size: 0.95rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 3px solid #000;
+      transition: background-color 0.2s ease;
+    }
+
+    .loot-box-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .loot-box-status {
+      font-size: 1rem;
+      transition: transform 0.2s ease;
+    }
+
+    .loot-box-content {
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      background-color: #1A1C1E;
+      font-size: 0.9rem;
+      line-height: 1.4;
+      color: #DFE2E5;
+      padding: 0 12px;
+      transition: max-height 0.3s ease, opacity 0.3s ease, padding 0.3s ease;
+    }
+
+    /* Expanded loot box state */
+    .loot-box.expanded {
+      border-color: #00A2FF;
+      box-shadow: 3px 3px 0 #00A2FF;
+    }
+
+    .loot-box.expanded .loot-box-header {
+      background-color: #1A1C1E;
+      border-bottom-color: #00A2FF;
+      color: #00A2FF;
+    }
+
+    .loot-box.expanded .loot-box-content {
+      max-height: 200px;
+      opacity: 1;
+      padding: 12px;
+      border-top: none;
+    }
+
+    .loot-box.expanded .loot-box-status {
+      transform: rotate(360deg);
+    }
+
+    .ref-tag {
+      display: inline-block;
+      background-color: #333;
+      color: #888;
+      font-size: 0.75rem;
+      padding: 1px 4px;
+      margin-left: 5px;
+      border: 1px solid #444;
+      font-family: monospace;
+    }
+
+    /* SLIDE 1 (START) SPECIFICS */
+    .start-screen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      height: 100%;
+      gap: 20px;
+    }
+
+    .logo-container {
+      position: relative;
+      margin-bottom: 5px;
+    }
+
+    .logo-block-3d {
+      width: 120px;
+      height: 120px;
+      background-color: #F13B3B;
+      border: 8px solid #000;
+      transform: rotate(-12deg);
+      box-shadow: 8px 8px 0 #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3.5rem;
+      font-weight: 900;
+      color: #fff;
+    }
+
+    .logo-block-3d::after {
+      content: '';
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      background-color: #1F2124;
+      border: 8px solid #000;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .pulse-btn {
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.03); }
+      100% { transform: scale(1); }
+    }
+
+    /* SLIDE 5 (BOSS FIGHT) SPECIFICS */
+    .boss-arena {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 15px;
+      align-items: center;
+      width: 100%;
+    }
+
+    @media (max-width: 800px) {
+      .boss-arena {
+        grid-template-columns: 1fr;
+      }
+      .boss-visual {
+        display: none !important;
+      }
+    }
+
+    .boss-visual {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background-color: #141517;
+      border: 4px solid #000;
+      border-radius: 8px;
+      padding: 15px;
+      height: 250px;
+      position: relative;
+    }
+
+    .boss-hp-bar-outer {
+      width: 100%;
+      height: 20px;
+      background-color: #222;
+      border: 3px solid #000;
+      margin-bottom: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .boss-hp-bar-inner {
+      width: 100%;
+      height: 100%;
+      background-color: #F13B3B;
+      transition: width 0.3s ease;
+    }
+
+    .boss-hp-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-weight: 700;
+      font-size: 0.7rem;
+      color: #fff;
+      text-shadow: 1px 1px 0 #000;
+    }
+
+    .boss-sprite {
+      width: 100px;
+      height: 100px;
+      background-color: #8C14FF;
+      border: 5px solid #000;
+      position: relative;
+      transition: transform 0.1s ease;
+    }
+
+    .boss-sprite::before {
+      content: '👾';
+      font-size: 3.5rem;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .boss-sprite.hurt {
+      animation: shake 0.2s 2;
+      background-color: #F13B3B;
+    }
+
+    .boss-sprite.dead {
+      animation: explode 0.5s forwards;
+      background-color: #555;
+    }
+
+    .boss-sprite.dead::before {
+      content: '💀';
+    }
+
+    .victory-badge {
+      display: none;
+      position: absolute;
+      background-color: #00E676;
+      color: #000;
+      border: 4px solid #000;
+      box-shadow: 4px 4px 0 #000;
+      padding: 8px 15px;
+      font-size: 1.5rem;
+      font-weight: 800;
+      transform: rotate(-5deg);
+      z-index: 6;
+      animation: bounce 1s infinite alternate;
+    }
+
+    @keyframes shake {
+      0% { transform: translate(2px, 2px); }
+      50% { transform: translate(-2px, -2px); }
+      100% { transform: translate(0, 0); }
+    }
+
+    @keyframes explode {
+      0% { transform: scale(1); filter: brightness(2); }
+      100% { transform: scale(0); opacity: 0; }
+    }
+
+    /* SIDEBAR (ROBLOX CHARACTER PREVIEW) */
+    .avatar-sidebar {
+      background-color: #232527;
+      border: 4px solid #000;
+      box-shadow: 6px 6px 0px #000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px;
+    }
+
+    .avatar-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #A3A8AF;
+      border-bottom: 2px solid #000;
+      width: 100%;
+      text-align: center;
+      padding-bottom: 8px;
+    }
+
+    /* DYNAMIC AVATAR WRAPPER */
+    .avatar-frame {
+      width: 180px;
+      height: 220px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* CSS BLOCKY AVATAR */
+    .roblox-avatar {
+      position: relative;
+      width: 90px;
+      height: 150px;
+      transform-style: preserve-3d;
+      animation: idle-float 3s infinite ease-in-out;
+    }
+
+    @keyframes idle-float {
+      0% { transform: translateY(0px) rotateY(5deg); }
+      50% { transform: translateY(-6px) rotateY(-5deg); }
+      100% { transform: translateY(0px) rotateY(5deg); }
+    }
+
+    .char-head {
+      position: absolute;
+      width: 28px;
+      height: 28px;
+      background-color: #FFD600; /* Yellow skin */
+      border: 3px solid #000;
+      top: 15px;
+      left: 31px;
+      z-index: 3;
+    }
+
+    .char-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .char-eyes {
+      display: flex;
+      gap: 4px;
+    }
+
+    .char-eyes::before, .char-eyes::after {
+      content: '';
+      width: 3px;
+      height: 3px;
+      background-color: #000;
+    }
+
+    .char-mouth {
+      width: 12px;
+      height: 4px;
+      border: 2px dashed #000;
+      border-top: none;
+      border-radius: 0 0 8px 8px;
+      background-color: transparent;
+      transition: all 0.2s ease;
+    }
+
+    /* Face States */
+    .face-confused .char-mouth {
+      width: 6px;
+      height: 2px;
+      border-radius: 0;
+      border: 2px solid #000;
+      border-bottom: none;
+      border-left: none;
+      border-right: none;
+    }
+
+    .face-battle .char-mouth {
+      width: 8px;
+      height: 2px;
+      border: 2px solid #000;
+      border-radius: 0;
+    }
+
+    .face-victory .char-mouth {
+      width: 14px;
+      height: 6px;
+      border: 2px solid #000;
+      border-top: none;
+      border-radius: 0 0 10px 10px;
+      background-color: #000;
+    }
+
+    .char-torso {
+      position: absolute;
+      width: 42px;
+      height: 52px;
+      background-color: #00A2FF; /* Blue torso */
+      border: 3px solid #000;
+      top: 46px;
+      left: 24px;
+      z-index: 2;
+    }
+
+    .char-arm-l, .char-arm-r {
+      position: absolute;
+      width: 16px;
+      height: 48px;
+      background-color: #FFD600; /* Yellow arms */
+      border: 3px solid #000;
+      top: 46px;
+      z-index: 1;
+      transform-origin: top center;
+    }
+
+    .char-arm-l {
+      left: 5px;
+      animation: arm-swing-l 3s infinite ease-in-out;
+    }
+
+    .char-arm-r {
+      right: 5px;
+      animation: arm-swing-r 3s infinite ease-in-out;
+    }
+
+    @keyframes arm-swing-l {
+      0% { transform: rotate(5deg); }
+      50% { transform: rotate(-5deg); }
+      100% { transform: rotate(5deg); }
+    }
+
+    @keyframes arm-swing-r {
+      0% { transform: rotate(-5deg); }
+      50% { transform: rotate(5deg); }
+      100% { transform: rotate(-5deg); }
+    }
+
+    .char-leg-l, .char-leg-r {
+      position: absolute;
+      width: 18px;
+      height: 44px;
+      background-color: #00E676; /* Green legs */
+      border: 3px solid #000;
+      top: 100px;
+      z-index: 1;
+    }
+
+    .char-leg-l { left: 24px; }
+    .char-leg-r { left: 48px; }
+
+    /* ACCESSORIES */
+    .char-shield {
+      position: absolute;
+      width: 30px;
+      height: 36px;
+      background-color: #DFE2E5;
+      border: 3px solid #000;
+      border-radius: 0 0 12px 12px;
+      top: 55px;
+      left: -8px;
+      z-index: 4;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+    .char-shield::after { content: '🛡️'; font-size: 1rem; }
+
+    .char-goggles {
+      position: absolute;
+      width: 32px;
+      height: 10px;
+      background-color: #FFD600;
+      border: 2px solid #000;
+      top: 24px;
+      left: 29px;
+      z-index: 5;
+      display: none;
+      opacity: 0.9;
+    }
+    .char-goggles::before, .char-goggles::after {
+      content: ''; position: absolute; width: 12px; height: 8px; background-color: #00E676; border: 1px solid #000;
+    }
+    .char-goggles::before { left: 2px; }
+    .char-goggles::after { right: 2px; }
+
+    .char-sword {
+      position: absolute;
+      width: 8px;
+      height: 50px;
+      background-color: #E0E0E0;
+      border: 2px solid #000;
+      top: 20px;
+      right: -2px;
+      z-index: 4;
+      transform-origin: bottom center;
+      transform: rotate(45deg);
+      display: none;
+    }
+    .char-sword::after {
+      content: ''; position: absolute; width: 16px; height: 5px; background-color: #795548; border: 2px solid #000; bottom: 8px; left: -6px;
+    }
+
+    .char-crown {
+      position: absolute;
+      width: 32px;
+      height: 14px;
+      background-color: #FFD600;
+      border: 2px solid #000;
+      top: 3px;
+      left: 29px;
+      z-index: 5;
+      display: none;
+      clip-path: polygon(0% 100%, 100% 100%, 100% 0%, 75% 50%, 50% 0%, 25% 50%, 0% 0%);
+    }
+
+    .has-shield .char-shield { display: flex; }
+    .has-goggles .char-goggles { display: block; }
+    .has-sword .char-sword { display: block; }
+    .has-crown .char-crown { display: block; }
+
+    .equip-label {
+      background-color: #1A1C1E;
+      border: 2px solid #000;
+      color: #FFD600;
+      padding: 4px 8px;
+      font-size: 0.75rem;
+      font-family: 'Press Start 2P', cursive;
+      text-align: center;
+      width: 100%;
+    }
+
+    /* BOTTOM HUD NAVIGATION */
+    .bottom-hud {
+      width: 100%;
+      max-width: 1200px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      z-index: 10;
+    }
+
+    .nav-bar-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .side-nav-btn {
+      min-width: 100px;
+    }
+
+    .hotbar {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      background-color: rgba(30,30,30,0.85);
+      border: 4px solid #000;
+      padding: 6px;
+      border-radius: 4px;
+      flex: 1;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .hotbar-slot {
+      width: 60px;
+      height: 60px;
+      background-color: rgba(60, 60, 60, 0.7);
+      border: 3px solid #555;
+      position: relative;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+    }
+
+    .hotbar-slot:hover {
+      background-color: rgba(80, 80, 80, 0.9);
+      border-color: #aaa;
+    }
+
+    .hotbar-slot.active {
+      background-color: rgba(0, 162, 255, 0.2);
+      border-color: #00A2FF;
+      box-shadow: inset 0 0 10px #00A2FF;
+    }
+
+    .hotbar-slot-num {
+      position: absolute;
+      top: 2px;
+      left: 4px;
+      font-size: 0.6rem;
+      font-family: 'Press Start 2P', cursive;
+      color: #999;
+    }
+
+    .hotbar-slot.active .hotbar-slot-num {
+      color: #00A2FF;
+    }
+
+    .hotbar-slot-icon {
+      font-size: 1.4rem;
+      margin-top: 3px;
+    }
+
+    .hotbar-slot-title {
+      font-size: 0.6rem;
+      font-weight: 700;
+      color: #ccc;
+      text-align: center;
+      margin-top: 1px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 100%;
+      padding: 0 2px;
+    }
+
+    /* KEYBOARD SHORTCUTS PANEL */
+    .shortcuts-bar {
+      text-align: center;
+      font-size: 0.7rem;
+      color: #70757D;
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+    }
+
+    .key-cap {
+      background-color: #333;
+      color: #ddd;
+      border: 1px solid #555;
+      border-bottom: 2px solid #111;
+      padding: 1px 4px;
+      border-radius: 3px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- APP HUD HEADER -->
+  <header>
+    <div class="header-logo">
+      <div class="roblox-tilt-logo"></div>
+      <div class="header-title press-start">IT SURVIVAL</div>
+    </div>
+    <div class="header-info">
+      <div class="level-badge press-start" id="hud-level-badge">STAGE 01</div>
+      <button class="mute-btn" id="sound-toggle-btn" title="เปิด/ปิดเสียง">🔊</button>
+      <a href="index" class="roblox-btn red" style="font-size: 0.8rem; padding: 4px 10px; border-width: 2px; box-shadow: 0 2px 0 #000; text-decoration: none; margin-left: 10px; display: inline-flex; align-items: center; justify-content: center; height: auto;">Portal 🏠</a>
+    </div>
+  </header>
+
+  <!-- GAME VIEWPORT -->
+  <div class="game-viewport">
+    
+    <!-- MAIN SLIDES PANEL -->
+    <div class="slides-container">
+      
+      <!-- SLIDE 1: START SCREEN -->
+      <div class="slide active" id="slide-1" data-level="1">
+        <div class="start-screen">
+          <div class="logo-container">
+            <div class="logo-block-3d">IT</div>
+          </div>
+          <h1 class="slide-title press-start" style="font-size: 1.8rem; color: #FFD600; text-align: center;">
+            MISSION: เอาชีวิตรอดในโลกดิจิทัล!
+          </h1>
+          <p style="font-size: 1.15rem; color: #A3A8AF; max-width: 650px; text-align: center; line-height: 1.6;">
+            บทเรียนการใช้เทคโนโลยีสารสนเทศอย่างปลอดภัยและมีความรับผิดชอบสำหรับนักเรียนชั้น ม.3 <br>
+            <span style="color: #FF5722; font-weight: bold;">[เวอร์ชันเจาะลึกเนื้อหา - โหมด Click to Expand]</span>
+          </p>
+          <div style="margin: 5px 0;">
+            <span style="font-size: 0.85rem; background-color: #232527; padding: 6px 12px; border: 2px solid #000; color: #00E676; font-weight: bold;">
+              💡 ครูอธิบายเจาะลึกทีละประเด็นได้ง่ายขึ้นด้วยกล่องสมบัติความรู้
+            </span>
+          </div>
+          <button class="roblox-btn green pulse-btn" id="start-game-btn" style="font-size: 1.4rem; padding: 12px 36px; margin-top: 10px;">
+            🎮 PRESS START TO PLAY
+          </button>
+        </div>
+      </div>
+
+      <!-- SLIDE 2: LEVEL 1 -->
+      <div class="slide" id="slide-2" data-level="2">
+        <div class="slide-header-bar">
+          <div class="slide-header-text">
+            <div class="slide-level-lbl press-start">LEVEL 1 - โลกของเรากับเทคโนโลยี</div>
+            <h2 class="slide-title">เทคโนโลยีเข้าไปซ่อนอยู่ในระดับไหนบ้าง?</h2>
+          </div>
+          <button class="roblox-btn yellow reveal-all-btn" data-slide="2">🔓 REVEAL ALL ITEMS</button>
+        </div>
+        
+        <div class="content-area">
+          <div class="question-panel">
+            <span class="q-icon">🔍</span>
+            <div class="question-text">รู้หรือไม่? เทคโนโลยีสารสนเทศถูกนำมาพัฒนาสังคมใน 3 ระดับหลักอย่างไรบ้าง? (คลิกแต่ละกล่องเพื่อขยายความ)</div>
+          </div>
+
+          <div class="loot-grid grid-3-cols" id="loot-grid-2">
+            <!-- Item 1 -->
+            <div class="loot-box" data-item-idx="1">
+              <div class="loot-box-header">
+                <span class="loot-box-title">🌍 ระดับประเทศ</span>
+                <span class="loot-box-status">📦</span>
+              </div>
+              <div class="loot-box-content">
+                ช่วยขับเคลื่อนเศรษฐกิจและพัฒนาคุณภาพชีวิตภาพรวม เช่น รัฐบาลมี <span class="highlight-text">ระบบยื่นภาษีออนไลน์</span> และการใช้ <span class="highlight-text">เทคโนโลยีทางการแพทย์</span> ช่วยดูแลสุขภาพประชาชนได้อย่างมีประสิทธิภาพ <span class="ref-tag">[1]</span>
+              </div>
+            </div>
+            <!-- Item 2 -->
+            <div class="loot-box" data-item-idx="2">
+              <div class="loot-box-header">
+                <span class="loot-box-title">🏢 ระดับองค์กร</span>
+                <span class="loot-box-status">📦</span>
+              </div>
+              <div class="loot-box-content">
+                ช่วยเพิ่มประสิทธิภาพและควบคุมการดำเนินงานภายใน เช่น การนำ <span class="highlight-text">ระบบบริหารจัดการองค์กร</span> เข้ามาควบคุมทรัพยากร และการอำนวยความสะดวกด้วย <span class="highlight-text">การประชุมทางไกล</span> <span class="ref-tag">[1]</span>
+              </div>
+            </div>
+            <!-- Item 3 -->
+            <div class="loot-box" data-item-idx="3">
+              <div class="loot-box-header">
+                <span class="loot-box-title">👤 ระดับบุคคล</span>
+                <span class="loot-box-status">📦</span>
+              </div>
+              <div class="loot-box-content">
+                ช่วยให้เราเข้าถึงข้อมูลสารสนเทศได้รวดเร็วตลอดเวลา เป็นเครื่องมือช่วยสืบค้น เช่น <span class="highlight-text">การเรียนรู้ออนไลน์</span> เพื่อศึกษาและฝึกฝนทักษะใหม่ๆ ได้ด้วยตนเอง <span class="ref-tag">[1]</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 3: LEVEL 2 -->
+      <div class="slide" id="slide-3" data-level="3">
+        <div class="slide-header-bar">
+          <div class="slide-header-text">
+            <div class="slide-level-lbl press-start">LEVEL 2 - ปกป้องกระเป๋าตังค์ (Mobile Banking)</div>
+            <h2 class="slide-title">8 กฎเหล็ก ป้องกันแฮกเกอร์ขโมยเงินในแอปมือถือ?</h2>
+          </div>
+          <button class="roblox-btn green reveal-all-btn" data-slide="3">🔓 REVEAL ALL ITEMS</button>
+        </div>
+
+        <div class="content-area">
+          <div class="question-panel">
+            <span class="q-icon">🛡️</span>
+            <div class="question-text">แอปธนาคารบนสมาร์ตโฟน (Mobile Banking) สะดวกมาก แต่ทำอย่างไรจึงจะใช้งานได้ปลอดภัย 100%?</div>
+          </div>
+
+          <div class="loot-grid grid-2-cols" id="loot-grid-3">
+            <!-- Box 1 -->
+            <div class="loot-box" data-item-idx="1">
+              <div class="loot-box-header">
+                <span class="loot-box-title">1. ห้ามใช้อุปกรณ์สาธารณะ</span>
+                <span class="loot-box-status">📦</span>
+              </div>
+              <div class="loot-box-content">
+                หลีกเลี่ยงการทำธุรกรรมผ่านคอมพิวเตอร์สาธารณะ หรือมือถือผู้อื่น เพื่อป้องกันการถูกดักจับคีย์บอร์ดและขโมยข้อมูลล็อกอินส่วนตัวไปใช้งานต่อ <span class="ref-tag">[2]</span>
+              </div>
+            </div>
+            <!-- Box 2 -->
+            <div class="loot-box" data-item-idx="2">
+              <div class="loot-box-header">
+                <span class="loot-box-title">2. ไม่ใช้ Wi-Fi ฟรี</span>
+                <span class="loot-box-status">📦</span>
+              </div>
+              <div class="loot-box-content">
+                เพราะ Wi-Fi สาธารณะส่วนใหญ่มีระบบความปลอดภัยต่ำ แฮกเกอร์อาจดักจับข้อมูลธุรกรรมที่วิ่งผ่านเครือข่ายได้ ควรใช้สัญญาณเซลลูลาร์ (4G/5G) เสมอ <span class="ref-tag">[2]</span>
+              </div>
+            </div>
+            <!-- Box 3 -->
+            <div class="loot-box" data-item-idx="3">
+              <div class="loot-box-header">
+                <span class="loot-box-title">3. ตั้งรหัสผ่านให้ซับซ้อน</span>
+                <span class="loot-box-status">📦</span>
+              </div>
+              <div class="loot-box-content">
+                ควรกำหนดรหัสผ่านที่เดายาก ความยาว <span class="highlight-text">12-16 ตัวอักษร</span> ผสมทั้งอักษรพิมพ์ใหญ่ อักษรพิมพ์เล็ก ตัวเลข และอักขระพิเศษเพื่อเพิ่มความซับซ้อน <span class="ref-tag">[2]</span>
+              </div>
+            </div>
+            <!-- Box 4 -->
+            <div class="loot-box" data-item-idx="4">
+              <div class="loot-box-header">
+                <span class="loot-box-title">4. ออกจากระบบทุกครั้ง</span>
+                <span class="loot-box-status">📦</span>
+              </div>
+              <div class="loot-box-content">
+                เมื่อทำธุรกรรมเสร็จสิ้น ให้กด <span class="highlight-text">Log out</span> ทุกครั้ง เพื่อช่วยป้องกันไม่ให้ระบบจำเซสชันค้างไว้ และกันไม่ให้ผู้ไม่หวังดีเข้ามาเข้าถึงข้อมูล <span class="ref-tag">[2]</span>
+              </div>
+            </div>
+            <!-- Box 5 -->
+            <div class="loot-box" data-item-idx="5">
+              <div class="loot-box-header">
+                <span class="loot-box-title">5. เปิดแจ้งเตือน SMS</span>
+                <span class="loot-box-status">📦</span>
+              </div>
+              <div class="loot-box-content">
+                สมัครบริการส่งข้อความ SMS แจ้งเตือนเมื่อมีเงินเข้า-ออกบัญชีทันที ทำให้รับรู้ธุรกรรมที่เกิดขึ้น และแก้ปัญหาได้ทันท่วงทีกรณีถูกถอนเงินโดยไม่รู้ตัว <span class="ref-tag">[2]</span>
+              </div>
+            </div>
+            <!-- Box 6 -->
+            <div class="loot-box" data-item-idx="6">
+              <div class="loot-box-header">
+                <span class="loot-box-title">6. เปิดแจ้งเตือน Email</span>
+                <span class="loot-box-status">📦</span>
+              </div>
+              <div class="loot-box-content">
+                การแจ้งเตือนผ่านอีเมลจะมีความละเอียดสูง สามารถตั้งเวลาส่งอัตโนมัติ และใช้สำหรับสืบค้นประวัติธุรกรรมย้อนหลังเพื่อเป็นหลักฐานได้อย่างรวดเร็ว <span class="ref-tag">[2]</span>
+              </div>
+            </div>
+            <!-- Box 7 -->
+            <div class="loot-box" data-item-idx="7">
+              <div class="loot-box-header">
+                <span class="loot-box-title">7. จำกัดวงเงินทำธุรกรรม</span>
+                <span class="loot-box-status">📦</span>
+              </div>
+              <div class="loot-box-content">
+                ตั้งค่าวงเงินสูงสุดในการโอนหรือถอนในแต่ละวันผ่านแอป เพื่อจำกัดขอบเขตความเสียหาย หากโชคร้ายถูกโจรกรรมข้อมูล บัญชีจะได้ไม่ถูกดูดเงินหมดเกลี้ยง <span class="ref-tag">[2]</span>
+              </div>
+            </div>
+            <!-- Box 8 -->
+            <div class="loot-box" data-item-idx="8">
+              <div class="loot-box-header">
+                <span class="loot-box-title">8. เปิดยืนยันตัวตน 2 ขั้น (2FA)</span>
+                <span class="loot-box-status">📦</span>
+              </div>
+              <div class="loot-box-content">
+                ระบบความปลอดภัยเพิ่มความมั่นใจ ชั้นแรกใส่รหัสผ่าน และชั้นที่สองยืนยันตัวตนเพิ่มเติม เช่น การป้อนรหัส <span class="highlight-text">OTP</span>, สแกนใบหน้า หรือสแกนลายนิ้วมือ <span class="ref-tag">[2]</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 4: LEVEL 3 -->
+      <div class="slide" id="slide-4" data-level="4">
+        <div class="slide-header-bar">
+          <div class="slide-header-text">
+            <div class="slide-level-lbl press-start">LEVEL 3 - ช้อปปิ้งออนไลน์ไม่ให้โดนสแกม</div>
+            <h2 class="slide-title">6 ไอเทมเช็กความชัวร์ ก่อนกดยอมรับการโอนซื้อของ?</h2>
+          </div>
+          <button class="roblox-btn orange reveal-all-btn" data-slide="4">🔓 REVEAL ALL ITEMS</button>
+        </div>
+
+        <div class="content-area">
+          <div class="question-panel">
+            <span class="q-icon">🛒</span>
+            <div class="question-text">ร้านค้าในเน็ตมีเป็นหมื่นล้าน แต่จะเลือกซื้อและโอนเงินอย่างไรไม่ให้เสียเปล่าและโดนฉ้อโกง?</div>
+          </div>
+
+          <div class="loot-grid grid-2-cols" id="loot-grid-4">
+            <!-- Check 1 -->
+            <div class="loot-box" data-item-idx="1">
+              <div class="loot-box-header">
+                <span class="loot-box-title">1. สังเกตเว็บไซต์ขึ้นต้นด้วย "https://"</span>
+                <span class="loot-box-status">📦</span>
+              </div>
+              <div class="loot-box-content">
+                สัญลักษณ์ตัว "s" สื่อถึงความปลอดภัย (Secure) มีการเข้ารหัสข้อมูลสำคัญระหว่างการส่งซื้อ ช่วยป้องกันข้อมูลบัตรเครดิตหรือข้อมูลส่วนตัวรั่วไหล <span class="ref-tag">[3]</span>
+              </div>
+            </div>
+            <!-- Check 2 -->
+            <div class="loot-box" data-item-idx="2">
+              <div class="loot-box-header">
+                <span class="loot-box-title">2. อ่านรีวิวจากผู้ใช้งานจริง</span>
+                <span class="loot-box-status">📦</span>
+              </div>
+              <div class="loot-box-content">
+                ตรวจสอบความเห็นของคนที่เคยซื้อสินค้านั้นจริงๆ ว่าได้รับของตรงปกหรือไม่ ร้านค้าจัดส่งของจริงและรวดเร็วขนาดไหนก่อนการตัดสินใจกดสั่งซื้อ <span class="ref-tag">[3]</span>
+              </div>
+            </div>
+            <!-- Check 3 -->
+            <div class="loot-box" data-item-idx="3">
+              <div class="loot-box-header">
+                <span class="loot-box-title">3. ตรวจสอบคุณสมบัติสินค้า</span>
+                <span class="loot-box-status">📦</span>
+              </div>
+              <div class="loot-box-content">
+                อ่านคุณสมบัติสินค้าให้ครบถ้วน ขนาด รุ่น รายละเอียด และเงื่อนไขการรับประกัน โดยข้อมูลต้องดูสมเหตุสมผล ไม่โอ้อวดสรรพคุณโฆษณาเกินจริง <span class="ref-tag">[3]</span>
+              </div>
+            </div>
+            <!-- Check 4 -->
+            <div class="loot-box" data-item-idx="4">
+              <div class="loot-box-header">
+                <span class="loot-box-title">4. สำรวจราคาตลาด</span>
+                <span class="loot-box-status">📦</span>
+              </div>
+              <div class="loot-box-content">
+                เช็กราคากลางจากหลายๆ ร้าน มักมีมิจฉาชีพตั้งราคาให้ <span class="highlight-text">ถูกกว่าร้านอื่นมากๆ</span> เพื่อจูงใจให้ลูกค้าโอนไว อย่ารีบซื้อเพราะคำว่าถูกเกินจริง <span class="ref-tag">[3]</span>
+              </div>
+            </div>
+            <!-- Check 5 -->
+            <div class="loot-box" data-item-idx="5">
+              <div class="loot-box-header">
+                <span class="loot-box-title">5. ตรวจสอบข้อมูลร้านค้า</span>
+                <span class="loot-box-status">📦</span>
+              </div>
+              <div class="loot-box-content">
+                เช็กประวัติร้านค้าว่าได้จดทะเบียนพาณิชย์อิเล็กทรอนิกส์ถูกต้องหรือไม่ และนำชื่อร้านหรือเลขบัญชีไปตรวจสอบตามเว็บรายงานการฉ้อโกงก่อนซื้อ <span class="ref-tag">[3]</span>
+              </div>
+            </div>
+            <!-- Check 6 -->
+            <div class="loot-box" data-item-idx="6">
+              <div class="loot-box-header">
+                <span class="loot-box-title">6. เก็บหลักฐานการสั่งซื้อ</span>
+                <span class="loot-box-status">📦</span>
+              </div>
+              <div class="loot-box-content">
+                แคปหน้าจอเก็บแชตสนทนา หลักฐานการสั่งซื้อ สลิปการโอนเงิน และข้อมูลบัญชีธนาคารของผู้ขายไว้ทุกครั้ง เผื่อเกิดคดีความหรือฉ้อโกงขึ้นมา <span class="ref-tag">[3]</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 5: BOSS FIGHT -->
+      <div class="slide" id="slide-5" data-level="5">
+        <div class="slide-header-bar">
+          <div class="slide-header-text">
+            <div class="slide-level-lbl press-start" style="color: #F13B3B;">🔥 BOSS FIGHT (FINAL STAGE) 🔥</div>
+            <h2 class="slide-title">ความรับผิดชอบ 5 ด้าน สู่การเป็น Pro Player?</h2>
+          </div>
+          <button class="roblox-btn red reveal-all-btn" id="boss-fight-btn" data-slide="5">⚔️ ATTACK BOSS (REVEAL ALL)</button>
+        </div>
+
+        <div class="content-area">
+          <div class="question-panel">
+            <span class="q-icon">👹</span>
+            <div class="question-text">
+              มอนสเตอร์ทำลายจริยธรรมบุก! ปลดล็อก "กล่องพลังความรับผิดชอบ" ทั้ง 5 ด้านเพื่อปราบมัน! (คลิกแต่ละกล่องเพื่อยิงพลังและเปิดความรู้)
+            </div>
+          </div>
+
+          <div class="boss-arena">
+            <!-- Left: Boss Monster Visual -->
+            <div class="boss-visual">
+              <div class="victory-badge press-start" id="victory-title">VICTORY!</div>
+              <div class="boss-hp-bar-outer">
+                <div class="boss-hp-bar-inner" id="boss-hp"></div>
+                <div class="boss-hp-text press-start">BOSS HP: <span id="hp-value">100</span>/100</div>
+              </div>
+              <div class="boss-sprite" id="boss-character"></div>
+            </div>
+
+            <!-- Right: 5 Areas of Responsibility (Loot Box style) -->
+            <div class="loot-grid" id="loot-grid-5">
+              <!-- Item 1 -->
+              <div class="loot-box" data-boss-dmg="20" data-item-idx="1">
+                <div class="loot-box-header">
+                  <span class="loot-box-title">🙋 1. ความรับผิดชอบต่อตนเอง (Self-responsibility)</span>
+                  <span class="loot-box-status">📦</span>
+                </div>
+                <div class="loot-box-content">
+                  ตระหนักก่อนลงมือทำ, รักษาข้อมูลส่วนตัว (ไม่บอกรหัสผ่าน), สร้างสรรค์ผลงานเอง และ <span class="highlight-text">อ้างสิทธิ์ลิขสิทธิ์</span> อย่างถูกต้อง เช่น ใส่ลายน้ำระบุชื่อตนเอง <span class="ref-tag">[3]</span>
+                </div>
+              </div>
+              <!-- Item 2 -->
+              <div class="loot-box" data-boss-dmg="20" data-item-idx="2">
+                <div class="loot-box-header">
+                  <span class="loot-box-title">🤝 2. ความรับผิดชอบต่อผู้อื่น (Responsibility to others)</span>
+                  <span class="loot-box-status">📦</span>
+                </div>
+                <div class="loot-box-content">
+                  เคารพสิทธิ์และทรัพย์สินทางปัญญาผู้อื่น (ไม่คัดลอกผลงานดัดแปลงโดยไม่ได้รับอนุญาต), ไม่แอบอ้างสวมรอยใช้บัญชีผู้อื่น และ <span class="highlight-text">ใช้คำสุภาพ เหมาะกับกาลเทศะ</span> <span class="ref-tag">[3]</span>
+                </div>
+              </div>
+              <!-- Item 3 -->
+              <div class="loot-box" data-boss-dmg="20" data-item-idx="3">
+                <div class="loot-box-header">
+                  <span class="loot-box-title">🌐 3. ความรับผิดชอบต่อสังคม (Social responsibility)</span>
+                  <span class="loot-box-status">📦</span>
+                </div>
+                <div class="loot-box-content">
+                  หลีกเลี่ยงการเผยแพร่ข้อมูลสร้างความขัดแย้ง, ไม่นำข้อมูลลับภายในองค์กรไปแพร่กระจาย และ <span class="highlight-text">ใช้เทคโนโลยีสร้างสรรค์สิ่งที่มีประโยชน์</span> เช่น ทำบล็อกแชร์ความรู้ <span class="ref-tag">[4]</span>
+                </div>
+              </div>
+              <!-- Item 4 -->
+              <div class="loot-box" data-boss-dmg="20" data-item-idx="4">
+                <div class="loot-box-header">
+                  <span class="loot-box-title">⚖️ 4. ความรับผิดชอบทางจริยธรรม (Ethical responsibility)</span>
+                  <span class="loot-box-status">📦</span>
+                </div>
+                <div class="loot-box-content">
+                  เลือกทำในสิ่งที่ถูกต้องเป็นประโยชน์ต่อส่วนรวมอย่างเป็นธรรม, ไม่ใช้อารมณ์ตัดสิน, ไม่สปามโฆษณาที่สร้างความรำคาญ และ <span class="highlight-text">ตรวจสอบความถูกต้องก่อนกดแชร์เสมอ</span> <span class="ref-tag">[4]</span>
+                </div>
+              </div>
+              <!-- Item 5 -->
+              <div class="loot-box" data-boss-dmg="20" data-item-idx="5">
+                <div class="loot-box-header">
+                  <span class="loot-box-title">👮 5. ความรับผิดชอบทางกฎหมาย (Legal responsibility)</span>
+                  <span class="loot-box-status">📦</span>
+                </div>
+                <div class="loot-box-content">
+                  ปฏิบัติตามกฎหมายอย่างเคร่งครัด หากฝ่าฝืนต้องรับบทลงโทษ เช่น <span class="highlight-text">พ.ร.บ. ว่าด้วยการกระทำความผิดเกี่ยวกับคอมพิวเตอร์</span> (ไม่แชร์สิ่งลามก/ข้อมูลเท็จ/ข่าวปลอม) <span class="ref-tag">[4]</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- SIDEBAR: AVATAR DYNAMIC SYSTEM -->
+    <div class="avatar-sidebar">
+      <div class="avatar-title press-start">CHARACTER</div>
+      
+      <!-- AVATAR CONTAINER -->
+      <div class="avatar-frame">
+        <div class="roblox-avatar" id="player-avatar">
+          <!-- Accessories -->
+          <div class="char-crown"></div>
+          <div class="char-goggles"></div>
+          <div class="char-shield"></div>
+          <div class="char-sword"></div>
+
+          <!-- Body -->
+          <div class="char-head">
+            <div class="char-face" id="player-face">
+              <div class="char-eyes"></div>
+              <div class="char-mouth"></div>
+            </div>
+          </div>
+          <div class="char-torso"></div>
+          <div class="char-arm-l"></div>
+          <div class="char-arm-r"></div>
+          <div class="char-leg-l"></div>
+          <div class="char-leg-r"></div>
+        </div>
+      </div>
+
+      <!-- EQUIP LABELS -->
+      <div class="equip-label" id="player-equip-status">LVL 1: NOOB</div>
+    </div>
+
+  </div>
+
+  <!-- BOTTOM HUD & HOTBAR -->
+  <div class="bottom-hud">
+    <div class="nav-bar-container">
+      <button class="roblox-btn red side-nav-btn" id="prev-btn" style="flex-shrink: 0;">◀ BACK</button>
+      
+      <!-- HOTBAR SLOTS -->
+      <div class="hotbar">
+        <div class="hotbar-slot active" data-slide="1" title="หน้าเริ่มเกม">
+          <span class="hotbar-slot-num">1</span>
+          <span class="hotbar-slot-icon">🎮</span>
+          <span class="hotbar-slot-title">Start</span>
+        </div>
+        <div class="hotbar-slot" data-slide="2" title="ด่านที่ 1 - โลกของเรา">
+          <span class="hotbar-slot-num">2</span>
+          <span class="hotbar-slot-icon">🌍</span>
+          <span class="hotbar-slot-title">Level 1</span>
+        </div>
+        <div class="hotbar-slot" data-slide="3" title="ด่านที่ 2 - ปลอดภัยทางการเงิน">
+          <span class="hotbar-slot-num">3</span>
+          <span class="hotbar-slot-icon">🛡️</span>
+          <span class="hotbar-slot-title">Level 2</span>
+        </div>
+        <div class="hotbar-slot" data-slide="4" title="ด่านที่ 3 - ซื้อของออนไลน์">
+          <span class="hotbar-slot-num">4</span>
+          <span class="hotbar-slot-icon">🛒</span>
+          <span class="hotbar-slot-title">Level 3</span>
+        </div>
+        <div class="hotbar-slot" data-slide="5" title="บอสไฟต์ - ความรับผิดชอบ">
+          <span class="hotbar-slot-num">5</span>
+          <span class="hotbar-slot-icon">⚔️</span>
+          <span class="hotbar-slot-title">Boss</span>
+        </div>
+      </div>
+
+      <button class="roblox-btn green side-nav-btn" id="next-btn" style="flex-shrink: 0;">NEXT LEVEL ▶</button>
+    </div>
+
+    <!-- SHORTCUTS & INSTRUCTIONS -->
+    <div class="shortcuts-bar">
+      <span>ควบคุม: คีย์บอร์ด <span class="key-cap">◀</span> หรือ <span class="key-cap">▶</span> เพื่อเปลี่ยนสไลด์</span>
+      <span>|</span>
+      <span>เปิดไอเทมคีย์ลัดช่อง <span class="key-cap">1</span> - <span class="key-cap">5</span></span>
+      <span>|</span>
+      <span>เปิดเฉลยข้อมูลทั้งหมดในหน้านั้นๆ ด้วยปุ่ม <span class="key-cap">Spacebar</span></span>
+    </div>
+  </div>
+
+  <script>
+    // SYNTHESIZED SOUND EFFECTS VIA WEB AUDIO API
+    let audioCtx = null;
+    let isMuted = false;
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+    }
+
+    function playSynthSound(type) {
+      if (isMuted) return;
+      initAudio();
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      const now = audioCtx.currentTime;
+
+      if (type === 'click') {
+        // High 8-bit short blip
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(800, now);
+        osc.frequency.exponentialRampToValueAtTime(400, now + 0.1);
+        gain.gain.setValueAtTime(0.1, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+        osc.start(now);
+        osc.stop(now + 0.1);
+      } 
+      else if (type === 'slide') {
+        // Sweeping jump sound
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(300, now);
+        osc.frequency.exponentialRampToValueAtTime(600, now + 0.25);
+        gain.gain.setValueAtTime(0.15, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+        osc.start(now);
+        osc.stop(now + 0.25);
+      }
+      else if (type === 'reveal') {
+        // Cool powerup arpeggio
+        osc.type = 'square';
+        const freqs = [440, 550, 660, 880];
+        freqs.forEach((freq, idx) => {
+          const oscNode = audioCtx.createOscillator();
+          const gainNode = audioCtx.createGain();
+          oscNode.type = 'square';
+          oscNode.frequency.setValueAtTime(freq, now + idx * 0.08);
+          gainNode.gain.setValueAtTime(0.08, now + idx * 0.08);
+          gainNode.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.15);
+          oscNode.connect(gainNode);
+          gainNode.connect(audioCtx.destination);
+          oscNode.start(now + idx * 0.08);
+          oscNode.stop(now + idx * 0.08 + 0.2);
+        });
+      }
+      else if (type === 'oof') {
+        // Roblox classic Oof synth recreation
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(150, now);
+        osc.frequency.linearRampToValueAtTime(60, now + 0.15);
+        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+        osc.start(now);
+        osc.stop(now + 0.15);
+      }
+      else if (type === 'boss-hit') {
+        // Sword slash hit
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(220, now);
+        osc.frequency.exponentialRampToValueAtTime(80, now + 0.15);
+        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+        osc.start(now);
+        osc.stop(now + 0.15);
+      }
+      else if (type === 'victory') {
+        // Glorious fanfare chords
+        const chord1 = [261.63, 329.63, 392.00]; // C4 major
+        const chord2 = [329.63, 415.30, 493.88]; // E4 major
+        const chord3 = [392.00, 493.88, 587.33, 783.99]; // G4 major to high G5
+        
+        const playChord = (notes, timeOffset, duration) => {
+          notes.forEach(note => {
+            const oscN = audioCtx.createOscillator();
+            const gainN = audioCtx.createGain();
+            oscN.type = 'triangle';
+            oscN.frequency.setValueAtTime(note, now + timeOffset);
+            gainN.gain.setValueAtTime(0.08, now + timeOffset);
+            gainN.gain.exponentialRampToValueAtTime(0.001, now + timeOffset + duration);
+            oscN.connect(gainN);
+            gainN.connect(audioCtx.destination);
+            oscN.start(now + timeOffset);
+            oscN.stop(now + timeOffset + duration);
+          });
+        };
+
+        playChord(chord1, 0, 0.2);
+        playChord(chord2, 0.2, 0.2);
+        playChord(chord3, 0.4, 0.6);
+      }
+    }
+
+    // STATE VARIABLES
+    let currentSlideIndex = 0;
+    const slides = document.querySelectorAll('.slide');
+    const hotbarSlots = document.querySelectorAll('.hotbar-slot');
+    const hudBadge = document.getElementById('hud-level-badge');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+
+    // BOSS FIGHT STATE
+    let bossHpVal = 100;
+    let isBossDefeated = false;
+
+    // AVATAR SYSTEM STATE AND ELEMENTS
+    const avatar = document.getElementById('player-avatar');
+    const face = document.getElementById('player-face');
+    const equipStatus = document.getElementById('player-equip-status');
+
+    function updateAvatarState() {
+      // Clear faces and accessories first
+      avatar.className = 'roblox-avatar';
+      face.className = 'char-face';
+      
+      const currentLevel = currentSlideIndex + 1;
+      
+      // Check if any items are expanded in the active slide
+      const currentGrid = document.querySelector(`.slide.active .loot-grid`);
+      let hasAnyExpanded = false;
+      let hasAllExpanded = true;
+      let itemsCount = 0;
+
+      if (currentGrid) {
+        const boxes = currentGrid.querySelectorAll('.loot-box');
+        itemsCount = boxes.length;
+        boxes.forEach(box => {
+          if (box.classList.contains('expanded')) {
+            hasAnyExpanded = true;
+          } else {
+            hasAllExpanded = false;
+          }
+        });
+      }
+
+      if (currentLevel === 1) {
+        equipStatus.textContent = 'LVL 1: NOOB';
+        // Simple smile
+      } 
+      else if (currentLevel === 2) {
+        if (!hasAnyExpanded) {
+          face.classList.add('face-confused');
+          equipStatus.textContent = 'LVL 2: SCANNING...';
+        } else if (hasAllExpanded) {
+          face.classList.add('face-victory');
+          equipStatus.textContent = 'LVL 2: EXPERT';
+        } else {
+          face.classList.add('face-victory');
+          equipStatus.textContent = 'LVL 2: DISCOVERER';
+        }
+      } 
+      else if (currentLevel === 3) {
+        avatar.classList.add('has-shield');
+        if (!hasAnyExpanded) {
+          face.classList.add('face-confused');
+          equipStatus.textContent = 'LVL 3: UNARMED';
+        } else if (hasAllExpanded) {
+          face.classList.add('face-victory');
+          equipStatus.textContent = 'LVL 3: SHIELD MAX';
+        } else {
+          equipStatus.textContent = 'LVL 3: DEFENDER';
+        }
+      } 
+      else if (currentLevel === 4) {
+        avatar.classList.add('has-shield', 'has-goggles');
+        if (!hasAnyExpanded) {
+          face.classList.add('face-confused');
+          equipStatus.textContent = 'LVL 4: INSPECTING';
+        } else if (hasAllExpanded) {
+          face.classList.add('face-victory');
+          equipStatus.textContent = 'LVL 4: DETECTIVE';
+        } else {
+          equipStatus.textContent = 'LVL 4: INVESTIGATOR';
+        }
+      } 
+      else if (currentLevel === 5) {
+        avatar.classList.add('has-shield', 'has-goggles', 'has-sword');
+        
+        if (!isBossDefeated) {
+          face.classList.add('face-battle');
+          equipStatus.textContent = 'BOSS FIGHT: ALIVE';
+        } else {
+          // Boss Defeated!
+          avatar.classList.add('has-crown');
+          face.classList.add('face-victory');
+          equipStatus.textContent = 'PRO PLAYER (MAX)';
+        }
+      }
+    }
+
+    // NAVIGATION LOGIC
+    function goToSlide(index) {
+      if (index === currentSlideIndex || index < 0 || index >= slides.length) return;
+      
+      const isForward = index > currentSlideIndex;
+      const prevIndex = currentSlideIndex;
+      currentSlideIndex = index;
+      
+      // Clean up active and transition states for all slides
+      slides.forEach((slide) => {
+        slide.classList.remove('active', 'exit-left', 'enter-left');
+      });
+      
+      // Animate outgoing slide
+      if (isForward) {
+        slides[prevIndex].classList.add('exit-left');
+      }
+      
+      // Animate incoming slide
+      if (!isForward) {
+        slides[currentSlideIndex].classList.add('enter-left');
+        slides[currentSlideIndex].offsetHeight; // force reflow
+        slides[currentSlideIndex].classList.remove('enter-left');
+      }
+      
+      slides[currentSlideIndex].classList.add('active');
+      
+      // Update Bottom Hotbar UI
+      hotbarSlots.forEach((slot, idx) => {
+        if (idx === currentSlideIndex) {
+          slot.classList.add('active');
+        } else {
+          slot.classList.remove('active');
+        }
+      });
+      
+      // Update Top HUD Level indicator
+      const lvlStr = (currentSlideIndex + 1).toString().padStart(2, '0');
+      hudBadge.textContent = `STAGE ${lvlStr}`;
+      if (currentSlideIndex === 4) {
+        hudBadge.textContent = `BOSS STAGE`;
+        hudBadge.style.backgroundColor = '#F13B3B';
+        hudBadge.style.color = '#fff';
+      } else {
+        hudBadge.style.backgroundColor = '#FFD600';
+        hudBadge.style.color = '#000';
+      }
+      
+      // Handle navigation buttons disabled state
+      prevBtn.classList.toggle('disabled', currentSlideIndex === 0);
+      nextBtn.classList.toggle('disabled', currentSlideIndex === slides.length - 1);
+      prevBtn.disabled = (currentSlideIndex === 0);
+      nextBtn.disabled = (currentSlideIndex === slides.length - 1);
+      
+      // Update avatar state
+      updateAvatarState();
+      
+      playSynthSound('slide');
+    }
+
+    // TOGGLE LOOT BOX EXPANSION
+    function toggleLootBox(boxElement) {
+      const isExpanded = boxElement.classList.contains('expanded');
+      
+      // Toggle
+      if (isExpanded) {
+        boxElement.classList.remove('expanded');
+        boxElement.querySelector('.loot-box-status').textContent = '📦';
+        playSynthSound('click');
+      } else {
+        boxElement.classList.add('expanded');
+        boxElement.querySelector('.loot-box-status').textContent = '💎';
+        
+        // Specifc check for Slide 5 Boss Damage on reveal
+        if (currentSlideIndex === 4 && boxElement.hasAttribute('data-boss-dmg') && !isBossDefeated) {
+          damageBoss(20);
+        } else {
+          playSynthSound('reveal');
+        }
+      }
+      
+      updateAvatarState();
+    }
+
+    // REVEAL ALL IN CURRENT SLIDE
+    function revealAllInCurrentSlide() {
+      const currentSlide = slides[currentSlideIndex];
+      const boxes = currentSlide.querySelectorAll('.loot-box');
+      
+      if (boxes.length === 0) return;
+
+      let anyNewRevealed = false;
+
+      // Specifc check for Slide 5: Boss fight automated sequence
+      if (currentSlideIndex === 4 && !isBossDefeated) {
+        triggerBossFightAllSequence();
+        return;
+      }
+
+      boxes.forEach(box => {
+        if (!box.classList.contains('expanded')) {
+          box.classList.add('expanded');
+          box.querySelector('.loot-box-status').textContent = '💎';
+          anyNewRevealed = true;
+        }
+      });
+
+      if (anyNewRevealed) {
+        playSynthSound('reveal');
+      } else {
+        playSynthSound('click');
+      }
+
+      updateAvatarState();
+    }
+
+    // INDIVIDUAL BOSS DAMAGE LOGIC
+    function damageBoss(amount) {
+      if (isBossDefeated) return;
+
+      const bossChar = document.getElementById('boss-character');
+      const bossHp = document.getElementById('boss-hp');
+      const hpValue = document.getElementById('hp-value');
+      const victoryTitle = document.getElementById('victory-title');
+
+      bossHpVal = Math.max(0, bossHpVal - amount);
+      
+      // Play Hit Animation and Sound
+      playSynthSound('boss-hit');
+      bossChar.classList.add('hurt');
+      setTimeout(() => bossChar.classList.remove('hurt'), 200);
+
+      // Update HP UI
+      bossHp.style.width = `${bossHpVal}%`;
+      hpValue.textContent = bossHpVal;
+
+      if (bossHpVal <= 0) {
+        isBossDefeated = true;
+        
+        // Explode boss
+        playSynthSound('victory');
+        bossChar.className = 'boss-sprite dead';
+        victoryTitle.style.display = 'block';
+
+        // Set all slots to expanded
+        const boxes = document.querySelectorAll('#loot-grid-5 .loot-box');
+        boxes.forEach(box => {
+          box.classList.add('expanded');
+          box.querySelector('.loot-box-status').textContent = '💎';
+        });
+
+        // Set avatar victory state
+        updateAvatarState();
+      }
+    }
+
+    // ATTACK BOSS & REVEAL ALL AUTOMATED SEQUENCE (REVEAL ALL ON SLIDE 5)
+    function triggerBossFightAllSequence() {
+      const bossChar = document.getElementById('boss-character');
+      const bossHp = document.getElementById('boss-hp');
+      const hpValue = document.getElementById('hp-value');
+      const victoryTitle = document.getElementById('victory-title');
+      const playerAvatar = document.getElementById('player-avatar');
+
+      // Swing sword animation
+      playerAvatar.style.animation = 'none';
+      setTimeout(() => {
+        playerAvatar.style.transform = 'translateX(60px) scale(1.1) rotate(10deg)';
+        playerAvatar.style.transition = 'transform 0.15s ease-in-out';
+      }, 50);
+
+      // Attack intervals
+      const hits = [75, 50, 25, 0];
+      hits.forEach((targetHp, index) => {
+        setTimeout(() => {
+          if (targetHp > 0) {
+            playSynthSound('boss-hit');
+            bossChar.classList.add('hurt');
+            setTimeout(() => bossChar.classList.remove('hurt'), 150);
+          } else {
+            // Boss Defeated
+            isBossDefeated = true;
+            playSynthSound('victory');
+            bossChar.className = 'boss-sprite dead';
+            victoryTitle.style.display = 'block';
+            
+            // Re-apply standard float
+            playerAvatar.style.transform = 'none';
+            playerAvatar.style.transition = 'none';
+            playerAvatar.style.animation = 'idle-float 3s infinite ease-in-out';
+
+            // Open all responsibilities
+            const boxes = document.querySelectorAll('#loot-grid-5 .loot-box');
+            boxes.forEach(box => {
+              box.classList.add('expanded');
+              box.querySelector('.loot-box-status').textContent = '💎';
+            });
+
+            updateAvatarState();
+          }
+
+          bossHpVal = targetHp;
+          bossHp.style.width = `${bossHpVal}%`;
+          hpValue.textContent = bossHpVal;
+
+        }, 200 + index * 300);
+      });
+    }
+
+    // EVENT LISTENERS
+    
+    // Start Game Button
+    document.getElementById('start-game-btn').addEventListener('click', () => {
+      goToSlide(1);
+    });
+
+    // Side Navigation Controls
+    prevBtn.addEventListener('click', () => {
+      if (currentSlideIndex > 0) {
+        goToSlide(currentSlideIndex - 1);
+      } else {
+        playSynthSound('oof');
+      }
+    });
+
+    nextBtn.addEventListener('click', () => {
+      if (currentSlideIndex < slides.length - 1) {
+        goToSlide(currentSlideIndex + 1);
+      } else {
+        playSynthSound('oof');
+      }
+    });
+
+    // Hotbar Navigation Click Handles
+    hotbarSlots.forEach((slot, index) => {
+      slot.addEventListener('click', () => {
+        goToSlide(index);
+      });
+    });
+
+    // Loot Box Click Actions
+    document.querySelectorAll('.loot-box').forEach(box => {
+      box.addEventListener('click', () => {
+        toggleLootBox(box);
+      });
+    });
+
+    // Reveal All Buttons Action
+    document.querySelectorAll('.reveal-all-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        revealAllInCurrentSlide();
+      });
+    });
+
+    // Sound toggle
+    document.getElementById('sound-toggle-btn').addEventListener('click', (e) => {
+      isMuted = !isMuted;
+      e.target.textContent = isMuted ? '🔇' : '🔊';
+      initAudio();
+    });
+
+    // KEYBOARD NAVIGATION CONTROLS
+    window.addEventListener('keydown', (e) => {
+      // Left Arrow key: Back
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        if (currentSlideIndex > 0) goToSlide(currentSlideIndex - 1);
+      }
+      // Right Arrow key: Next
+      else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        if (currentSlideIndex < slides.length - 1) goToSlide(currentSlideIndex + 1);
+      }
+      // Spacebar: Reveal all in active slide
+      else if (e.key === ' ' || e.key === 'Spacebar') {
+        e.preventDefault();
+        revealAllInCurrentSlide();
+      }
+      // Keys 1 to 5: Hotbar slots jump
+      else if (e.key >= '1' && e.key <= '5') {
+        const slotIdx = parseInt(e.key, 10) - 1;
+        goToSlide(slotIdx);
+      }
+    });
+
+    // INITIALIZATION
+    window.addEventListener('DOMContentLoaded', () => {
+      prevBtn.classList.add('disabled');
+      prevBtn.disabled = true;
+      updateAvatarState();
+    });
+
+  </script>
+</body>
+</html>

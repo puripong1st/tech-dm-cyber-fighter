@@ -1,0 +1,2446 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="logo.png">
+  <title>Cyber Fighter: ศึกประลองวิชาดิจิทัล</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;800&family=Press+Start+2P&display=swap"
+    rel="stylesheet">
+
+
+
+  <!-- Supabase JS Client CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    /* ==========================================================================
+       1. CORE THEMING & CYBERPUNK STYLING
+       ========================================================================== */
+    :root {
+      --bg-cyber: #050508;
+      --bg-console: #0e0f17;
+      --neon-cyan: #00f0ff;
+      --neon-magenta: #ff007f;
+      --neon-green: #39ff14;
+      --neon-yellow: #ffff00;
+      --border-cyber: 3px solid #000;
+      --shadow-cyan: 0 0 10px rgba(0, 240, 255, 0.5);
+      --shadow-magenta: 0 0 10px rgba(255, 0, 127, 0.5);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Kanit', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-cyber);
+      background-image:
+        linear-gradient(rgba(18, 18, 30, 0.6) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(18, 18, 30, 0.6) 1px, transparent 1px);
+      background-size: 30px 30px;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 10px;
+      overflow-x: hidden;
+    }
+
+    /* Outer Arcade Cabinet Wrapper */
+    .arcade-cabinet {
+      width: 100%;
+      max-width: 900px;
+      background: var(--bg-console);
+      border: 4px solid #000;
+      box-shadow: 8px 8px 0px #000, 0 0 20px rgba(0, 240, 255, 0.2);
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Neon Top Bar */
+    .arcade-header {
+      background: #000;
+      border-bottom: 4px solid #000;
+      padding: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+    }
+
+    .arcade-header::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, var(--neon-cyan), var(--neon-magenta));
+      z-index: 5;
+    }
+
+    .header-title {
+      font-family: 'Press Start 2P', cursive;
+      font-size: 1.1rem;
+      color: var(--neon-cyan);
+      text-shadow: 2px 2px 0px var(--neon-magenta);
+      letter-spacing: -0.5px;
+    }
+
+    .difficulty-badge {
+      font-size: 0.75rem;
+      font-weight: 800;
+      background: var(--neon-magenta);
+      color: #000;
+      padding: 3px 8px;
+      border-radius: 4px;
+      border: 2px solid #000;
+      font-family: 'Press Start 2P', monospace;
+    }
+
+    /* Screen manager */
+    .game-screen {
+      display: none;
+      padding: 20px;
+      min-height: 520px;
+      position: relative;
+    }
+
+    .game-screen.active {
+      display: flex;
+      flex-direction: column;
+      animation: scanlineEnter 0.3s ease-out;
+    }
+
+    /* ==========================================================================
+       2. START / SELECTION SCREEN
+       ========================================================================== */
+    .welcome-card {
+      width: 100%;
+    }
+
+    .logo-large {
+      font-family: 'Press Start 2P', cursive;
+      font-size: 2.1rem;
+      color: var(--neon-cyan);
+      text-shadow: 4px 4px 0px var(--neon-magenta), 8px 8px 0 #000;
+      margin-bottom: 5px;
+      text-align: center;
+    }
+
+    .logo-sub {
+      color: var(--neon-magenta);
+      font-weight: bold;
+      font-size: 1rem;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 0px #000;
+      text-align: center;
+    }
+
+    .config-box {
+      background: rgba(0, 0, 0, 0.4);
+      border: 3px solid #000;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 15px;
+      box-shadow: inset 0 0 10px rgba(0, 240, 255, 0.1);
+    }
+
+    /* Forms */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-bottom: 15px;
+    }
+
+    @media (min-width: 600px) {
+      .form-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .input-group label {
+      font-size: 0.85rem;
+      font-weight: bold;
+      color: var(--neon-cyan);
+      margin-bottom: 4px;
+    }
+
+    .input-group input,
+    .input-group select {
+      background: #000;
+      border: 2px solid #333;
+      border-radius: 6px;
+      padding: 8px 12px;
+      color: #fff;
+      font-size: 0.95rem;
+      font-weight: bold;
+      transition: all 0.2s;
+    }
+
+    .input-group input:focus,
+    .input-group select:focus {
+      outline: none;
+      border-color: var(--neon-cyan);
+    }
+
+    .config-label {
+      font-size: 0.9rem;
+      font-weight: bold;
+      color: var(--neon-cyan);
+      margin-bottom: 8px;
+      text-align: left;
+      display: block;
+    }
+
+    .char-selection {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 15px;
+    }
+
+    .char-card {
+      background: #151821;
+      border: 3px solid #000;
+      border-radius: 8px;
+      padding: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 4px 4px 0px #000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .char-card:hover {
+      border-color: var(--neon-cyan);
+      transform: translateY(-1px);
+    }
+
+    .char-card.selected {
+      border-color: var(--neon-magenta);
+      box-shadow: 4px 4px 0px var(--neon-magenta);
+      background: rgba(255, 0, 127, 0.1);
+    }
+
+    .char-avatar-preview {
+      width: 50px;
+      height: 50px;
+      margin-bottom: 4px;
+    }
+
+    .char-name {
+      font-weight: bold;
+      font-size: 0.85rem;
+    }
+
+    .diff-select {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .diff-btn {
+      background: #151821;
+      border: 3px solid #000;
+      color: #fff;
+      padding: 8px;
+      font-size: 0.85rem;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+      box-shadow: 4px 4px 0px #000;
+      transition: all 0.15s;
+    }
+
+    .diff-btn.selected {
+      background: var(--neon-cyan);
+      color: #000;
+      box-shadow: 4px 4px 0px #000;
+      font-weight: 800;
+    }
+
+    .btn-arcade {
+      background: var(--neon-yellow);
+      color: #000;
+      border: 4px solid #000;
+      border-radius: 8px;
+      padding: 12px 25px;
+      font-size: 1.15rem;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 5px 5px 0px #000;
+      text-transform: uppercase;
+      width: 100%;
+      transition: all 0.1s;
+    }
+
+    .btn-arcade:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 7px 7px 0px #000;
+    }
+
+    .btn-arcade:active {
+      transform: translate(3px, 3px);
+      box-shadow: 2px 2px 0px #000;
+    }
+
+    /* ==========================================================================
+       3. FIGHTING / BATTLE SCREEN
+       ========================================================================== */
+    .battle-hud {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      background: rgba(0, 0, 0, 0.5);
+      border: 3px solid #000;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 15px;
+    }
+
+    .hud-hp-box {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .hud-fighter-name {
+      font-size: 0.8rem;
+      font-weight: bold;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .hp-bar-bg {
+      width: 100%;
+      height: 14px;
+      background: #222;
+      border: 2px solid #000;
+      border-radius: 4px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .hp-bar-fill {
+      height: 100%;
+      background: var(--neon-green);
+      width: 100%;
+      transition: width 0.3s cubic-bezier(0.1, 0.8, 0.3, 1);
+    }
+
+    .hp-bar-fill.warning {
+      background: var(--neon-yellow);
+    }
+
+    .hp-bar-fill.danger {
+      background: var(--neon-magenta);
+    }
+
+    .battle-arena {
+      flex: 1;
+      height: 180px;
+      background: #090911;
+      border: 3px solid #000;
+      border-radius: 8px;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      padding: 0 40px 10px 40px;
+      box-shadow: inset 0 0 30px rgba(0, 240, 255, 0.15);
+    }
+
+    .arena-floor {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 30px;
+      background: linear-gradient(0deg, rgba(0, 240, 255, 0.2) 0%, transparent 100%);
+      border-top: 2px solid var(--neon-cyan);
+      box-shadow: 0 -2px 10px rgba(0, 240, 255, 0.3);
+      z-index: 1;
+    }
+
+    .fighter-wrapper {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: all 0.3s ease;
+    }
+
+    .player-side {
+      animation: idleMove 2s infinite ease-in-out;
+    }
+
+    .enemy-side {
+      animation: idleMove 2.2s infinite ease-in-out;
+    }
+
+    .fighter-svg {
+      width: 80px;
+      height: 80px;
+      filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.2));
+      transition: transform 0.15s;
+    }
+
+    /* Combat Animations */
+    .attacker-player {
+      animation: playerAttackAnim 0.4s ease-in-out forwards !important;
+    }
+
+    .attacker-enemy {
+      animation: enemyAttackAnim 0.4s ease-in-out forwards !important;
+    }
+
+    .damaged {
+      animation: takeDamageAnim 0.3s ease-in-out !important;
+    }
+
+    .dead {
+      animation: deathAnim 0.8s ease-in-out forwards !important;
+    }
+
+    .stage-label-banner {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #000;
+      border: 2px solid var(--neon-cyan);
+      padding: 2px 12px;
+      border-radius: 4px;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.65rem;
+      color: var(--neon-cyan);
+      z-index: 5;
+    }
+
+    .damage-popup {
+      position: absolute;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.8rem;
+      color: var(--neon-magenta);
+      text-shadow: 2px 2px 0px #000;
+      animation: floatDamage 0.8s ease-out forwards;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    .damage-popup.heal {
+      color: var(--neon-green);
+    }
+
+    .hit-splash {
+      position: absolute;
+      width: 35px;
+      height: 35px;
+      background: radial-gradient(circle, #fff 0%, rgba(255, 0, 127, 0.8) 50%, transparent 100%);
+      pointer-events: none;
+      z-index: 9;
+      border-radius: 50%;
+      transform: scale(0);
+      animation: burstSplash 0.3s ease-out forwards;
+    }
+
+    /* ==========================================================================
+       4. INTERACTIVE CONSOLE & CHOICE BUTTONS
+       ========================================================================== */
+    .console-box {
+      background: #000;
+      border: 3px solid #000;
+      border-radius: 10px;
+      padding: 15px;
+      box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.8);
+      position: relative;
+    }
+
+    .console-box::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 8px;
+      border: 2px solid var(--neon-magenta);
+      pointer-events: none;
+    }
+
+    .question-container {
+      margin-bottom: 15px;
+      min-height: 60px;
+    }
+
+    .question-header {
+      font-size: 0.7rem;
+      font-family: 'Press Start 2P', monospace;
+      color: var(--neon-magenta);
+      margin-bottom: 4px;
+    }
+
+    .question-text {
+      font-size: 1rem;
+      font-weight: 800;
+      line-height: 1.4;
+    }
+
+    .choices-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    @media (min-width: 600px) {
+      .choices-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .choice-btn {
+      background: #11141f;
+      border: 3px solid #000;
+      border-radius: 6px;
+      padding: 10px 12px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #fff;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.1s;
+      box-shadow: 4px 4px 0px #000;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .choice-btn:hover:not(:disabled) {
+      background: #1a1e2e;
+      border-color: var(--neon-cyan);
+      transform: translateY(-1px);
+      box-shadow: 5px 5px 0px #000;
+    }
+
+    .choice-btn:active:not(:disabled) {
+      transform: translateY(2px);
+      box-shadow: 2px 2px 0px #000;
+    }
+
+    .choice-key {
+      background: #000;
+      color: var(--neon-magenta);
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.7rem;
+      width: 22px;
+      height: 22px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      border: 1px solid var(--neon-magenta);
+    }
+
+    .battle-feedback-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 100;
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+
+    .battle-feedback-overlay.error-red {
+      background: rgba(255, 0, 0, 0.15);
+      border: 6px solid #ff0000;
+    }
+
+    .battle-feedback-overlay.success-green {
+      background: rgba(0, 255, 0, 0.1);
+      border: 6px solid var(--neon-green);
+    }
+
+    /* ==========================================================================
+       5. VICTORY / SUMMARY SCREEN
+       ========================================================================== */
+    .victory-card {
+      text-align: center;
+      margin: auto;
+      max-width: 500px;
+      width: 100%;
+    }
+
+    .trophy-banner {
+      font-size: 4rem;
+      margin-bottom: 15px;
+      animation: bounceTrophy 1.5s ease-in-out infinite;
+    }
+
+    .score-list {
+      background: rgba(0, 0, 0, 0.5);
+      border: 3px solid var(--neon-cyan);
+      border-radius: 8px;
+      padding: 15px;
+      margin: 20px 0;
+      text-align: left;
+    }
+
+    .score-list-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+      font-size: 0.9rem;
+    }
+
+    .score-list-item:last-child {
+      margin-bottom: 0;
+      border-top: 2px dashed #333;
+      padding-top: 6px;
+      font-weight: bold;
+      color: var(--neon-yellow);
+    }
+
+    /* ==========================================================================
+       6. TEACHER DASHBOARD & TABLE FILTER
+       ========================================================================== */
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .dashboard-title {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--neon-cyan);
+    }
+
+    .filter-controls {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 10px;
+      border-radius: 8px;
+      border: 2px solid #000;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+    }
+
+    .filter-controls label {
+      font-size: 0.9rem;
+      font-weight: bold;
+      color: var(--neon-yellow);
+    }
+
+    .filter-controls select {
+      background: #000;
+      color: #fff;
+      border: 2px solid #333;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-weight: bold;
+      flex: 1;
+      min-width: 120px;
+    }
+
+    .table-container {
+      width: 100%;
+      overflow-x: auto;
+      border: 3px solid #000;
+      border-radius: 8px;
+      background: #0b0c10;
+      margin-bottom: 15px;
+    }
+
+    .score-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.85rem;
+    }
+
+    .score-table th,
+    .score-table td {
+      padding: 10px 12px;
+      border-bottom: 2px solid #1f2833;
+    }
+
+    .score-table th {
+      background: #1f2833;
+      color: var(--neon-cyan);
+      font-weight: bold;
+    }
+
+    .score-table tr:hover {
+      background: rgba(0, 255, 255, 0.05);
+    }
+
+    .score-table .room-tag {
+      background: var(--neon-purple);
+      color: white;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: bold;
+    }
+
+    .score-table .score-tag {
+      color: var(--neon-yellow);
+      font-weight: bold;
+    }
+
+    /* Secret settings button */
+    .teacher-login-trigger {
+      position: fixed;
+      bottom: 15px;
+      right: 15px;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.7);
+      border: 2px solid var(--neon-cyan);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--neon-cyan);
+      cursor: pointer;
+      z-index: 100;
+      transition: all 0.2s;
+    }
+
+    .teacher-login-trigger:hover {
+      background: var(--neon-cyan);
+      color: #000;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-card {
+      background: var(--bg-card);
+      border: var(--border-thick);
+      box-shadow: var(--block-shadow);
+      border-radius: 12px;
+      padding: 25px;
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    /* ==========================================================================
+       7. MICRO-ANIMATIONS & SHAKES
+       ========================================================================== */
+    @keyframes scanlineEnter {
+      from {
+        opacity: 0;
+        filter: brightness(2);
+      }
+
+      to {
+        opacity: 1;
+        filter: brightness(1);
+      }
+    }
+
+    @keyframes idleMove {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-4px);
+      }
+    }
+
+    @keyframes playerAttackAnim {
+      0% {
+        transform: translateX(0) scale(1);
+      }
+
+      40% {
+        transform: translateX(90px) scale(1.1);
+        filter: brightness(2);
+      }
+
+      100% {
+        transform: translateX(0) scale(1);
+      }
+    }
+
+    @keyframes enemyAttackAnim {
+      0% {
+        transform: translateX(0) scale(1);
+      }
+
+      40% {
+        transform: translateX(-90px) scale(1.1);
+        filter: brightness(2);
+      }
+
+      100% {
+        transform: translateX(0) scale(1);
+      }
+    }
+
+    @keyframes takeDamageAnim {
+
+      0%,
+      100% {
+        transform: translateX(0);
+        filter: brightness(1) invert(0);
+      }
+
+      20%,
+      60% {
+        transform: translateX(-6px);
+        filter: brightness(2) invert(1) sepia(1) saturate(10) hue-rotate(330deg);
+      }
+
+      40%,
+      80% {
+        transform: translateX(6px);
+        filter: brightness(2) invert(1) sepia(1) saturate(10) hue-rotate(330deg);
+      }
+    }
+
+    @keyframes deathAnim {
+      0% {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+      }
+
+      50% {
+        opacity: 0.7;
+        transform: scale(1.2) rotate(15deg);
+        filter: invert(1);
+      }
+
+      100% {
+        opacity: 0;
+        transform: scale(0) rotate(90deg);
+      }
+    }
+
+    @keyframes floatDamage {
+      0% {
+        opacity: 0;
+        transform: translateY(0);
+      }
+
+      20% {
+        opacity: 1;
+      }
+
+      100% {
+        opacity: 0;
+        transform: translateY(-40px);
+      }
+    }
+
+    @keyframes burstSplash {
+      0% {
+        transform: scale(0);
+        opacity: 1;
+      }
+
+      100% {
+        transform: scale(2.5);
+        opacity: 0;
+      }
+    }
+
+    @keyframes bounceTrophy {
+
+      0%,
+      100% {
+        transform: translateY(0) scale(1);
+      }
+
+      50% {
+        transform: translateY(-12px) scale(1.05);
+      }
+    }
+
+    .shake-screen {
+      animation: screenShake 0.25s ease-in-out;
+    }
+
+    @keyframes screenShake {
+
+      0%,
+      100% {
+        transform: translateX(0);
+      }
+
+      20%,
+      60% {
+        transform: translateX(-5px) translateY(-3px);
+      }
+
+      40%,
+      80% {
+        transform: translateX(5px) translateY(3px);
+      }
+    }
+
+    /* ==========================================================================
+       8. PRINT/PDF STYLE OVERLAY (HIDDEN IN SCREEN)
+       ========================================================================== */
+    #pdf-template {
+      display: none;
+      background: white;
+      color: black;
+      padding: 40px;
+      font-family: 'Kanit', sans-serif;
+    }
+
+    #pdf-template h1 {
+      text-align: center;
+      font-size: 22px;
+      margin-bottom: 5px;
+      color: #111;
+    }
+
+    #pdf-template h2 {
+      text-align: center;
+      font-size: 15px;
+      margin-bottom: 20px;
+      color: #555;
+      font-weight: normal;
+    }
+
+    #pdf-template table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+
+    #pdf-template th,
+    #pdf-template td {
+      border: 1px solid #777;
+      padding: 8px 10px;
+      text-align: left;
+      font-size: 12px;
+    }
+
+    #pdf-template th {
+      background-color: #e5e5e5;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Outer Console Body -->
+  <div class="arcade-cabinet" id="arcade-wrapper">
+
+    <!-- Header banner -->
+    <header class="arcade-header">
+      <div class="header-title">CYBER FIGHTER</div>
+      <div id="hud-difficulty" class="difficulty-badge">EASY</div>
+    </header>
+
+    <!-- Feedback Flash overlay -->
+    <div class="battle-feedback-overlay" id="feedback-overlay"></div>
+
+    <!-- ==========================================
+       SCREEN 1: WELCOME & REGISTRATION & CHARACTER SELECT
+       ========================================== -->
+    <section id="screen-welcome" class="game-screen active">
+      <div class="welcome-card">
+        <h1 class="logo-large">CYBER FIGHTER</h1>
+        <p class="logo-sub">ศึกประลองวิชาดิจิทัล ม.3</p>
+
+        <div class="config-box">
+          <!-- 1. Student Personal Information -->
+          <label class="config-label">1. ข้อมูลส่วนตัวสายลับผู้ประลอง:</label>
+          <div class="form-grid">
+            <div class="input-group">
+              <label for="reg-name">ชื่อจริง</label>
+              <input type="text" id="reg-name" placeholder="ระบุชื่อจริงภาษาไทย" required>
+            </div>
+            <div class="input-group">
+              <label for="reg-surname">นามสกุล</label>
+              <input type="text" id="reg-surname" placeholder="ระบุนามสกุลภาษาไทย" required>
+            </div>
+            <div class="input-group">
+              <label for="reg-number">เลขที่ประจำตัว</label>
+              <input type="number" id="reg-number" min="1" max="100" placeholder="ตัวอย่าง: 15" required>
+            </div>
+            <div class="input-group">
+              <label for="reg-room">ห้องเรียน (ม.3/1 - ม.3/15)</label>
+              <select id="reg-room" required>
+                <option value="" disabled selected>เลือกห้องเรียน</option>
+                <!-- Generating room options 3/1 to 3/15 -->
+                <script>
+                  for (let i = 1; i <= 15; i++) {
+                    document.write(`<option value="ม.3/${i}">มัธยมศึกษาปีที่ 3/${i}</option>`);
+                  }
+                </script>
+              </select>
+            </div>
+          </div>
+
+          <!-- 2. Character Choice -->
+          <label class="config-label">2. เลือกตัวละครสายลับ:</label>
+          <div class="char-selection">
+            <div class="char-card selected" onclick="selectCharacter('male', this)">
+              <svg class="char-avatar-preview" viewBox="0 0 100 100">
+                <rect x="25" y="20" width="50" height="50" rx="10" fill="#1b2234" stroke="#00f0ff" stroke-width="4" />
+                <path d="M 30,45 L 70,45" stroke="#00f0ff" stroke-width="8" stroke-linecap="round" />
+                <path d="M 45,20 L 55,10" stroke="#ff007f" stroke-width="4" />
+                <rect x="35" y="70" width="30" height="15" fill="#00f0ff" />
+              </svg>
+              <div class="char-name">AGENT ALPHA (ชาย)</div>
+            </div>
+            <div class="char-card" onclick="selectCharacter('female', this)">
+              <svg class="char-avatar-preview" viewBox="0 0 100 100">
+                <rect x="25" y="20" width="50" height="50" rx="15" fill="#241b34" stroke="#ff007f" stroke-width="4" />
+                <path d="M 30,45 L 70,45" stroke="#ff007f" stroke-width="8" stroke-linecap="round" />
+                <circle cx="20" cy="30" r="10" fill="#00f0ff" />
+                <circle cx="80" cy="30" r="10" fill="#00f0ff" />
+                <rect x="35" y="70" width="30" height="15" fill="#ff007f" />
+              </svg>
+              <div class="char-name">AGENT NOVA (หญิง)</div>
+            </div>
+          </div>
+
+        </div>
+
+        <div style="display: flex; gap: 15px; width: 100%; margin-top: 15px;">
+          <button class="btn-arcade" onclick="startGame()" style="flex: 2; margin: 0;">
+            เข้าสู่สังเวียนต่อสู้ ⚔️
+          </button>
+          <a href="index" class="btn-arcade btn-danger"
+            style="flex: 1; margin: 0; text-decoration: none; display: flex; align-items: center; justify-content: center;">
+            กลับพอร์ทัล 🏠
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+       SCREEN 2: BATTLE ARENA
+       ========================================== -->
+    <section id="screen-battle" class="game-screen">
+
+      <!-- Battle HUD -->
+      <div class="battle-hud">
+        <!-- Player HP Box -->
+        <div class="hud-hp-box">
+          <div class="hud-fighter-name">
+            <span id="txt-hud-player-name">PLAYER</span>
+            <span id="txt-hud-player-hp">100/100 HP</span>
+          </div>
+          <div class="hp-bar-bg">
+            <div class="hp-bar-fill" id="bar-player-hp"></div>
+          </div>
+        </div>
+
+        <!-- Score/Middle separator -->
+        <div
+          style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0 10px; min-width: 90px;">
+          <div style="font-family: 'Press Start 2P', monospace; font-size: 0.7rem; color: var(--neon-yellow);">VS</div>
+          <div style="font-size: 0.6rem; color: var(--text-gray); margin-top: 2px;">รอบ: <span
+              id="txt-hud-attempts">1</span></div>
+          <div
+            style="font-size: 0.75rem; color: var(--neon-cyan); margin-top: 4px; font-weight: bold; font-family: monospace;"
+            id="txt-hud-timer">00:00</div>
+        </div>
+
+        <!-- Enemy HP Box -->
+        <div class="hud-hp-box" style="text-align: right;">
+          <div class="hud-fighter-name">
+            <span id="txt-hud-enemy-hp">100/100 HP</span>
+            <span id="txt-hud-enemy-name">ENEMY</span>
+          </div>
+          <div class="hp-bar-bg">
+            <div class="hp-bar-fill" id="bar-enemy-hp"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Combat Arena View -->
+      <div class="battle-arena" id="battle-view-container">
+
+        <!-- Stage Level Overlay Banner -->
+        <div class="stage-label-banner" id="stage-banner-text">STAGE 1</div>
+
+        <!-- Left Side: Player Agent -->
+        <div class="fighter-wrapper player-side" id="player-sprite-wrapper">
+          <svg class="fighter-svg" id="player-svg-model" viewBox="0 0 100 100">
+            <!-- Dynamically injected player SVG -->
+          </svg>
+        </div>
+
+        <!-- Right Side: Enemy Creature -->
+        <div class="fighter-wrapper enemy-side" id="enemy-sprite-wrapper">
+          <svg class="fighter-svg" id="enemy-svg-model" viewBox="0 0 100 100">
+            <!-- Dynamically injected enemy SVG based on active Stage -->
+          </svg>
+        </div>
+
+        <!-- Neon Grid Floor -->
+        <div class="arena-floor"></div>
+      </div>
+
+      <!-- Question and buttons -->
+      <div class="console-box">
+        <div class="question-container">
+          <div class="question-header" id="txt-question-header">QUESTION 1 - REMEMBERING</div>
+          <div class="question-text" id="txt-question-body">คำถามจะปรากฏขึ้นตรงนี้...</div>
+        </div>
+
+        <div class="choices-grid" id="choices-grid-container">
+          <!-- Choice buttons will be injected -->
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ==========================================
+       SCREEN 3: VICTORY / GAME OVER
+       ========================================== -->
+    <section id="screen-victory" class="game-screen" style="text-align: center;">
+      <div class="victory-card">
+        <div class="trophy-banner" id="victory-badge-icon">🏆</div>
+        <h1 class="logo-large" id="victory-headline" style="color: var(--neon-green); text-shadow: 3px 3px 0px #000;">
+          MISSION CLEARED</h1>
+        <p class="logo-sub" id="victory-subline">คุณเอาชีวิตรอดและตอบคำถามวิชาเทคโนโลยีได้ถูกต้องครบถ้วน!</p>
+
+        <div class="score-list">
+          <div class="score-list-item">
+            <span>สายลับผู้ประลอง:</span>
+            <span id="summary-fullname">ชื่อ - นามสกุล</span>
+          </div>
+          <div class="score-list-item">
+            <span>ห้อง / เลขที่:</span>
+            <span id="summary-room-number">ห้อง ม.3/1 เลขที่ 0</span>
+          </div>
+
+          <div class="score-list-item">
+            <span>จำนวนรอบการลองเล่น (Attempts):</span>
+            <span id="summary-attempts" style="color: var(--neon-magenta);">1 ครั้ง</span>
+          </div>
+          <div class="score-list-item">
+            <span>เวลาที่ใช้ในการเล่น:</span>
+            <span id="summary-play-time" style="color: var(--neon-cyan);">0 นาที 0 วินาที</span>
+          </div>
+          <div class="score-list-item">
+            <span>ตอบผิดระหว่างรอบนี้:</span>
+            <span id="summary-mistakes" style="color: var(--neon-yellow);">0 ครั้ง</span>
+          </div>
+          <div class="score-list-item">
+            <span>บันทึกฐานข้อมูลคลาวด์:</span>
+            <span id="summary-cloud-status" style="color: var(--neon-cyan);">ตรวจจับสถานะ...</span>
+          </div>
+          <div class="score-list-item">
+            <span>คะแนนสะสมสุดท้าย:</span>
+            <span id="summary-final-score">0 คะแนน</span>
+          </div>
+        </div>
+
+        <button class="btn-arcade" onclick="restartGame()">
+          กลับสู่หน้าลงทะเบียน 🔄
+        </button>
+      </div>
+    </section>
+
+
+
+    <!-- Session Recovery Modal Overlay -->
+    <div class="modal-overlay" id="recovery-modal">
+      <div class="modal-card">
+        <h3 style="color: var(--neon-cyan); margin-bottom: 12px; font-size: 1.15rem;">
+          พบภารกิจที่เล่นค้างไว้! 🛡️
+        </h3>
+        <p id="recovery-text"
+          style="font-size: 0.9rem; color: #a5a6b7; margin-bottom: 15px; line-height: 1.5; text-align: left;">
+          ระบบตรวจพบข้อมูลการต่อสู้ล่าสุดของนักเรียน
+        </p>
+        <div style="display: flex; gap: 10px;">
+          <button onclick="resumeSession()" class="btn-arcade"
+            style="margin: 0; font-size: 0.9rem; padding: 8px;">เล่นต่อจากเดิม ⚔️</button>
+          <button onclick="discardSession()" class="btn-arcade btn-danger"
+            style="margin: 0; font-size: 0.9rem; padding: 8px;">เริ่มใหม่ทั้งหมด 🔄</button>
+        </div>
+      </div>
+    </div>
+
+
+
+    <!-- JavaScript Logics -->
+    <script>
+      /* ==========================================================================
+         A. DATABASE INITIALIZATION CONFIG (SUPABASE)
+         ========================================================================== */
+      // คำแนะนำ: นำ URL และ ANON KEY ของคุณจาก Supabase Project Settings > API มาใส่ตรงนี้
+      const SUPABASE_URL = "SUPABASE_URL_PLACEHOLDER";
+      const SUPABASE_ANON_KEY = "SUPABASE_ANON_KEY_PLACEHOLDER";
+
+      let supabaseClient = null;
+
+      if (SUPABASE_URL && SUPABASE_URL !== "YOUR_SUPABASE_URL" && !SUPABASE_URL.includes("PLACEHOLDER") && 
+          SUPABASE_ANON_KEY && SUPABASE_ANON_KEY !== "YOUR_SUPABASE_ANON_KEY" && !SUPABASE_ANON_KEY.includes("PLACEHOLDER")) {
+        try {
+          supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+          console.log("Supabase Client initialized successfully!");
+
+        } catch (e) {
+          console.error("Failed to connect to Supabase: ", e);
+        }
+      } else {
+        console.warn("ระบบฐานข้อมูลคลาวด์กำลังรันแบบเสมือน (Offline Local Storage Mode)");
+      }
+
+      /* SQL DDL COMMAND สำหรับรันเพื่อสร้างตารางเก็บคะแนนที่อัปเดตบน Supabase:
+      
+      create table cyber_fighter_scores (
+        id uuid default gen_random_uuid() primary key,
+        name text not null,
+        surname text not null,
+        student_number integer not null,
+        room text not null,
+        score integer not null,
+        attempts integer not null,
+        created_at timestamp with time zone default timezone('utc'::text, now()) not null
+      );
+      */
+
+      /* ==========================================================================
+         B. GAME SYSTEM STATE & DATA DEFINITIONS
+         ========================================================================== */
+      const GAME_STAGES = [
+        {
+          stageNum: 1,
+          bossName: "สไลม์เทคโนโลยี",
+          bossType: "slime",
+          questions: [
+            {
+              header: "STAGE 1 | (ขั้นที่ 1: การจำ)",
+              question: "การใช้เทคโนโลยีสารสนเทศที่ช่วยให้ผู้คนสามารถเข้าถึงข้อมูลและค้นหาความรู้เพื่อฝึกทักษะใหม่ๆ ได้อย่างรวดเร็ว จัดเป็นการใช้งานเทคโนโลยีในระดับใด?",
+              choices: ["ระดับประเทศ", "ระดับองค์กร", "ระดับบุคคล", "ระดับสังคม"],
+              answer: 2 // C
+            },
+            {
+              header: "STAGE 1 | (ขั้นที่ 2: การเข้าใจ)",
+              question: "เหตุใดหน่วยงานต่างๆ จึงนำ \"ระบบบริหารจัดการองค์กร\" หรือ \"การประชุมทางไกล\" เข้ามาใช้งาน?",
+              choices: [
+                "เพื่อเพิ่มประสิทธิภาพและควบคุมการทำงานภายใน",
+                "เพื่อให้พนักงานได้สืบค้นข้อมูลส่วนตัว",
+                "เพื่อขับเคลื่อนเศรษฐกิจของประเทศ",
+                "เพื่อใช้ยื่นภาษีออนไลน์"
+              ],
+              answer: 0 // A
+            },
+            {
+              header: "STAGE 1 | (ขั้นที่ 3: การประยุกต์ใช้)",
+              question: "ถ้านักเรียนเห็นข่าวว่ารัฐบาลเปิดตัว \"ระบบยื่นภาษีออนไลน์\" และใช้ \"เทคโนโลยีดูแลสุขภาพประชาชน\" สิ่งนี้สะท้อนถึงการนำเทคโนโลยีมาใช้ตามเป้าหมายระดับใด?",
+              choices: ["ระดับองค์กร", "ระดับบุคคล", "ระดับนานาชาติ", "ระดับประเทศ"],
+              answer: 3 // D
+            }
+          ]
+        },
+        {
+          stageNum: 2,
+          bossName: "แฮกเกอร์จอมฉก",
+          bossType: "hacker",
+          questions: [
+            {
+              header: "STAGE 2 | (ขั้นที่ 3: การประยุกต์ใช้)",
+              question: "หากแบตเตอรี่โทรศัพท์ของนักเรียนหมด นักเรียนควรยืมคอมพิวเตอร์สาธารณะเพื่อโอนเงินผ่านอินเทอร์เน็ตหรือไม่ เพราะเหตุใด?",
+              choices: [
+                "ควร เพราะเป็นเรื่องด่วนระดับสูง",
+                "ไม่ควร เพื่อป้องกันการถูกดักโจรกรรมข้อมูลส่วนตัว",
+                "ไม่ควร เพราะคอมพิวเตอร์สาธารณะมักจะมีความเร็วอินเทอร์เน็ตต่ำ",
+                "ควร เพราะช่วยประหยัดค่าบริการอินเทอร์เน็ตมือถือตัวเอง"
+              ],
+              answer: 1 // B
+            },
+            {
+              header: "STAGE 2 | (ขั้นที่ 2: การเข้าใจ)",
+              question: "ทำไมเราจึงควรหลีกเลี่ยงการใช้งานผ่าน \"Wi-Fi สาธารณะ\" เมื่อต้องทำธุรกรรมการเงิน?",
+              choices: [
+                "เพราะระบบรักษาความปลอดภัยมักจะต่ำ ทำให้ข้อมูลที่ส่งผ่านอินเทอร์เน็ตไม่ปลอดภัย",
+                "เพราะสัญญาณมักจะหลุดบ่อยทำให้เกิดความรำคาญ",
+                "เพราะอาจทำให้แอปพลิเคชันค้างและใช้พลังงานแบตเตอรี่มากเกินไป",
+                "เพราะธนาคารผู้ให้บริการจะคิดค่าธรรมเนียมเพิ่มเติมเมื่อทำรายการ"
+              ],
+              answer: 0 // A
+            },
+            {
+              header: "STAGE 2 | (ขั้นที่ 1: การจำ)",
+              question: "การกำหนดรหัสผ่านเพื่อความปลอดภัยในการใช้งาน ควรมีความยาวกี่ตัวอักษร?",
+              choices: ["4-6 ตัวอักษร", "8-10 ตัวอักษร", "12-16 ตัวอักษร", "18-20 ตัวอักษร"],
+              answer: 2 // C
+            },
+            {
+              header: "STAGE 2 | (ขั้นที่ 3: การประยุกต์ใช้)",
+              question: "เมื่อนักเรียนโอนเงินเสร็จแล้ว การกดปุ่มโฮมปิดแอปทิ้งเลยทันที ถือเป็นการกระทำที่ถูกต้องหรือไม่?",
+              choices: [
+                "ถูกต้อง เพราะแอปจะสลายการเชื่อมต่ออัตโนมัติ",
+                "ถูกต้อง เพราะทำให้การล็อกอินครั้งถัดไปรวดเร็วกว่าเดิม",
+                "ไม่ถูกต้อง เพราะต้องลบและติดตั้งแอปพลิเคชันใหม่ทุกครั้ง",
+                "ไม่ถูกต้อง ควรออกจากระบบ (Log out) ทุกครั้งเพื่อป้องกันผู้ไม่หวังดีขโมยข้อมูล"
+              ],
+              answer: 3 // D
+            },
+            {
+              header: "STAGE 2 | (ขั้นที่ 1: การจำ)",
+              question: "บริการใดที่ช่วยแจ้งเตือนให้เราทราบและแก้ไขได้ทันท่วงที \"เมื่อมีเงินเข้า-ออก\"?",
+              choices: ["บริการ SMS แจ้งเตือน", "บริการโทรแจ้งเตือน", "บริการส่งจดหมายแจ้งเตือน", "บริการแจ้งเตือนผ่านบอร์ดข่าวสารของเว็บไซต์"],
+              answer: 0 // A
+            },
+            {
+              header: "STAGE 2 | (ขั้นที่ 2: การเข้าใจ)",
+              question: "ข้อดีของการเปิดแจ้งเตือนการทำธุรกรรมผ่าน \"Email\" ที่เหนือกว่า SMS คืออะไร?",
+              choices: [
+                "ส่งข้อความได้รวดเร็วและใช้พลังงานคลื่นวิทยุน้อยกว่า",
+                "เก็บรายละเอียดได้เยอะกว่า ตั้งส่งอัตโนมัติได้ และค้นหาประวัติย้อนหลังได้อย่างรวดเร็ว",
+                "ช่วยป้องกันไวรัสเข้าสู่ตัวสมาร์ทโฟน",
+                "ไม่จำเป็นต้องเปิดเชื่อมต่ออินเทอร์เน็ตก็รับข้อความได้ทันที"
+              ],
+              answer: 1 // B
+            },
+            {
+              header: "STAGE 2 | (ขั้นที่ 3: การประยุกต์ใช้)",
+              question: "บอยมีเงินในบัญชีหนึ่งแสนบาท เขาตั้งค่า \"จำกัดวงเงินทำธุรกรรม\" สูงสุดต่อวันไว้แค่ห้าพันบาท การทำเช่นนี้มีประโยชน์อย่างไร?",
+              choices: [
+                "เพื่อเร่งสปีดตัวแอปให้โหลดเร็วขึ้น",
+                "หากถูกแฮกข้อมูล เงินจะได้ไม่ถูกโอนออกไปจนหมดบัญชี",
+                "เพื่อให้ทางธนาคารมอบอัตราดอกเบี้ยรายวันสูงขึ้น",
+                "เพื่อไม่ให้อุปกรณ์อื่นแอบเอาบัญชีนี้ไปชำระซื้อของได้"
+              ],
+              answer: 1 // B
+            },
+            {
+              header: "STAGE 2 | (ขั้นที่ 1: การจำ)",
+              question: "ข้อใดคือตัวอย่างของการเปิดใช้งาน \"การยืนยันตัวตน 2 ขั้นตอน (2FA)\" ก่อนเข้าสู่ระบบ?",
+              choices: [
+                "การใส่รหัสผ่านที่มีความยาวมากเป็นพิเศษ",
+                "การเชื่อมต่อสัญญาณ Wi-Fi ประจำบ้าน",
+                "การใส่รหัส OTP, สแกนนิ้วมือ หรือสแกนใบหน้าเพิ่มเติมจากการใส่รหัสผ่านปกติ",
+                "การเปลี่ยนรหัสผ่านผู้ใช้งานใหม่ในทุก ๆ วัน"
+              ],
+              answer: 2 // C
+            }
+          ]
+        },
+        {
+          stageNum: 3,
+          bossName: "พ่อค้าหน้าเลือด",
+          bossType: "merchant",
+          questions: [
+            {
+              header: "STAGE 3 | (ขั้นที่ 2: การเข้าใจ)",
+              question: "ทำไมเราจึงควรเลือกซื้อสินค้าจากเว็บไซต์ที่ขึ้นต้นด้วย \"https://\" เท่านั้น?",
+              choices: [
+                "มีการเข้ารหัสข้อมูลส่วนตัว ป้องกันการดักจับข้อมูลบัตรเครดิตขณะสั่งซื้อ",
+                "เพราะเป็นเครื่องหมายยืนยันว่าสินค้านั้นมีราคาถูกที่สุด",
+                "ช่วยให้การแสดงภาพและเสียงของร้านค้าโหลดได้รวดเร็วเต็มรูปแบบ",
+                "เพราะเป็นร้านที่ได้รับใบอนุญาตจัดส่งด่วนฟรีถึงบ้าน"
+              ],
+              answer: 0 // A
+            },
+            {
+              header: "STAGE 3 | (ขั้นที่ 3: การประยุกต์ใช้)",
+              question: "หากนักเรียนพบร้านค้าออนไลน์ที่รูปสินค้าสวยมาก แต่ไม่มีรีวิวเลย นักเรียนควรทำอย่างไรเพื่อความปลอดภัย?",
+              choices: [
+                "รีบสั่งซื้อทันทีเพราะเป็นสินค้าโปรโมชันจำนวนจำกัด",
+                "โอนเงินมัดจำครึ่งหนึ่งเพื่อทดสอบระบบส่งสินค้าก่อน",
+                "ศึกษาการแสดงความคิดเห็นของลูกค้าท่านอื่น (อ่านรีวิว) เพื่อเช็กความน่าเชื่อถือของร้านค้าก่อนเสมอ",
+                "ทักส่งข้อความเพื่อขอลดราคาสินค้าเพิ่ม"
+              ],
+              answer: 2 // C
+            },
+            {
+              header: "STAGE 3 | (ขั้นที่ 1: การจำ)",
+              question: "ก่อนสั่งซื้อสินค้า การตรวจสอบคุณสมบัติสินค้าที่ดีควรมีลักษณะอย่างไร?",
+              choices: [
+                "ต้องเขียนคำโฆษณาด้วยคำทับศัพท์ภาษาอังกฤษปะปนอยู่มาก",
+                "คำบรรยายคุณสมบัติสินค้าจะต้องเป็นความจริงและไม่แสดงสรรพคุณเกินจริง",
+                "ข้อมูลอธิบายสินค้าต้องมีความยาวเกินกว่าหนึ่งหน้ากระดาษ",
+                "ไม่จำเป็นต้องแสดงรายละเอียดประกอบเพราะรูปภาพชัดเจนอยู่แล้ว"
+              ],
+              answer: 1 // B
+            },
+            {
+              header: "STAGE 3 | (ขั้นที่ 2: การเข้าใจ)",
+              question: "ทำไมมิจฉาชีพส่วนมากจึงมักตั้งราคาสินค้าให้ \"ถูกกว่าร้านอื่นมาก ๆ\"?",
+              choices: [
+                "เพื่อดึงดูดใจและหลอกล่อให้เหยื่อรีบตัดสินใจโอนเงินทันทีโดยไม่ได้ตรวจเช็กความน่าเชื่อถือ",
+                "เพื่อระบายสต็อกสินค้าเสียที่จัดเก็บไว้ออกไปให้หมด",
+                "เพื่อส่งเสริมให้ร้านค้าได้คะแนนโหวตอันดับหนึ่งในเวลาอันรวดเร็ว",
+                "เพราะต้องการลดค่าใช้จ่ายในการจัดส่งลงครึ่งหนึ่ง"
+              ],
+              answer: 0 // A
+            },
+            {
+              header: "STAGE 3 | (ขั้นที่ 1: การจำ)",
+              question: "การตรวจสอบข้อมูลร้านค้าออนไลน์ สิ่งสำคัญที่สุดที่ต้องตรวจสอบคืออะไร?",
+              choices: [
+                "ตรวจสอบประวัติการลงทะเบียนพาณิชย์อิเล็กทรอนิกส์ และเช็กประวัติความเสี่ยงฉ้อโกง",
+                "ตรวจสอบจำนวนแอดมินและผู้ที่กดติดตามเพจร้านค้า",
+                "ตรวจสอบสถานที่ตั้งจริงของตัวแทนจำหน่ายในต่างประเทศ",
+                "ตรวจสอบยอดการรีทวีตหรือแชร์ข้อมูลสินค้าในหน้าโซเชียลมีเดีย"
+              ],
+              answer: 0 // A
+            },
+            {
+              header: "STAGE 3 | (ขั้นที่ 3: การประยุกต์ใช้)",
+              question: "เมื่อนักเรียนกดโอนเงินซื้อรองเท้าคู่ใหม่เสร็จแล้ว นักเรียนควรทำสิ่งใดเก็บไว้เป็นหลักฐาน?",
+              choices: [
+                "บันทึกไฟล์ภาพโฆษณารองเท้าคู่ที่สั่งซื้อไว้เพียงอย่างเดียว",
+                "บันทึกหลักฐานการสั่งซื้อ สลิปยืนยันการโอนเงิน และข้อมูลชื่อบัญชีธนาคารผู้ขาย",
+                "คัดลอกลิงก์โปรไฟล์เพจเฟซบุ๊กเพื่อทำการติดตามสินค้าต่อ",
+                "ไม่ต้องเก็บหลักฐานใดๆ เนื่องจากระบบยืนยันในตัวเสร็จแล้ว"
+              ],
+              answer: 1 // B
+            }
+          ]
+        },
+        {
+          stageNum: 4,
+          bossName: "ปีศาจก๊อปปี้",
+          bossType: "copycat",
+          questions: [
+            {
+              header: "STAGE 4 | (ขั้นที่ 2: การเข้าใจ)",
+              question: "การปกป้องรหัสผ่านตัวเอง ยอมรับผลของการกระทำ และรู้จัก \"ใส่ลายน้ำระบุชื่อผลงานว่าตนสร้างขึ้น\" จัดเป็นความรับผิดชอบด้านใด?",
+              choices: ["ความรับผิดชอบต่อผู้อื่น", "ความรับผิดชอบต่อตนเอง", "ความรับผิดชอบต่อสังคมโดยรวม", "ความรับผิดชอบตามกฎระเบียบของระบบเครือข่าย"],
+              answer: 1 // B
+            },
+            {
+              header: "STAGE 4 | (ขั้นที่ 3: การประยุกต์ใช้)",
+              question: "หากต้นกล้านำภาพใบหน้าของเพื่อนร่วมห้องมาโพสต์และนำไปบิดเบือนล้อเลียนโดยไม่ขออนุญาต ต้นกล้าขาดความรับผิดชอบในมิติใด?",
+              choices: [
+                "ความรับผิดชอบต่อระบบคอมพิวเตอร์ส่วนกลาง",
+                "ความรับผิดชอบต่อตนเอง",
+                "ความรับผิดชอบต่อผู้อื่น (การเคารพสิทธิส่วนบุคคลและทรัพย์สินทางปัญญา)",
+                "ความรับผิดชอบตามเกณฑ์โรงเรียน"
+              ],
+              answer: 2 // C
+            },
+            {
+              header: "STAGE 4 | (ขั้นที่ 1: การจำ)",
+              question: "การสร้างเว็บบล็อกสาธารณะขึ้นมาเพื่อเขียนเขียนบทความแบ่งปันความรู้ที่เป็นประโยชน์ต่อการศึกษา จัดอยู่ในข้อใด?",
+              choices: ["ความรับผิดชอบต่อสังคม", "ความรับผิดชอบต่อตนเอง", "ความรับผิดชอบต่อผู้อื่น", "ความรับผิดชอบทางคดีแพ่ง"],
+              answer: 0 // A
+            },
+            {
+              header: "STAGE 4 | (ขั้นที่ 2: การเข้าใจ)",
+              question: "ตามหลักจริยธรรมดิจิทัล ก่อนที่เราจะทำการแชร์หรือบอกต่อโพสต์ข้อมูลใดๆ บนอินเทอร์เน็ต เราควรทำสิ่งใดก่อนเสมอ?",
+              choices: [
+                "ตรวจสอบความจริงและแหล่งที่มาของข้อมูลเพื่อป้องกันการสร้างข่าวเท็จแก่ผู้อื่น",
+                "ดูจำนวนยอดถูกใจและการแชร์ในโพสต์ต้นทางว่ามีจำนวนมากเพียงใด",
+                "นำชื่อผู้เขียนเดิมออกแล้วใส่เครดิตภาพเป็นตัวเราเองเพื่อความปลอดภัย",
+                "ส่งแชร์เข้ากลุ่มเฉพาะของเพื่อนสนิทก่อนทำการเผยแพร่สู่ภายนอก"
+              ],
+              answer: 0 // A
+            },
+            {
+              header: "STAGE 4 | (ขั้นที่ 3: การประยุกต์ใช้)",
+              question: "การที่นักเรียนเลือก \"ไม่ผลิตหรือแชร์ข่าวปลอม (Fake News)\" เนื่องจากตระหนักดีว่าสร้างความเสียหายทางกฎหมายสะท้อนการปฏิบัติข้อใด?",
+              choices: ["ความรับผิดชอบต่อตนเอง", "ความรับผิดชอบต่อองค์กร", "ความรับผิดชอบทางกฎหมาย", "ความรับผิดชอบทางเทคนิค"],
+              answer: 2 // C
+            }
+          ]
+        },
+        {
+          stageNum: 5,
+          bossName: "บอสใหญ่ไซเบอร์",
+          bossType: "boss",
+          questions: [
+            {
+              header: "STAGE 5 | บอสใหญ่ ข้อที่ 1",
+              question: "[ทบทวน Stage 1] การนำระบบบริหารจัดการภายในและการประชุมทางไกลมาช่วยบริหารงาน ถือเป็นเทคโนโลยีระดับใด?",
+              choices: ["ระดับบุคคล", "ระดับสังคม", "ระดับองค์กร", "ระดับประเทศ"],
+              answer: 2 // C
+            },
+            {
+              header: "STAGE 5 | บอสใหญ่ ข้อที่ 2",
+              question: "[ทบทวน Stage 1] ระบบยื่นภาษีออนไลน์และการติดตามข้อมูลสุขภาพสาธารณสุขของรัฐบาล จัดเป็นเทคโนโลยีระดับใด?",
+              choices: ["ระดับประเทศ", "ระดับองค์กร", "ระดับบุคคล", "ระดับนานาชาติ"],
+              answer: 0 // A
+            },
+            {
+              header: "STAGE 5 | บอสใหญ่ ข้อที่ 3",
+              question: "[ทบทวน Stage 2] เพราะเหตุใดจึงห้ามเชื่อมต่อสัญญาณอินเทอร์เน็ต \"Wi-Fi ฟรีสาธารณะ\" เพื่อโอนเงินบนโทรศัพท์มือถือ?",
+              choices: [
+                "เพราะการเชื่อมต่อจะทำให้ชิปรับส่งสัญญาณโทรศัพท์เสียหายระยะยาว",
+                "เพราะระบบป้องกันมักจะต่ำ ข้อมูลอาจถูกดักขโมยไปใช้งานทางการเงินได้",
+                "เพราะธนาคารจะทำการบล็อกสิทธิ์แอปเนื่องจากกลัวสปีดช้า",
+                "เพราะสัญญาณ Wi-Fi สาธารณะมักจะไม่เสถียรทำให้เงินโอนค้างส่งไม่สำเร็จ"
+              ],
+              answer: 1 // B
+            },
+            {
+              header: "STAGE 5 | บอสใหญ่ ข้อที่ 4",
+              question: "[ทบทวน Stage 2] การเข้าไปตั้งค่าบัญชีเพื่อทำการ \"จำกัดวงเงินการทำรายการประจำวัน\" มีประโยชน์สูงสุดในกรณีใด?",
+              choices: [
+                "เมื่อใช้งานอินเทอร์เน็ตช้าทำให้ทำรายการไม่ติดขัด",
+                "กรณีเกิดเหตุถูกเจาะระบบข้อมูล คนร้ายจะได้ไม่สามารถโอนเงินออกหมดตัวได้",
+                "เพื่อช่วยเพิ่มอัตราผลตอบแทนหรือดอกเบี้ยสะสมประจำปี",
+                "เพื่อให้ไม่สามารถทำรายการชำระซื้อสินค้าต่างประเทศได้โดยไม่ได้รับอนุญาต"
+              ],
+              answer: 1 // B
+            },
+            {
+              header: "STAGE 5 | บอสใหญ่ ข้อที่ 5",
+              question: "[ทบทวน Stage 2] ข้อใดจัดเป็นการเปิดใช้งาน \"การยืนยันตัวตนแบบสองชั้น (2FA)\" ที่ถูกต้อง?",
+              choices: [
+                "การเปิดใช้รหัสผ่านความยาวสูงสุด 24 ตัวอักษร",
+                "การใส่รหัส OTP จากโทรศัพท์เพิ่มเติมนอกจากการกรอกรหัสผ่านหลักปกติ",
+                "การเชื่อมต่อเข้าใช้งานแอปพลิเคชันพร้อมกันสองอุปกรณ์เพื่อความรวดเร็ว",
+                "การตั้งรหัสผ่านให้ถูกบังคับลงทะเบียนใหม่ในทุกครึ่งปี"
+              ],
+              answer: 1 // B
+            },
+            {
+              header: "STAGE 5 | บอสใหญ่ ข้อที่ 6",
+              question: "[ทบทวน Stage 3] แถบช่องลิงก์ที่อยู่ปลายทางในเบราว์เซอร์สำหรับร้านช้อปปิ้งที่ปลอดภัย ควรเริ่มต้นด้วยสัญลักษณ์ใด?",
+              choices: ["http://", "ftp://", "https://", "www.shop."],
+              answer: 2 // C
+            },
+            {
+              header: "STAGE 5 | บอสใหญ่ ข้อที่ 7",
+              question: "[ทบทวน Stage 3] หากพบร้านขายอุปกรณ์ไอทีตั้งราคาสินค้าราคา \"ต่ำกว่าร้านค้าอื่นๆ มากผิดปกติ\" มักเกิดจากจุดประสงค์ใด?",
+              choices: [
+                "เพื่อหลอกล่อใจให้เกิดความโลภและรีบส่งเงินโอนซื้อทันทีโดยละเลยการตรวจสอบประวัติ",
+                "เพื่อตอบแทนคืนกำไรพิเศษให้แก่กลุ่มผู้ใช้ออนไลน์",
+                "เพื่อช่วยกระจายระบายสินค้าเสื่อมประสิทธิภาพสู่ผู้บริโภค",
+                "เพราะเป็นโปรแกรมช่วยเหลือผู้บริโภคขององค์กรรัฐวิสาหกิจ"
+              ],
+              answer: 0 // A
+            },
+            {
+              header: "STAGE 5 | บอสใหญ่ ข้อที่ 8",
+              question: "[ทบทวน Stage 4] การดูแลรักษารหัสผ่านของตนเองเป็นความลับ และการ \"ใส่ลายน้ำแสดงลิขสิทธิ์\" สะท้อนถึงสิ่งใด?",
+              choices: ["ความรับผิดชอบต่อตนเอง", "ความรับผิดชอบต่อผู้อื่น", "ความรับผิดชอบต่อผู้ปกครอง", "ความรับผิดชอบทางแพ่ง"],
+              answer: 0 // A
+            },
+            {
+              header: "STAGE 5 | บอสใหญ่ ข้อที่ 9",
+              question: "[ทบทวน Stage 4] การเลือกเคารพในลิขสิทธิ์ ไม่แอบอ้างสวมสิทธิ์ และไม่นำรหัสบัญชีของผู้อื่นไปใช้งาน ถือเป็นสิ่งใด?",
+              choices: ["ความรับผิดชอบต่อครอบครัว", "ความรับผิดชอบต่อตนเอง", "ความรับผิดชอบต่อผู้อื่น", "ความรับผิดชอบทางความมั่นคง"],
+              answer: 2 // C
+            },
+            {
+              header: "STAGE 5 | บอสใหญ่ ข้อที่ 10",
+              question: "[ทบทวน Stage 4] การไม่สร้างและไม่เผยแพร่สิ่งที่เป็นข้อมูลบิดเบือนข่าวปลอม (Fake News) เพื่อปฏิบัติตาม พ.ร.บ. คอมพิวเตอร์ คือสิ่งใด?",
+              choices: ["ความรับผิดชอบต่อตนเอง", "ความรับผิดชอบต่อสังคมโดยทั่วไป", "ความรับผิดชอบทางกฎหมาย", "ความรับผิดชอบระดับโรงเรียน"],
+              answer: 2 // C
+            }
+          ]
+        }
+      ];
+
+      const PLAYER_MODELS = {
+        male: `
+        <g transform="translate(0, 5)">
+          <rect x="35" y="65" width="30" height="25" fill="#1b2234" stroke="#00f0ff" stroke-width="3"/>
+          <path d="M25 80 L75 80 L70 95 L30 95 Z" fill="#0c0e14" stroke="#00f0ff" stroke-width="3"/>
+          <rect x="25" y="30" width="50" height="40" rx="10" fill="#121824" stroke="#00f0ff" stroke-width="4"/>
+          <rect x="30" y="42" width="40" height="10" rx="4" fill="#000" stroke="#00f0ff" stroke-width="2"/>
+          <rect x="35" y="45" width="30" height="4" rx="2" fill="#00f0ff"/>
+          <circle cx="20" cy="50" r="10" fill="#1b2234" stroke="#00f0ff" stroke-width="2"/>
+          <circle cx="80" cy="50" r="10" fill="#1b2234" stroke="#00f0ff" stroke-width="2"/>
+          <path d="M 15 50 L 5 15" stroke="#ff007f" stroke-width="6" stroke-linecap="round"/>
+          <path d="M 15 50 L 5 15" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+        </g>
+      `,
+        female: `
+        <g transform="translate(0, 5)">
+          <rect x="35" y="65" width="30" height="25" fill="#241b34" stroke="#ff007f" stroke-width="3"/>
+          <path d="M25 80 L75 80 L70 95 L30 95 Z" fill="#0e0c14" stroke="#ff007f" stroke-width="3"/>
+          <rect x="25" y="30" width="50" height="40" rx="12" fill="#1c1224" stroke="#ff007f" stroke-width="4"/>
+          <rect x="30" y="42" width="40" height="10" rx="4" fill="#000" stroke="#ff007f" stroke-width="2"/>
+          <rect x="35" y="45" width="30" height="4" rx="2" fill="#ff007f"/>
+          <circle cx="22" cy="22" r="10" fill="#00f0ff" stroke="#ff007f" stroke-width="2"/>
+          <circle cx="78" cy="22" r="10" fill="#00f0ff" stroke="#ff007f" stroke-width="2"/>
+          <rect x="8" y="45" width="16" height="8" rx="2" fill="#00f0ff" stroke="#000" stroke-width="2"/>
+          <path d="M 22 49 L 5 49" stroke="#00f0ff" stroke-width="4" stroke-linecap="round"/>
+        </g>
+      `
+      };
+
+      const ENEMY_MODELS = {
+        slime: `
+        <g transform="translate(0, 15)">
+          <ellipse cx="50" cy="65" rx="35" ry="25" fill="#143422" stroke="#39ff14" stroke-width="4"/>
+          <ellipse cx="50" cy="60" rx="28" ry="18" fill="#1c472f"/>
+          <circle cx="40" cy="58" r="4" fill="#39ff14"/>
+          <circle cx="60" cy="58" r="4" fill="#39ff14"/>
+          <path d="M 45 68 Q 50 72 55 68" stroke="#39ff14" stroke-width="2" stroke-linecap="round" fill="none"/>
+        </g>
+      `,
+        hacker: `
+        <g transform="translate(0, 5)">
+          <path d="M 20 90 Q 50 30 80 90 Z" fill="#0c0c0e" stroke="#ff007f" stroke-width="4"/>
+          <path d="M 35 60 Q 50 40 65 60 Q 50 80 35 60 Z" fill="#000" stroke="#39ff14" stroke-width="2"/>
+          <text x="38" y="63" fill="#39ff14" font-size="8" font-weight="bold" font-family="monospace">1 0 1</text>
+          <polygon points="35,92 65,92 60,78 40,78" fill="rgba(0, 240, 255, 0.15)"/>
+        </g>
+      `,
+        merchant: `
+        <g transform="translate(0, 5)">
+          <rect x="30" y="55" width="40" height="35" rx="5" fill="#362205" stroke="#ffff00" stroke-width="3"/>
+          <rect x="25" y="30" width="50" height="35" rx="10" fill="#1a1c22" stroke="#ffff00" stroke-width="3"/>
+          <rect x="32" y="40" width="14" height="8" fill="#ffff00" stroke="#000" stroke-width="2"/>
+          <rect x="54" y="40" width="14" height="8" fill="#ffff00" stroke="#000" stroke-width="2"/>
+          <line x1="46" y1="44" x2="54" y2="44" stroke="#000" stroke-width="2"/>
+          <circle cx="50" cy="70" r="10" fill="#ffff00" stroke="#000" stroke-width="2"/>
+          <text x="46" y="75" fill="#000" font-weight="bold" font-size="12">$</text>
+        </g>
+      `,
+        copycat: `
+        <g transform="translate(0, 5)">
+          <g opacity="0.6" transform="translate(4, -2)">
+            <rect x="25" y="30" width="50" height="40" rx="10" fill="#241b34" stroke="#ff007f" stroke-width="4"/>
+          </g>
+          <rect x="35" y="65" width="30" height="25" fill="#303540" stroke="#a0a5b5" stroke-width="3"/>
+          <rect x="25" y="30" width="50" height="40" rx="10" fill="#1b1c20" stroke="#a0a5b5" stroke-width="4"/>
+          <rect x="30" y="42" width="40" height="10" rx="4" fill="#000" stroke="#a0a5b5" stroke-width="2"/>
+          <rect x="35" y="45" width="30" height="4" rx="2" fill="#ff007f"/>
+          <circle cx="20" cy="50" r="10" fill="#303540" stroke="#a0a5b5" stroke-width="2"/>
+          <circle cx="80" cy="50" r="10" fill="#303540" stroke="#a0a5b5" stroke-width="2"/>
+        </g>
+      `,
+        boss: `
+        <g transform="translate(0, 0)">
+          <circle cx="50" cy="50" r="42" fill="none" stroke="#ff007f" stroke-width="3" stroke-dasharray="10 5"/>
+          <rect x="25" y="25" width="50" height="50" rx="25" fill="#0f0914" stroke="#00f0ff" stroke-width="5"/>
+          <circle cx="50" cy="50" r="18" fill="#ff007f" opacity="0.8"/>
+          <polygon points="50,38 62,50 50,62 38,50" fill="#ffff00" stroke="#000" stroke-width="2"/>
+          <circle cx="50" cy="50" r="4" fill="#fff"/>
+          <line x1="10" y1="50" x2="25" y2="50" stroke="#00f0ff" stroke-width="2"/>
+          <line x1="75" y1="50" x2="90" y2="50" stroke="#00f0ff" stroke-width="2"/>
+        </g>
+      `
+      };
+
+      /* ==========================================================================
+         C. AUDIO SYSTEM SYNTHESIZER (WEB AUDIO API)
+         ========================================================================== */
+      let audioCtx = null;
+
+      function initAudio() {
+        if (!audioCtx) {
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+      }
+
+      function playPlayerAttackSound() {
+        initAudio();
+        if (!audioCtx) return;
+        const t = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'triangle';
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.frequency.setValueAtTime(800, t);
+        osc.frequency.exponentialRampToValueAtTime(150, t + 0.2);
+        gain.gain.setValueAtTime(0.2, t);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.25);
+        osc.start(t);
+        osc.stop(t + 0.25);
+      }
+
+      function playEnemyAttackSound() {
+        initAudio();
+        if (!audioCtx) return;
+        const t = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sawtooth';
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.frequency.setValueAtTime(150, t);
+        osc.frequency.linearRampToValueAtTime(450, t + 0.25);
+        gain.gain.setValueAtTime(0.15, t);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.28);
+        osc.start(t);
+        osc.stop(t + 0.28);
+      }
+
+      function playDeathSound() {
+        initAudio();
+        if (!audioCtx) return;
+        const t = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sawtooth';
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.frequency.setValueAtTime(100, t);
+        osc.frequency.exponentialRampToValueAtTime(10, t + 0.6);
+        gain.gain.setValueAtTime(0.3, t);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.65);
+        osc.start(t);
+        osc.stop(t + 0.65);
+      }
+
+      function playVictoryFanfare() {
+        initAudio();
+        if (!audioCtx) return;
+        const t = audioCtx.currentTime;
+        const notes = [293.66, 349.23, 440.00, 523.25, 587.33, 698.46, 880.00];
+        notes.forEach((freq, idx) => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'square';
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          const playTime = t + (idx * 0.1);
+          osc.frequency.setValueAtTime(freq, playTime);
+          gain.gain.setValueAtTime(0.12, playTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, playTime + 0.25);
+          osc.start(playTime);
+          osc.stop(playTime + 0.25);
+        });
+      }
+
+      /* ==========================================================================
+         D. GAME ENGINE CORE STATES
+         ========================================================================== */
+      let gameState = {
+        name: "",
+        surname: "",
+        number: "",
+        room: "",
+        selectedChar: 'male',
+        difficulty: 'EASY',
+        stageIndex: 0,
+        questionIndex: 0,
+        playerHp: 100,
+        enemyHp: 100,
+        attempts: 1, // ติดตามจำนวนครั้งที่เล่นทั้งหมดรวมถึงรีสตาร์ท
+        currentSessionMistakes: 0,
+        score: 0
+      };
+
+      // ตัวแปรสำหรับระบบจับเวลา
+      let startTime = 0;
+      let timerInterval = null;
+      let elapsedTime = 0; // เก็บเวลาเป็นวินาที
+
+      function startTimer() {
+        startTime = Date.now() - (elapsedTime * 1000);
+        if (timerInterval) clearInterval(timerInterval);
+        timerInterval = setInterval(() => {
+          elapsedTime = Math.floor((Date.now() - startTime) / 1000);
+          updateTimerDisplay(elapsedTime);
+        }, 1000);
+      }
+
+      function stopTimer() {
+        if (timerInterval) {
+          clearInterval(timerInterval);
+          timerInterval = null;
+        }
+      }
+
+      function formatTime(totalSeconds) {
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = totalSeconds % 60;
+        const displayMin = minutes < 10 ? '0' + minutes : minutes;
+        const displaySec = seconds < 10 ? '0' + seconds : seconds;
+        return `${displayMin}:${displaySec}`;
+      }
+
+      function updateTimerDisplay(totalSeconds) {
+        const display = document.getElementById('txt-hud-timer');
+        if (display) {
+          display.innerText = formatTime(totalSeconds);
+        }
+      }
+
+      function selectCharacter(gender, element) {
+        gameState.selectedChar = gender;
+        document.querySelectorAll('.char-card').forEach(card => card.classList.remove('selected'));
+        element.classList.add('selected');
+        playPlayerAttackSound();
+      }
+
+
+
+      function switchScreen(screenId) {
+        document.querySelectorAll('.game-screen').forEach(scr => scr.classList.remove('active'));
+        document.getElementById(screenId).classList.add('active');
+      }
+
+      let currentSessionStages = [];
+
+      function startGame() {
+        // ดึงข้อมูลและตรวจสอบ
+        gameState.name = document.getElementById('reg-name').value.trim();
+        gameState.surname = document.getElementById('reg-surname').value.trim();
+        gameState.number = document.getElementById('reg-number').value.trim();
+        gameState.room = document.getElementById('reg-room').value;
+
+        if (!gameState.name || !gameState.surname || !gameState.number || !gameState.room) {
+          alert("กรุณากรอกข้อมูลสายลับให้ครบถ้วนก่อนเข้าสู่การประลอง!");
+          return;
+        }
+
+        initAudio();
+
+        // สุ่มคำถามและตัวเลือกสำหรับเซสชันการเล่นนี้
+        initializeSessionStages();
+
+        // Reset State
+        gameState.stageIndex = 0;
+        gameState.questionIndex = 0;
+        gameState.playerHp = 100;
+        gameState.enemyHp = 100;
+        gameState.currentSessionMistakes = 0;
+        gameState.score = 0;
+
+        // อัปเดตข้อมูลบน HUD
+        document.getElementById('txt-hud-player-name').innerText = `${gameState.name} [${gameState.room}]`;
+        document.getElementById('txt-hud-attempts').innerText = gameState.attempts;
+
+        // โหลด SVG โมเดลผู้เล่น
+        document.getElementById('player-svg-model').innerHTML = PLAYER_MODELS[gameState.selectedChar];
+
+        switchScreen('screen-battle');
+        loadStage();
+
+        // เริ่มจับเวลาตั้งแต่ 0 วินาที
+        elapsedTime = 0;
+        updateTimerDisplay(0);
+        startTimer();
+
+        saveActiveSession();
+      }
+
+      function loadStage() {
+        const activeStage = currentSessionStages[gameState.stageIndex];
+        gameState.enemyHp = 100;
+        gameState.questionIndex = 0;
+
+        // โหลด SVG โมเดลศัตรูตามด่าน
+        document.getElementById('enemy-svg-model').innerHTML = ENEMY_MODELS[activeStage.bossType];
+        document.getElementById('txt-hud-enemy-name').innerText = activeStage.bossName;
+
+        // รีเซ็ตการขยับ/สั่นของโมเดล
+        document.getElementById('enemy-sprite-wrapper').className = 'fighter-wrapper enemy-side';
+        document.getElementById('player-sprite-wrapper').className = 'fighter-wrapper player-side';
+        document.getElementById('stage-banner-text').innerText = `STAGE ${activeStage.stageNum}`;
+
+        updateHpBars();
+        loadQuestion();
+      }
+
+      function updateHpBars() {
+        // Player HP bar
+        const playerBar = document.getElementById('bar-player-hp');
+        playerBar.style.width = `${gameState.playerHp}%`;
+        document.getElementById('txt-hud-player-hp').innerText = `${gameState.playerHp}/100 HP`;
+
+        playerBar.className = 'hp-bar-fill';
+        if (gameState.playerHp <= 30) playerBar.classList.add('danger');
+        else if (gameState.playerHp <= 60) playerBar.classList.add('warning');
+
+        // Enemy HP bar
+        const enemyBar = document.getElementById('bar-enemy-hp');
+        const activeStage = currentSessionStages[gameState.stageIndex];
+        const maxQuestions = activeStage.questions.length;
+
+        const currentEnemyHp = Math.max(0, Math.round(100 - (gameState.questionIndex * (100 / maxQuestions))));
+        enemyBar.style.width = `${currentEnemyHp}%`;
+        document.getElementById('txt-hud-enemy-hp').innerText = `${currentEnemyHp}/100 HP`;
+
+        enemyBar.className = 'hp-bar-fill';
+        if (currentEnemyHp <= 30) enemyBar.classList.add('danger');
+        else if (currentEnemyHp <= 60) enemyBar.classList.add('warning');
+      }
+
+      function loadQuestion() {
+        const activeStage = currentSessionStages[gameState.stageIndex];
+
+        if (gameState.questionIndex >= activeStage.questions.length) {
+          stageClearedTransition();
+          return;
+        }
+
+        const qData = activeStage.questions[gameState.questionIndex];
+        document.getElementById('txt-question-header').innerText = qData.header;
+        document.getElementById('txt-question-body').innerText = qData.question;
+
+        // Populate choices
+        const container = document.getElementById('choices-grid-container');
+        container.innerHTML = '';
+
+        const keys = ['A', 'B', 'C', 'D'];
+        qData.choices.forEach((choice, idx) => {
+          const btn = document.createElement('button');
+          btn.className = 'choice-btn';
+          btn.innerHTML = `<span class="choice-key">${keys[idx]}</span> <span>${choice}</span>`;
+          btn.onclick = () => submitAnswer(idx, btn);
+          container.appendChild(btn);
+        });
+      }
+
+      /* ==========================================================================
+         E. COMBAT RESOLUTION & ANIMATIONS
+         ========================================================================== */
+      function submitAnswer(selectedIndex, clickedBtn) {
+        const activeStage = currentSessionStages[gameState.stageIndex];
+        const qData = activeStage.questions[gameState.questionIndex];
+        const allButtons = document.querySelectorAll('.choice-btn');
+
+        allButtons.forEach(b => b.disabled = true);
+
+        if (selectedIndex === qData.answer) {
+          resolveCombatSuccess();
+        } else {
+          resolveCombatFailure(clickedBtn, qData.answer);
+        }
+      }
+
+      function resolveCombatSuccess() {
+        const playerWrapper = document.getElementById('player-sprite-wrapper');
+        const enemyWrapper = document.getElementById('enemy-sprite-wrapper');
+        const overlay = document.getElementById('feedback-overlay');
+        const activeStage = currentSessionStages[gameState.stageIndex];
+
+        playerWrapper.classList.add('attacker-player');
+        playPlayerAttackSound();
+
+        setTimeout(() => {
+          enemyWrapper.classList.add('damaged');
+          createHitSplash(false);
+
+          const damage = Math.round(100 / activeStage.questions.length);
+          createDamagePopup(`-${damage} HP`, false);
+
+          overlay.classList.add('success-green');
+          overlay.style.opacity = 1;
+
+          gameState.questionIndex++;
+          gameState.score += 150;
+          updateHpBars();
+          saveActiveSession();
+        }, 150);
+
+        setTimeout(() => {
+          playerWrapper.classList.remove('attacker-player');
+          enemyWrapper.classList.remove('damaged');
+          overlay.style.opacity = 0;
+          overlay.classList.remove('success-green');
+
+          loadQuestion();
+        }, 700);
+      }
+
+      function resolveCombatFailure(clickedBtn, correctIdx) {
+        const playerWrapper = document.getElementById('player-sprite-wrapper');
+        const enemyWrapper = document.getElementById('enemy-sprite-wrapper');
+        const overlay = document.getElementById('feedback-overlay');
+        const arcadeWrapper = document.getElementById('arcade-wrapper');
+        const allButtons = document.querySelectorAll('.choice-btn');
+
+        enemyWrapper.classList.add('attacker-enemy');
+        playEnemyAttackSound();
+
+        setTimeout(() => {
+          playerWrapper.classList.add('damaged');
+          createHitSplash(true);
+
+          clickedBtn.style.borderColor = 'var(--neon-magenta)';
+          clickedBtn.style.background = '#4a0b16';
+          allButtons[correctIdx].style.borderColor = 'var(--neon-green)';
+          allButtons[correctIdx].style.background = '#0b4a1b';
+
+          const damageTaken = 10;
+          gameState.playerHp = Math.max(0, gameState.playerHp - damageTaken);
+          gameState.currentSessionMistakes++;
+
+          createDamagePopup(`-${damageTaken} HP`, true);
+
+          arcadeWrapper.classList.add('shake-screen');
+          overlay.classList.add('error-red');
+          overlay.style.opacity = 1;
+
+          updateHpBars();
+          saveActiveSession();
+        }, 150);
+
+        setTimeout(() => {
+          enemyWrapper.classList.remove('attacker-enemy');
+          playerWrapper.classList.remove('damaged');
+          arcadeWrapper.classList.remove('shake-screen');
+          overlay.style.opacity = 0;
+          overlay.classList.remove('error-red');
+
+          if (gameState.playerHp <= 0) {
+            gameOverTransition();
+          } else {
+            allButtons.forEach(b => {
+              b.disabled = false;
+            });
+          }
+        }, 1000);
+      }
+
+      /* ==========================================================================
+         F. TRANSITIONS & SCORE SYNCING
+         ========================================================================== */
+      function stageClearedTransition() {
+        const enemyWrapper = document.getElementById('enemy-sprite-wrapper');
+        playDeathSound();
+        enemyWrapper.classList.add('dead');
+
+        setTimeout(() => {
+          gameState.stageIndex++;
+
+          if (gameState.stageIndex < currentSessionStages.length) {
+            const healVal = 30;
+            gameState.playerHp = Math.min(100, gameState.playerHp + healVal);
+            createDamagePopup(`+${healVal} HP`, true, true);
+            loadStage();
+            saveActiveSession();
+          } else {
+            gameVictoryTransition();
+          }
+        }, 1000);
+      }
+
+      async function gameVictoryTransition() {
+        stopTimer();
+        playVictoryFanfare();
+        switchScreen('screen-victory');
+
+        document.getElementById('victory-badge-icon').innerText = '🏆';
+        document.getElementById('victory-headline').innerText = "MISSION CLEARED";
+        document.getElementById('victory-headline').style.color = "var(--neon-green)";
+        document.getElementById('victory-subline').innerText = "คุณผ่านการทดสอบและสู้บอสผ่านครบทุกด่าน!";
+
+        const finalScore = calculateFinalScore();
+        populateSummary(finalScore);
+
+        // บันทึกคะแนนลงในฐานข้อมูล
+        await syncScoreToDatabase(finalScore);
+        localStorage.removeItem('cyber_fighter_active_session');
+      }
+
+      function gameOverTransition() {
+        stopTimer();
+        playDeathSound();
+        switchScreen('screen-victory');
+
+        document.getElementById('victory-badge-icon').innerText = '💀';
+        document.getElementById('victory-headline').innerText = "SYSTEM FAIL";
+        document.getElementById('victory-headline').style.color = "var(--neon-magenta)";
+        document.getElementById('victory-subline').innerText = "พลังชีวิตหมด! การเชื่อมต่อล้มเหลว";
+
+        const finalScore = calculateFinalScore();
+        populateSummary(finalScore);
+
+        // บันทึกคะแนนแม้จะล้มเหลว (เพื่อสถิติรอบที่ทำ)
+        syncScoreToDatabase(finalScore);
+        localStorage.removeItem('cyber_fighter_active_session');
+      }
+
+      function calculateFinalScore() {
+        const hpBonus = gameState.playerHp * 5;
+        const penalty = gameState.currentSessionMistakes * 50;
+        return Math.max(0, gameState.score + hpBonus - penalty);
+      }
+
+      function populateSummary(finalScore) {
+        document.getElementById('summary-fullname').innerText = `${gameState.name} ${gameState.surname}`;
+        document.getElementById('summary-room-number').innerText = `ห้อง ${gameState.room} เลขที่ ${gameState.number}`;
+        document.getElementById('summary-attempts').innerText = `${gameState.attempts} ครั้ง`;
+
+        const mins = Math.floor(elapsedTime / 60);
+        const secs = elapsedTime % 60;
+        document.getElementById('summary-play-time').innerText = `${mins} นาที ${secs} วินาที`;
+
+        document.getElementById('summary-mistakes').innerText = `${gameState.currentSessionMistakes} ครั้ง`;
+        document.getElementById('summary-final-score').innerText = `${finalScore} คะแนน`;
+      }
+
+      async function syncScoreToDatabase(finalScore) {
+        const cloudStatusEl = document.getElementById('summary-cloud-status');
+        cloudStatusEl.innerText = "กำลังบันทึกคะแนน...";
+
+        let existingRecordId = null;
+        let attemptsCount = 1;
+
+        // 1. ดึงสถิติรอบการเล่นสะสมจาก LocalStorage ก่อน
+        const localScores = getLocalScores();
+        const existingLocal = localScores.find(item =>
+          item.name === gameState.name &&
+          item.surname === gameState.surname &&
+          item.room === gameState.room &&
+          item.student_number === parseInt(gameState.number)
+        );
+
+        if (existingLocal) {
+          attemptsCount = (existingLocal.attempts || 1) + 1;
+        }
+
+        // 2. ดึงสถิติรอบการเล่นสะสมจาก Supabase Cloud
+        if (supabaseClient) {
+          try {
+            const { data, error } = await supabaseClient
+              .from('cyber_fighter_scores')
+              .select('id, attempts')
+              .eq('name', gameState.name)
+              .eq('surname', gameState.surname)
+              .eq('room', gameState.room)
+              .eq('student_number', parseInt(gameState.number))
+              .maybeSingle();
+
+            if (!error && data) {
+              existingRecordId = data.id;
+              attemptsCount = (data.attempts || 1) + 1;
+            }
+          } catch (e) {
+            console.error("Failed to query existing score in database:", e);
+          }
+        }
+
+        // อัปเดตรอบการเล่นให้ถูกต้องบนการ์ดผลลัพธ์
+        gameState.attempts = attemptsCount;
+        document.getElementById('summary-attempts').innerText = `${gameState.attempts} ครั้ง`;
+
+        const scoreRecord = {
+          name: gameState.name,
+          surname: gameState.surname,
+          student_number: parseInt(gameState.number),
+          room: gameState.room,
+          score: finalScore,
+          attempts: attemptsCount,
+          play_time: elapsedTime, // ระยะเวลาเล่นจริงหน่วยเป็นวินาที
+          created_at: new Date().toISOString()
+        };
+
+        // 1. บันทึกเข้า LocalStorage (เขียนทับประวัติเดิมของคนนี้)
+        saveScoreLocally(scoreRecord);
+
+        // 2. บันทึกเข้า Supabase Cloud (เขียนทับ แถวเดิม หรือเพิ่ม แถวใหม่)
+        if (supabaseClient) {
+          try {
+            let response;
+            if (existingRecordId) {
+              response = await supabaseClient
+                .from('cyber_fighter_scores')
+                .update(scoreRecord)
+                .eq('id', existingRecordId);
+            } else {
+              response = await supabaseClient
+                .from('cyber_fighter_scores')
+                .insert([scoreRecord]);
+            }
+
+            if (response.error) {
+              console.error("Supabase Error: ", response.error);
+              cloudStatusEl.innerHTML = "ล้มเหลว (บันทึกในเครื่องแทน) 💾";
+              cloudStatusEl.style.color = "var(--neon-yellow)";
+            } else {
+              cloudStatusEl.innerHTML = "บันทึกบน Cloud สำเร็จ 🚀";
+              cloudStatusEl.style.color = "var(--neon-green)";
+            }
+          } catch (err) {
+            console.error(err);
+            cloudStatusEl.innerHTML = "ตัดการเชื่อมต่อ (บันทึกในเครื่องแทน) 💾";
+            cloudStatusEl.style.color = "var(--neon-yellow)";
+          }
+        } else {
+          cloudStatusEl.innerHTML = "ใช้งานแบบออฟไลน์สำเร็จ 💾";
+          cloudStatusEl.style.color = "var(--neon-cyan)";
+        }
+      }
+
+      function restartGame() {
+        // เมื่อแพ้และอยากลองใหม่ จำนวนรอบ (Attempts) จะเพิ่มขึ้น 1 รอบ
+        gameState.attempts++;
+        switchScreen('screen-welcome');
+
+        // ล้างข้อมูลชื่อในฟอร์มเพื่อให้พร้อมกรอกใหม่ (หรือเก็บไว้ก็ได้ แต่เพิ่ม Attempts เพื่อสถิติ)
+        document.getElementById('reg-name').focus();
+      }
+
+      /* ==========================================================================
+         G. LOCAL STORAGE FALLBACK SYSTEM
+         ========================================================================== */
+      function saveScoreLocally(record) {
+        let scores = [];
+        try {
+          const existing = localStorage.getItem('cyber_fighter_scores');
+          if (existing) {
+            scores = JSON.parse(existing);
+          }
+        } catch (e) {
+          console.error(e);
+        }
+
+        const index = scores.findIndex(item =>
+          item.name === record.name &&
+          item.surname === record.surname &&
+          item.room === record.room &&
+          item.student_number === record.student_number
+        );
+
+        if (index !== -1) {
+          scores[index] = record;
+        } else {
+          scores.push(record);
+        }
+        localStorage.setItem('cyber_fighter_scores', JSON.stringify(scores));
+      }
+
+      function getLocalScores() {
+        try {
+          const scores = localStorage.getItem('cyber_fighter_scores');
+          return scores ? JSON.parse(scores) : [];
+        } catch (e) {
+          return [];
+        }
+      }
+
+      /* ==========================================================================
+         H. TEACHER DASHBOARD LOGIC & AUTHENTICATION
+         ========================================================================== */
+
+
+      /* ==========================================================================
+         J. AUXILIARY POPUP GRAPHICS (DAMAGE / SPARKS)
+         ========================================================================== */
+      function createDamagePopup(text, isPlayer, isHeal = false) {
+        const container = document.getElementById('battle-view-container');
+        const popup = document.createElement('div');
+        popup.className = 'damage-popup';
+        if (isHeal) popup.classList.add('heal');
+        popup.innerText = text;
+
+        if (isPlayer) {
+          popup.style.left = '75px';
+          popup.style.bottom = '110px';
+        } else {
+          popup.style.right = '75px';
+          popup.style.bottom = '110px';
+        }
+
+        container.appendChild(popup);
+        setTimeout(() => popup.remove(), 800);
+      }
+
+      function createHitSplash(isOnPlayer) {
+        const container = document.getElementById('battle-view-container');
+        const splash = document.createElement('div');
+        splash.className = 'hit-splash';
+
+        if (isOnPlayer) {
+          splash.style.left = '60px';
+          splash.style.bottom = '55px';
+        } else {
+          splash.style.right = '60px';
+          splash.style.bottom = '55px';
+        }
+
+        container.appendChild(splash);
+        setTimeout(() => splash.remove(), 300);
+      }
+
+      /* ==========================================================================
+         K. SESSION RECOVERY LOGICS
+         ========================================================================== */
+      function saveActiveSession() {
+        const sessionData = {
+          name: gameState.name,
+          surname: gameState.surname,
+          number: gameState.number,
+          room: gameState.room,
+          selectedChar: gameState.selectedChar,
+          difficulty: gameState.difficulty,
+          stageIndex: gameState.stageIndex,
+          questionIndex: gameState.questionIndex,
+          playerHp: gameState.playerHp,
+          enemyHp: gameState.enemyHp,
+          attempts: gameState.attempts,
+          currentSessionMistakes: gameState.currentSessionMistakes,
+          score: gameState.score,
+          currentSessionStages: currentSessionStages, // บันทึกคำถามที่สุ่มเรียงไว้แล้ว
+          elapsedTime: elapsedTime, // บันทึกเวลาที่เดินไปแล้ว
+          inProgress: true
+        };
+        localStorage.setItem('cyber_fighter_active_session', JSON.stringify(sessionData));
+      }
+
+      function checkActiveSession() {
+        const saved = localStorage.getItem('cyber_fighter_active_session');
+        if (saved) {
+          try {
+            const session = JSON.parse(saved);
+            if (session.inProgress) {
+              // แสดงข้อมูลใน Modal กู้คืนระบบ
+              const txt = document.getElementById('recovery-text');
+
+              const mins = Math.floor((session.elapsedTime || 0) / 60);
+              const secs = (session.elapsedTime || 0) % 60;
+
+              txt.innerHTML = `
+              <strong>ชื่อนักเรียน:</strong> ${session.name} ${session.surname}<br>
+              <strong>ห้อง:</strong> ${session.room} | <strong>เลขที่:</strong> ${session.number}<br>
+              <strong>ด่านที่ค้างอยู่:</strong> Stage ${session.stageIndex + 1} (คำถามที่ ${session.questionIndex + 1})<br>
+              <strong>พลังชีวิตคงเหลือ:</strong> ${session.playerHp} HP | <strong>เวลาสะสม:</strong> ${mins} นาที ${secs} วินาที
+            `;
+              document.getElementById('recovery-modal').classList.add('active');
+            }
+          } catch (e) {
+            console.error("Error parsing saved session", e);
+          }
+        }
+      }
+
+      function resumeSession() {
+        const saved = localStorage.getItem('cyber_fighter_active_session');
+        if (saved) {
+          try {
+            const session = JSON.parse(saved);
+
+            // กู้คืนข้อมูลเข้าสู่ตัวแปรเกม
+            gameState.name = session.name;
+            gameState.surname = session.surname;
+            gameState.number = session.number;
+            gameState.room = session.room;
+            gameState.selectedChar = session.selectedChar;
+            gameState.difficulty = session.difficulty;
+            gameState.stageIndex = session.stageIndex;
+            gameState.questionIndex = session.questionIndex;
+            gameState.playerHp = session.playerHp;
+            gameState.enemyHp = session.enemyHp;
+            gameState.attempts = session.attempts;
+            gameState.currentSessionMistakes = session.currentSessionMistakes;
+            gameState.score = session.score;
+            currentSessionStages = session.currentSessionStages; // คืนค่าตารางคำถามที่สุ่มเรียงไว้
+            elapsedTime = session.elapsedTime || 0; // คืนค่าเวลาสะสม
+
+            // อัปเดต UI ให้สอดคล้อง
+            document.getElementById('txt-hud-player-name').innerText = `${gameState.name} [${gameState.room}]`;
+            document.getElementById('txt-hud-attempts').innerText = gameState.attempts;
+            document.getElementById('player-svg-model').innerHTML = PLAYER_MODELS[gameState.selectedChar];
+
+            // ปิด Modal และสลับจอเข้าสู้ต่อ
+            document.getElementById('recovery-modal').classList.remove('active');
+            switchScreen('screen-battle');
+
+            // โหลดด่านและข้อที่เล่นค้างไว้
+            const activeStage = currentSessionStages[gameState.stageIndex];
+            document.getElementById('enemy-svg-model').innerHTML = ENEMY_MODELS[activeStage.bossType];
+            document.getElementById('txt-hud-enemy-name').innerText = activeStage.bossName;
+            document.getElementById('stage-banner-text').innerText = `STAGE ${activeStage.stageNum}`;
+
+            updateHpBars();
+            loadQuestion();
+
+            // เดินเวลาจับเวลาต่อเนื่อง
+            updateTimerDisplay(elapsedTime);
+            startTimer();
+          } catch (e) {
+            console.error(e);
+            discardSession();
+          }
+        }
+      }
+
+      function discardSession() {
+        localStorage.removeItem('cyber_fighter_active_session');
+        document.getElementById('recovery-modal').classList.remove('active');
+      }
+
+      /* ==========================================================================
+         L. QUESTION & CHOICES RANDOMIZATION ENGINE (SHUFFLER)
+         ========================================================================== */
+      function initializeSessionStages() {
+        // คัดลอกโครงสร้างคำถามทั้งหมดแบบ Deep Copy
+        currentSessionStages = JSON.parse(JSON.stringify(GAME_STAGES));
+
+        // สลับคำถามในแต่ละด่าน และสลับตัวเลือกของแต่ละคำถาม
+        currentSessionStages.forEach(stage => {
+          // 1. สลับลำดับคำถามในด่าน
+          shuffleArray(stage.questions);
+
+          // 2. สลับตัวเลือกของแต่ละข้อสอบโดยเชื่อมโยงข้อที่ถูกต้องไว้
+          stage.questions.forEach(question => {
+            const correctText = question.choices[question.answer];
+            shuffleArray(question.choices);
+            question.answer = question.choices.indexOf(correctText);
+          });
+        });
+      }
+
+      function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+      }
+
+      // เริ่มการตรวจสอบข้อมูลเซสชันเมื่อดาวน์โหลดโครงสร้างหน้าเว็บเสร็จ
+      window.addEventListener('DOMContentLoaded', () => {
+        checkActiveSession();
+      });
+    </script>
+</body>
+
+</html>
