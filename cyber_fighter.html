@@ -1376,6 +1376,369 @@
       background-color: #e5e5e5;
       font-weight: bold;
     }
+
+    /* ======================================================================
+       READABILITY PASS — Thai-first typography and clearer game controls
+       ====================================================================== */
+    :root {
+      --text-primary: #f8fafc;
+      --text-secondary: #cbd5e1;
+      --surface-readable: rgba(10, 16, 30, 0.96);
+    }
+
+    body {
+      font-size: 17px;
+      line-height: 1.55;
+    }
+
+    .header-title,
+    .logo-large {
+      line-height: 1.25;
+    }
+
+    .difficulty-badge,
+    .stage-label-banner,
+    .question-header,
+    .choice-key,
+    .skill-cost,
+    .combo-title {
+      font-family: 'Kanit', sans-serif;
+      letter-spacing: 0.02em;
+    }
+
+    .difficulty-badge {
+      font-size: 0.85rem;
+      padding: 5px 10px;
+    }
+
+    .logo-sub {
+      color: #f7a8cb;
+      font-size: 1.1rem;
+      line-height: 1.6;
+      max-width: 620px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .config-box {
+      background: rgba(6, 10, 20, 0.78);
+      border: 1px solid rgba(0, 240, 255, 0.3);
+      padding: 20px;
+    }
+
+    .config-label {
+      font-size: 1rem;
+      margin-top: 6px;
+      margin-bottom: 10px;
+    }
+
+    .input-group label,
+    .char-name,
+    .diff-btn {
+      font-size: 1rem;
+    }
+
+    .input-group input,
+    .input-group select {
+      min-height: 46px;
+      font-size: 1rem;
+      font-weight: 400;
+      border-color: #566078;
+    }
+
+    .input-group input:focus,
+    .input-group select:focus,
+    .btn-arcade:focus-visible,
+    .char-card:focus-visible,
+    .diff-btn:focus-visible,
+    .skill-btn:focus-visible,
+    .choice-btn:focus-visible {
+      outline: 3px solid var(--neon-yellow);
+      outline-offset: 3px;
+    }
+
+    .char-card {
+      min-height: 118px;
+      justify-content: center;
+      border-color: #394257;
+    }
+
+    .btn-arcade {
+      min-height: 52px;
+      font-size: 1.1rem;
+      line-height: 1.35;
+      text-transform: none;
+    }
+
+    .battle-hud {
+      padding: 14px;
+      gap: 12px;
+    }
+
+    .hud-fighter-name {
+      font-size: 0.95rem;
+      text-transform: none;
+    }
+
+    .hp-bar-bg {
+      height: 18px;
+    }
+
+    .stage-label-banner {
+      font-size: 0.85rem;
+      font-weight: 800;
+      padding: 5px 14px;
+    }
+
+    .skills-action-bar {
+      gap: 10px;
+      padding: 10px;
+    }
+
+    .skill-btn {
+      min-height: 48px;
+      font-size: 0.92rem;
+      line-height: 1.25;
+    }
+
+    .skill-cost {
+      font-size: 0.75rem;
+      white-space: nowrap;
+    }
+
+    .console-box {
+      background: var(--surface-readable);
+      border: 2px solid rgba(0, 240, 255, 0.38);
+      padding: 20px;
+      box-shadow: 0 6px 26px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    }
+
+    .console-box::after {
+      opacity: 0.35;
+    }
+
+    .question-container {
+      min-height: 92px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.35);
+    }
+
+    .question-header {
+      font-size: 0.95rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .question-text {
+      color: var(--text-primary);
+      font-size: 1.3rem;
+      font-weight: 600;
+      line-height: 1.65;
+      text-shadow: none;
+    }
+
+    .choices-grid {
+      gap: 12px;
+    }
+
+    .choice-btn {
+      min-height: 68px;
+      padding: 14px 16px;
+      font-size: 1.08rem;
+      font-weight: 500;
+      line-height: 1.55;
+      border: 2px solid rgba(0, 240, 255, 0.25);
+      align-items: flex-start;
+    }
+
+    .choice-btn > span:last-child {
+      flex: 1;
+      padding-top: 1px;
+    }
+
+    .choice-key {
+      color: #fff;
+      background: #6d164d;
+      font-size: 0.95rem;
+      font-weight: 800;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+    }
+
+    .choice-btn:hover:not(:disabled) {
+      border-color: var(--neon-cyan);
+      background: linear-gradient(135deg, rgba(0, 240, 255, 0.16), rgba(10, 14, 25, 0.98));
+    }
+
+    .score-list {
+      border-width: 2px;
+      padding: 18px;
+    }
+
+    .score-list-item {
+      gap: 16px;
+      font-size: 1rem;
+      line-height: 1.5;
+      padding: 7px 0;
+    }
+
+    @media (max-width: 599px) {
+      body { padding: 0; font-size: 16px; }
+      .arcade-cabinet { border-radius: 0; min-height: 100vh; }
+      .game-screen { padding: 16px 14px; }
+      .header-title { font-size: 0.9rem; }
+      .logo-large { font-size: 1.55rem; }
+      .config-box, .console-box { padding: 16px; }
+      .battle-hud { gap: 8px; padding: 10px; }
+      .hud-fighter-name { font-size: 0.78rem; }
+      .skills-action-bar { flex-direction: column; }
+      .skill-btn { justify-content: space-between; padding: 10px 12px; }
+      .battle-arena { height: 180px; padding-left: 22px; padding-right: 22px; }
+      .question-text { font-size: 1.15rem; }
+      .choice-btn { min-height: 62px; font-size: 1rem; }
+      .score-list-item { align-items: flex-start; flex-direction: column; gap: 1px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    .mission-guide {
+      background: linear-gradient(135deg, rgba(0, 240, 255, 0.12), rgba(255, 0, 127, 0.08));
+      border: 1px solid rgba(0, 240, 255, 0.35);
+      border-radius: 12px;
+      padding: 16px;
+      margin: 0 auto 18px;
+      max-width: 720px;
+    }
+
+    .mission-guide-title {
+      color: var(--neon-cyan);
+      font-size: 1.1rem;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .mission-guide-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      text-align: left;
+    }
+
+    .mission-guide-grid > div {
+      background: rgba(4, 8, 17, 0.58);
+      border-radius: 8px;
+      padding: 10px;
+    }
+
+    .mission-guide-grid strong,
+    .mission-guide-grid span {
+      display: block;
+    }
+
+    .mission-guide-grid strong {
+      color: var(--neon-yellow);
+      font-size: 0.98rem;
+      margin-bottom: 3px;
+    }
+
+    .mission-guide-grid span {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.45;
+    }
+
+    .question-meta-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .question-progress {
+      flex-shrink: 0;
+      color: #08111d;
+      background: var(--neon-yellow);
+      border-radius: 999px;
+      font-size: 0.9rem;
+      font-weight: 800;
+      padding: 3px 10px;
+    }
+
+    .learning-feedback {
+      margin-top: 16px;
+      padding: 14px 16px;
+      background: rgba(16, 78, 38, 0.34);
+      border: 1px solid rgba(74, 222, 128, 0.7);
+      border-left: 5px solid var(--neon-green);
+      border-radius: 8px;
+      color: var(--text-primary);
+    }
+
+    .learning-feedback-title {
+      color: var(--neon-green);
+      font-size: 1rem;
+      font-weight: 800;
+      margin-bottom: 3px;
+    }
+
+    .learning-feedback p {
+      font-size: 1rem;
+      line-height: 1.55;
+    }
+
+    .review-summary {
+      display: block;
+      border-top: 1px dashed rgba(148, 163, 184, 0.45);
+      margin-top: 6px;
+    }
+
+    .review-summary span:last-child {
+      display: block;
+      color: var(--neon-yellow);
+      font-weight: 600;
+      margin-top: 3px;
+    }
+
+    .achievement-section {
+      margin: -4px 0 20px;
+      text-align: left;
+    }
+
+    .achievement-section h2 {
+      color: var(--neon-cyan);
+      font-size: 1.08rem;
+      margin-bottom: 8px;
+    }
+
+    .achievement-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .achievement-badge {
+      background: rgba(255, 255, 0, 0.12);
+      border: 1px solid rgba(255, 255, 0, 0.55);
+      border-radius: 999px;
+      color: #fff9bf;
+      font-size: 0.92rem;
+      font-weight: 600;
+      padding: 6px 11px;
+    }
+
+    @media (max-width: 599px) {
+      .mission-guide-grid { grid-template-columns: 1fr; gap: 8px; }
+      .question-meta-row { align-items: flex-start; flex-direction: column; gap: 4px; }
+      .question-progress { font-size: 0.85rem; }
+    }
   </style>
 </head>
 
@@ -1400,6 +1763,15 @@
       <div class="welcome-card">
         <h1 class="logo-large">CYBER FIGHTER</h1>
         <p class="logo-sub">ศึกประลองวิชาดิจิทัล ม.3</p>
+
+        <aside class="mission-guide" aria-label="วิธีเล่นแบบย่อ">
+          <div class="mission-guide-title">พร้อมเริ่มภารกิจไหม?</div>
+          <div class="mission-guide-grid">
+            <div><strong>1. ตอบคำถาม</strong><span>เลือกคำตอบที่คิดว่าถูกที่สุด</span></div>
+            <div><strong>2. สะสม AP</strong><span>ตอบถูกเพื่อชาร์จพลังทักษะ</span></div>
+            <div><strong>3. เรียนรู้ต่อ</strong><span>ถ้าตอบพลาด เกมจะเฉลยให้ทันที</span></div>
+          </div>
+        </aside>
 
         <div class="config-box">
           <!-- 1. Student Personal Information -->
@@ -1582,12 +1954,19 @@
       <!-- Question and buttons -->
       <div class="console-box">
         <div class="question-container">
-          <div class="question-header" id="txt-question-header">QUESTION 1 - REMEMBERING</div>
-          <div class="question-text" id="txt-question-body">คำถามจะปรากฏขึ้นตรงนี้...</div>
+          <div class="question-meta-row">
+            <div class="question-header" id="txt-question-header">QUESTION 1 - REMEMBERING</div>
+            <div class="question-progress" id="txt-question-progress">ข้อ 1 / 1</div>
+          </div>
+          <div class="question-text" id="txt-question-body" aria-live="polite">คำถามจะปรากฏขึ้นตรงนี้...</div>
         </div>
 
         <div class="choices-grid" id="choices-grid-container">
           <!-- Choice buttons will be injected -->
+        </div>
+        <div class="learning-feedback" id="learning-feedback" aria-live="assertive" hidden>
+          <div class="learning-feedback-title">เฉลยเพื่อเรียนรู้</div>
+          <p id="learning-feedback-text"></p>
         </div>
       </div>
 
@@ -1633,7 +2012,16 @@
             <span>คะแนนสะสมสุดท้าย:</span>
             <span id="summary-final-score">0 คะแนน</span>
           </div>
+          <div class="score-list-item review-summary" id="summary-review-row" hidden>
+            <span>หัวข้อที่ควรทบทวน:</span>
+            <span id="summary-review">-</span>
+          </div>
         </div>
+
+        <section class="achievement-section" aria-labelledby="achievement-title">
+          <h2 id="achievement-title">ความสำเร็จของภารกิจ</h2>
+          <div class="achievement-badges" id="achievement-badges"></div>
+        </section>
 
         <button class="btn-arcade" onclick="restartGame()">
           กลับสู่หน้าลงทะเบียน 🔄
@@ -1993,9 +2381,12 @@
         currentSessionMistakes: 0,
         score: 0,
         comboCount: 0,
+        maxCombo: 0,
         ap: 0,
         shieldActive: false,
-        questionMissed: false
+        questionMissed: false,
+        skillsUsed: 0,
+        missedTopics: []
       };
 
       // ตัวแปรสำหรับระบบจับเวลา
@@ -2050,6 +2441,28 @@
 
       let currentSessionStages = [];
 
+      function updateQuestionProgress(activeStage) {
+        const progressEl = document.getElementById('txt-question-progress');
+        if (!progressEl) return;
+        progressEl.innerText = `ด่าน ${gameState.stageIndex + 1}/${currentSessionStages.length} · ข้อ ${gameState.questionIndex + 1}/${activeStage.questions.length}`;
+      }
+
+      function hideLearningFeedback() {
+        const feedback = document.getElementById('learning-feedback');
+        if (feedback) feedback.hidden = true;
+      }
+
+      function showLearningFeedback(qData, correctIdx) {
+        const feedback = document.getElementById('learning-feedback');
+        const feedbackText = document.getElementById('learning-feedback-text');
+        if (!feedback || !feedbackText) return;
+
+        const correctChoice = qData.choices[correctIdx];
+        const explanation = qData.explanation || 'ลองสังเกตคำสำคัญในโจทย์ แล้วเชื่อมโยงกับหลักการที่เรียนในบทนี้';
+        feedbackText.textContent = `คำตอบที่ถูกคือ “${correctChoice}” เพราะ ${explanation}`;
+        feedback.hidden = false;
+      }
+
       function startGame() {
         // ดึงข้อมูลและตรวจสอบ
         gameState.name = document.getElementById('reg-name').value.trim();
@@ -2076,8 +2489,12 @@
         gameState.currentSessionMistakes = 0;
         gameState.score = 0;
         gameState.comboCount = 0;
+        gameState.maxCombo = 0;
         gameState.ap = 0;
         gameState.shieldActive = false;
+        gameState.questionMissed = false;
+        gameState.skillsUsed = 0;
+        gameState.missedTopics = [];
 
         // อัปเดตข้อมูลบน HUD
         document.getElementById('txt-hud-player-name').innerText = `${gameState.name} [${gameState.room}]`;
@@ -2168,6 +2585,7 @@
         if (type === 'shield') {
           if (gameState.ap >= 50 && !gameState.shieldActive) {
             gameState.ap -= 50;
+            gameState.skillsUsed++;
             gameState.shieldActive = true;
             createDamagePopup("SHIELD ACTIVATED! 🛡️", true, true);
             playPlayerAttackSound();
@@ -2177,6 +2595,7 @@
         } else if (type === 'heal') {
           if (gameState.ap >= 60 && gameState.playerHp < 100) {
             gameState.ap -= 60;
+            gameState.skillsUsed++;
             gameState.playerHp = Math.min(100, gameState.playerHp + 25);
             createDamagePopup("+25 HP ❤️", true, true);
             playPlayerAttackSound();
@@ -2186,6 +2605,7 @@
         } else if (type === 'decrypt') {
           if (gameState.ap >= 75) {
             gameState.ap -= 75;
+            gameState.skillsUsed++;
             updateHpBars();
             
             // 50/50 Key: Find 2 incorrect choices and disable them
@@ -2282,6 +2702,8 @@
         const qData = activeStage.questions[gameState.questionIndex];
         document.getElementById('txt-question-header').innerText = qData.header;
         document.getElementById('txt-question-body').innerText = qData.question;
+        updateQuestionProgress(activeStage);
+        hideLearningFeedback();
 
         // Populate choices
         const container = document.getElementById('choices-grid-container');
@@ -2314,6 +2736,22 @@
         }
       }
 
+      // Allow students to choose A-D without moving their hand away from the keyboard.
+      document.addEventListener('keydown', (event) => {
+        if (document.getElementById('screen-battle')?.classList.contains('active') !== true) return;
+        if (event.altKey || event.ctrlKey || event.metaKey) return;
+
+        const choiceIndex = { a: 0, b: 1, c: 2, d: 3 }[event.key.toLowerCase()];
+        if (choiceIndex === undefined) return;
+
+        const choiceButtons = document.querySelectorAll('.choice-btn');
+        const targetButton = choiceButtons[choiceIndex];
+        if (!targetButton || targetButton.disabled) return;
+
+        event.preventDefault();
+        targetButton.click();
+      });
+
       function resolveCombatSuccess() {
         const playerWrapper = document.getElementById('player-sprite-wrapper');
         const enemyWrapper = document.getElementById('enemy-sprite-wrapper');
@@ -2322,6 +2760,7 @@
 
         // Increment Combo and Calculate Multiplier
         gameState.comboCount = (gameState.comboCount || 0) + 1;
+        gameState.maxCombo = Math.max(gameState.maxCombo || 0, gameState.comboCount);
         let multiplier = 1.0;
         if (gameState.comboCount >= 2) {
           multiplier = 1.0 + (gameState.comboCount - 1) * 0.2; // 2 Combo = 1.2x, 3 Combo = 1.4x, etc.
@@ -2384,6 +2823,12 @@
         gameState.questionMissed = true;
         showComboIndicator(0, 1.0);
 
+        const activeStage = currentSessionStages[gameState.stageIndex];
+        const missedTopic = activeStage.bossName;
+        if (!gameState.missedTopics.includes(missedTopic)) {
+          gameState.missedTopics.push(missedTopic);
+        }
+
         enemyWrapper.classList.add('attacker-enemy');
         playEnemyAttackSound();
         fireProjectile(false); // Shoot laser/projectile to player!
@@ -2396,6 +2841,7 @@
           clickedBtn.style.background = '#4a0b16';
           allButtons[correctIdx].style.borderColor = 'var(--neon-green)';
           allButtons[correctIdx].style.background = '#0b4a1b';
+          showLearningFeedback(qData, correctIdx);
 
           // Shield Gating check
           let damageTaken = 10;
@@ -2510,6 +2956,35 @@
 
         document.getElementById('summary-mistakes').innerText = `${gameState.currentSessionMistakes} ครั้ง`;
         document.getElementById('summary-final-score').innerText = `${finalScore} คะแนน`;
+
+        const reviewRow = document.getElementById('summary-review-row');
+        const reviewText = document.getElementById('summary-review');
+        const missedTopics = gameState.missedTopics || [];
+        reviewRow.hidden = missedTopics.length === 0;
+        if (missedTopics.length > 0) {
+          reviewText.innerText = missedTopics.join(' • ');
+        }
+
+        renderAchievementBadges();
+      }
+
+      function renderAchievementBadges() {
+        const badgesEl = document.getElementById('achievement-badges');
+        if (!badgesEl) return;
+
+        const badges = ['🎮 นักสู้ดิจิทัล: เข้าร่วมภารกิจจนจบ'];
+        if (gameState.currentSessionMistakes === 0) badges.push('🛡️ Perfect Defender: ตอบได้โดยไม่พลาด');
+        if ((gameState.maxCombo || 0) >= 3) badges.push(`⚡ Combo Master: ตอบถูกต่อเนื่อง ${gameState.maxCombo} ข้อ`);
+        if ((gameState.skillsUsed || 0) > 0) badges.push(`🧠 นักวางแผน: ใช้ทักษะ ${gameState.skillsUsed} ครั้ง`);
+        if (gameState.currentSessionMistakes > 0) badges.push('📚 ผู้ทบทวน: แก้โจทย์ที่พลาดได้ครบ');
+
+        badgesEl.innerHTML = '';
+        badges.forEach((badge) => {
+          const badgeEl = document.createElement('span');
+          badgeEl.className = 'achievement-badge';
+          badgeEl.textContent = badge;
+          badgesEl.appendChild(badgeEl);
+        });
       }
 
       async function syncScoreToDatabase(finalScore) {
@@ -2733,8 +3208,11 @@
           currentSessionMistakes: gameState.currentSessionMistakes,
           score: gameState.score,
           comboCount: gameState.comboCount || 0,
+          maxCombo: gameState.maxCombo || 0,
           ap: gameState.ap || 0,
           shieldActive: gameState.shieldActive || false,
+          skillsUsed: gameState.skillsUsed || 0,
+          missedTopics: gameState.missedTopics || [],
           currentSessionStages: currentSessionStages, // บันทึกคำถามที่สุ่มเรียงไว้แล้ว
           elapsedTime: elapsedTime, // บันทึกเวลาที่เดินไปแล้ว
           inProgress: true
@@ -2790,8 +3268,11 @@
             gameState.currentSessionMistakes = session.currentSessionMistakes;
             gameState.score = session.score;
             gameState.comboCount = session.comboCount || 0;
+            gameState.maxCombo = session.maxCombo || 0;
             gameState.ap = session.ap || 0;
             gameState.shieldActive = session.shieldActive || false;
+            gameState.skillsUsed = session.skillsUsed || 0;
+            gameState.missedTopics = session.missedTopics || [];
             currentSessionStages = session.currentSessionStages; // คืนค่าตารางคำถามที่สุ่มเรียงไว้
             elapsedTime = session.elapsedTime || 0; // คืนค่าเวลาสะสม
 
