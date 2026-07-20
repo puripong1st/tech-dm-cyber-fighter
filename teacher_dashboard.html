@@ -448,24 +448,27 @@
     #pdf-template {
       display: none;
       font-family: 'Sarabun', 'Chakra Petch', sans-serif;
-      color: #000;
+      color: #1e293b;
       background: #fff;
-      padding: 30px;
+      padding: 35px 30px;
     }
 
     #pdf-template h1 {
-      font-size: 20px;
+      font-size: 22px;
       text-align: center;
-      margin-bottom: 5px;
-      color: #111;
+      margin-bottom: 8px;
+      color: #0f172a;
+      font-weight: bold;
     }
 
     #pdf-template h2 {
-      font-size: 14px;
+      font-size: 13px;
       text-align: center;
       margin-bottom: 25px;
-      color: #555;
+      color: #475569;
       font-weight: normal;
+      border-bottom: 2px dashed #cbd5e1;
+      padding-bottom: 12px;
     }
 
     #pdf-template table {
@@ -475,23 +478,24 @@
     }
 
     #pdf-template th {
-      background: #f0f0f0;
-      border: 1px solid #ccc;
-      padding: 8px;
+      background: #f1f5f9;
+      border: 1px solid #94a3b8;
+      padding: 10px 6px;
       font-size: 12px;
-      color: #000;
+      color: #0f172a;
       text-align: center;
+      font-weight: bold;
     }
 
     #pdf-template td {
-      border: 1px solid #ccc;
-      padding: 8px;
+      border: 1px solid #cbd5e1;
+      padding: 10px 6px;
       font-size: 12px;
-      color: #333;
+      color: #334155;
     }
 
     #pdf-template tr:nth-child(even) {
-      background: #fafafa;
+      background: #f8fafc;
     }
 
     /* Responsive */
@@ -567,6 +571,16 @@
         </select>
       </div>
 
+      <!-- Gender Filter -->
+      <div class="filter-group">
+        <label for="filter-gender" class="filter-label"><i class="fa-solid fa-venus-mars"></i> คัดแยกเพศ:</label>
+        <select id="filter-gender" class="filter-select" onchange="filterDashboardData()">
+          <option value="ALL">แสดงเพศทั้งหมด</option>
+          <option value="ชาย">เพศชาย (ชาย ♂)</option>
+          <option value="หญิง">เพศหญิง (หญิง ♀)</option>
+        </select>
+      </div>
+
       <!-- Sorting Selector -->
       <div class="filter-group">
         <label for="sort-by" class="filter-label"><i class="fa-solid fa-sort"></i> เรียงลำดับ:</label>
@@ -604,11 +618,12 @@
           <tr>
             <th style="width: 8%;">ห้อง</th>
             <th style="width: 8%;">เลขที่</th>
-            <th style="width: 30%;">ชื่อผู้เล่น (นามแฝง/ชื่อจริง)</th>
-            <th style="width: 15%;">คะแนนรวม (5,000)</th>
-            <th style="width: 18%;">คะแนนเก็บ (เต็ม 10)</th>
-            <th style="width: 10%;">รอบที่เล่น</th>
-            <th style="width: 11%;">เวลาที่ใช้</th>
+            <th style="width: 8%;">เพศ</th>
+            <th style="width: 26%;">ชื่อผู้เล่น (นามแฝง/ชื่อจริง)</th>
+            <th style="width: 12%;">คะแนนรวม (5,000)</th>
+            <th style="width: 15%;">คะแนนเก็บ (เต็ม 10)</th>
+            <th style="width: 11%;">รอบที่เล่น</th>
+            <th style="width: 12%;">เวลาที่ใช้</th>
           </tr>
         </thead>
         <tbody id="score-table-body">
@@ -634,11 +649,12 @@
         <tr>
           <th style="width: 8%;">ห้อง</th>
           <th style="width: 8%;">เลขที่</th>
-          <th style="width: 28%;">ชื่อ - นามสกุล</th>
-          <th style="width: 20%;">นามแฝง (Codename)</th>
-          <th style="width: 13%;">คะแนนรวม</th>
-          <th style="width: 15%;">คะแนนเก็บ (เต็ม 10)</th>
-          <th style="width: 8%;">รอบที่เล่น</th>
+          <th style="width: 10%;">เพศ</th>
+          <th style="width: 25%;">ชื่อ - นามสกุล</th>
+          <th style="width: 16%;">นามแฝง (Codename)</th>
+          <th style="width: 12%;">คะแนนรวม</th>
+          <th style="width: 13%;">คะแนนเก็บ (10)</th>
+          <th style="width: 8%;">รอบ</th>
         </tr>
       </thead>
       <tbody id="pdf-table-body">
@@ -845,15 +861,23 @@
        -------------------------------------------------------------------------- */
     function filterDashboardData() {
       const roomFilter = document.getElementById('filter-room').value;
+      const genderFilter = document.getElementById('filter-gender').value;
       const sortBy = document.getElementById('sort-by').value;
       const searchVal = document.getElementById('search-input').value.trim().toLowerCase();
       const tableBody = document.getElementById('score-table-body');
 
-      // กรองข้อมูล (ตามห้องเรียน และการค้นหาชื่อ)
+      // กรองข้อมูล (ตามห้องเรียน เพศ และการค้นหาชื่อ)
       let filtered = currentLoadedScores.filter(item => {
         // กรองตามห้องเรียน
         if (roomFilter !== 'ALL' && item.room !== roomFilter) {
           return false;
+        }
+        // กรองตามเพศ
+        if (genderFilter !== 'ALL') {
+          const itemGender = item.gender || 'ไม่ระบุ';
+          if (itemGender !== genderFilter) {
+            return false;
+          }
         }
         // ค้นหาตามชื่อจริง นามสกุล นามแฝง หรือเลขที่
         if (searchVal) {
@@ -894,7 +918,7 @@
 
       // แสดงผลทางหน้าจอ
       if (filtered.length === 0) {
-        tableBody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: var(--text-gray); padding: 30px;">ไม่มีข้อมูลสถิติคะแนนของนักเรียนตามเงื่อนไขที่เลือก</td></tr>';
+        tableBody.innerHTML = '<tr><td colspan="8" style="text-align: center; color: var(--text-gray); padding: 30px;">ไม่มีข้อมูลสถิติคะแนนของนักเรียนตามเงื่อนไขที่เลือก</td></tr>';
         populatePdfTemplate([]);
         return;
       }
@@ -909,10 +933,17 @@
           ? `<strong>${item.nickname.trim()}</strong> <span style="font-size: 0.75rem; color: var(--neon-yellow); opacity: 0.85; margin-left: 4px;">(นามแฝง)</span>`
           : `<strong>${item.name} ${item.surname}</strong>`;
 
+        const genderTag = item.gender === 'ชาย'
+          ? '<span style="color: #00b0ff; font-weight: bold;">ชาย ♂</span>'
+          : item.gender === 'หญิง'
+            ? '<span style="color: #ff60b0; font-weight: bold;">หญิง ♀</span>'
+            : '<span style="color: var(--text-gray); font-style: italic;">ไม่ระบุ</span>';
+
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td><span class="room-tag">${item.room}</span></td>
           <td>${item.student_number}</td>
+          <td style="text-align: center;">${genderTag}</td>
           <td>${nameDisplay}</td>
           <td><span class="score-tag">${item.score}</span></td>
           <td style="text-align: center; font-weight: bold; color: var(--neon-cyan);">${scaledScore} / 10</td>
@@ -943,15 +974,19 @@
       filteredList.forEach(item => {
         const scaledScore = Math.max(0, Math.min(10, (item.score / 5000) * 10)).toFixed(1);
         const nickStr = (item.nickname && item.nickname.trim() !== '') ? item.nickname.trim() : '-';
+        const genderDisplay = item.gender || 'ไม่ระบุ';
+        const genderColor = item.gender === 'ชาย' ? '#0284c7' : item.gender === 'หญิง' ? '#db2777' : '#64748b';
+        
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td style="text-align: center;">${item.room}</td>
-          <td style="text-align: center;">${item.student_number}</td>
-          <td>${item.name} ${item.surname}</td>
-          <td style="text-align: center; color: #444;">${nickStr}</td>
-          <td style="font-weight: bold; text-align: center;">${item.score}</td>
-          <td style="font-weight: bold; text-align: center; color: #0077cc;">${scaledScore} / 10</td>
-          <td style="text-align: center;">${item.attempts}</td>
+          <td style="text-align: center; font-weight: bold; font-size: 13px;">${item.student_number}</td>
+          <td style="text-align: center; font-weight: bold; color: ${genderColor};">${genderDisplay}</td>
+          <td style="font-weight: bold; font-size: 13px;">${item.name} ${item.surname}</td>
+          <td style="text-align: center; color: #475569; font-style: italic;">${nickStr}</td>
+          <td style="text-align: center; color: #64748b;">${item.score}</td>
+          <td style="font-weight: bold; text-align: center; color: #0f172a; font-size: 13px; background: #e0f2fe;">${scaledScore} / 10</td>
+          <td style="text-align: center; font-weight: 500;">${item.attempts}</td>
         `;
         pdfBody.appendChild(tr);
       });

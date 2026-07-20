@@ -2656,10 +2656,14 @@
         surname text not null,
         student_number integer not null,
         room text not null,
+        gender text,
         score integer not null,
         attempts integer not null,
         created_at timestamp with time zone default timezone('utc'::text, now()) not null
       );
+      
+      -- คำสั่งสำหรับอัปเดตฐานข้อมูลที่มีอยู่แล้วให้รองรับเพศ:
+      -- alter table cyber_fighter_scores add column gender text;
       */
 
       /* ==========================================================================
@@ -3731,6 +3735,7 @@
           nickname: gameState.nickname || "",
           student_number: parseInt(gameState.number),
           room: gameState.room,
+          gender: gameState.selectedChar === 'male' ? 'ชาย' : 'หญิง',
           score: finalScore,
           attempts: attemptsCount,
           play_time: elapsedTime, // ระยะเวลาเล่นจริงหน่วยเป็นวินาที
