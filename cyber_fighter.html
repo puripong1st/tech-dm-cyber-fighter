@@ -1884,31 +1884,6 @@
       padding: 6px 11px;
     }
 
-    .kid-friendly-panel {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 10px;
-      margin: 0 0 12px;
-    }
-
-    .reward-pill {
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      border-radius: 10px;
-      padding: 8px 10px;
-      color: #f7fbff;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      min-height: 44px;
-    }
-
-    .reward-pill strong {
-      color: var(--neon-yellow);
-      font-size: 1rem;
-    }
-
     .mission-strip {
       margin: 0 0 12px;
       padding: 10px 14px;
@@ -1981,7 +1956,6 @@
     }
 
     @media (max-width: 599px) {
-      .kid-friendly-panel { grid-template-columns: 1fr; }
       .mission-strip { align-items: flex-start; flex-direction: column; }
       .mission-guide-grid { grid-template-columns: 1fr; gap: 8px; }
       .question-meta-row { align-items: flex-start; flex-direction: column; gap: 4px; }
@@ -2020,18 +1994,6 @@
 
     body.screen-battle-active .hp-bar-bg {
       height: 12px;
-    }
-
-    body.screen-battle-active .kid-friendly-panel {
-      gap: 8px;
-      margin-bottom: 6px;
-      flex-shrink: 0;
-    }
-
-    body.screen-battle-active .reward-pill {
-      min-height: 34px;
-      padding: 5px 9px;
-      font-size: 0.9rem;
     }
 
     body.screen-battle-active .mission-strip {
