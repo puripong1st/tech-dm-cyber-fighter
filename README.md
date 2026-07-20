@@ -67,6 +67,7 @@ create table cyber_fighter_scores (
   id uuid default gen_random_uuid() primary key,
   name text not null,
   surname text not null,
+  nickname text default '', -- ชื่อนามแฝง / โค้ดเนม (ไม่บังคับ)
   student_number integer not null,
   room text not null,
   score integer not null,
@@ -74,6 +75,9 @@ create table cyber_fighter_scores (
   play_time integer default 0, -- เวลาทำข้อสอบจริง (หน่วยเป็นวินาที)
   created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
+
+-- หากเคยสร้างตารางไว้แล้ว รันคำสั่งนี้เพื่อเพิ่มคอลัมน์นามแฝง:
+alter table cyber_fighter_scores add column if not exists nickname text default '';
 
 -- เปิดใช้ช่องทางดึงข้อมูลแบบอัปเดตเรียลไทม์ (Real-time DB Channel)
 alter publication supabase_realtime add table cyber_fighter_scores;

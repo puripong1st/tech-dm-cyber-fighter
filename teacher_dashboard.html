@@ -604,7 +604,7 @@
           <tr>
             <th style="width: 8%;">ห้อง</th>
             <th style="width: 8%;">เลขที่</th>
-            <th style="width: 30%;">ชื่อ - นามสกุล</th>
+            <th style="width: 30%;">ชื่อผู้เล่น (นามแฝง/ชื่อจริง)</th>
             <th style="width: 15%;">คะแนนรวม (5,000)</th>
             <th style="width: 18%;">คะแนนเก็บ (เต็ม 10)</th>
             <th style="width: 10%;">รอบที่เล่น</th>
@@ -632,12 +632,13 @@
     <table>
       <thead>
         <tr>
-          <th style="width: 10%;">ห้อง</th>
-          <th style="width: 10%;">เลขที่</th>
-          <th style="width: 35%;">ชื่อ - นามสกุล</th>
-          <th style="width: 15%;">คะแนนรวม</th>
-          <th style="width: 20%;">คะแนนเก็บ (เต็ม 10)</th>
-          <th style="width: 10%;">รอบที่เล่น</th>
+          <th style="width: 8%;">ห้อง</th>
+          <th style="width: 8%;">เลขที่</th>
+          <th style="width: 28%;">ชื่อ - นามสกุล</th>
+          <th style="width: 20%;">นามแฝง (Codename)</th>
+          <th style="width: 13%;">คะแนนรวม</th>
+          <th style="width: 15%;">คะแนนเก็บ (เต็ม 10)</th>
+          <th style="width: 8%;">รอบที่เล่น</th>
         </tr>
       </thead>
       <tbody id="pdf-table-body">
@@ -810,6 +811,9 @@
           if (row.attempts > existing.attempts) {
             existing.attempts = row.attempts;
           }
+          if (row.nickname && row.nickname.trim() !== '') {
+            existing.nickname = row.nickname;
+          }
         } else {
           groupedScores.push({...row});
         }
@@ -851,11 +855,12 @@
         if (roomFilter !== 'ALL' && item.room !== roomFilter) {
           return false;
         }
-        // ค้นหาตามชื่อจริง นามสกุล หรือเลขที่
+        // ค้นหาตามชื่อจริง นามสกุล นามแฝง หรือเลขที่
         if (searchVal) {
           const fullName = `${item.name} ${item.surname}`.toLowerCase();
+          const nickName = (item.nickname || '').toLowerCase();
           const studentNumStr = String(item.student_number);
-          if (!fullName.includes(searchVal) && !studentNumStr.includes(searchVal)) {
+          if (!fullName.includes(searchVal) && !nickName.includes(searchVal) && !studentNumStr.includes(searchVal)) {
             return false;
           }
         }
@@ -875,8 +880,8 @@
           const tB = b.play_time !== undefined && b.play_time !== null ? b.play_time : 999999;
           return tA - tB;
         } else if (sortBy === 'name_asc') {
-          const nameA = `${a.name} ${a.surname}`;
-          const nameB = `${b.name} ${b.surname}`;
+          const nameA = (a.nickname && a.nickname.trim() !== '') ? a.nickname.trim() : `${a.name} ${a.surname}`;
+          const nameB = (b.nickname && b.nickname.trim() !== '') ? b.nickname.trim() : `${b.name} ${b.surname}`;
           return nameA.localeCompare(nameB, 'th');
         } else if (sortBy === 'number_asc') {
           if (roomFilter === 'ALL' && a.room !== b.room) {
@@ -899,11 +904,16 @@
         const durationStr = item.play_time !== undefined && item.play_time !== null ? formatTime(item.play_time) + ' นาที' : '-';
         const scaledScore = Math.max(0, Math.min(10, (item.score / 5000) * 10)).toFixed(1);
 
+        const hasNickname = item.nickname && item.nickname.trim() !== '';
+        const nameDisplay = hasNickname 
+          ? `<strong>${item.nickname.trim()}</strong> <span style="font-size: 0.75rem; color: var(--neon-yellow); opacity: 0.85; margin-left: 4px;">(นามแฝง)</span>`
+          : `<strong>${item.name} ${item.surname}</strong>`;
+
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td><span class="room-tag">${item.room}</span></td>
           <td>${item.student_number}</td>
-          <td><strong>${item.name} ${item.surname}</strong></td>
+          <td>${nameDisplay}</td>
           <td><span class="score-tag">${item.score}</span></td>
           <td style="text-align: center; font-weight: bold; color: var(--neon-cyan);">${scaledScore} / 10</td>
           <td style="text-align: center; font-weight: bold; color: var(--neon-magenta);">${item.attempts}</td>
@@ -932,11 +942,13 @@
       
       filteredList.forEach(item => {
         const scaledScore = Math.max(0, Math.min(10, (item.score / 5000) * 10)).toFixed(1);
+        const nickStr = (item.nickname && item.nickname.trim() !== '') ? item.nickname.trim() : '-';
         const tr = document.createElement('tr');
         tr.innerHTML = `
-          <td>${item.room}</td>
-          <td>${item.student_number}</td>
+          <td style="text-align: center;">${item.room}</td>
+          <td style="text-align: center;">${item.student_number}</td>
           <td>${item.name} ${item.surname}</td>
+          <td style="text-align: center; color: #444;">${nickStr}</td>
           <td style="font-weight: bold; text-align: center;">${item.score}</td>
           <td style="font-weight: bold; text-align: center; color: #0077cc;">${scaledScore} / 10</td>
           <td style="text-align: center;">${item.attempts}</td>

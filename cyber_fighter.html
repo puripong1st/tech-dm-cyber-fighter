@@ -1426,6 +1426,10 @@
                 </script>
               </select>
             </div>
+            <div class="input-group" style="grid-column: 1 / -1;">
+              <label for="reg-nickname">ชื่อนามแฝง / โค้ดเนม <span style="color: var(--neon-yellow); font-weight: normal; font-size: 0.8rem;">(ไม่บังคับ - จะใส่หรือไม่ใส่ก็ได้)</span></label>
+              <input type="text" id="reg-nickname" placeholder="ระบุนามแฝงสายลับ (หากระบุ จะแสดงนามแฝงนี้ในบอร์ดครูแบบเรียลไทม์)">
+            </div>
           </div>
 
           <!-- 2. Character Choice -->
@@ -2296,6 +2300,7 @@
       let gameState = {
         name: "",
         surname: "",
+        nickname: "",
         number: "",
         room: "",
         selectedChar: 'male',
@@ -2369,6 +2374,7 @@
         // ดึงข้อมูลและตรวจสอบ
         gameState.name = document.getElementById('reg-name').value.trim();
         gameState.surname = document.getElementById('reg-surname').value.trim();
+        gameState.nickname = document.getElementById('reg-nickname') ? document.getElementById('reg-nickname').value.trim() : "";
         gameState.number = document.getElementById('reg-number').value.trim();
         gameState.room = document.getElementById('reg-room').value;
 
@@ -2874,6 +2880,7 @@
         const scoreRecord = {
           name: gameState.name,
           surname: gameState.surname,
+          nickname: gameState.nickname || "",
           student_number: parseInt(gameState.number),
           room: gameState.room,
           score: finalScore,
@@ -3033,6 +3040,7 @@
         const sessionData = {
           name: gameState.name,
           surname: gameState.surname,
+          nickname: gameState.nickname || "",
           number: gameState.number,
           room: gameState.room,
           selectedChar: gameState.selectedChar,
@@ -3089,6 +3097,7 @@
             // กู้คืนข้อมูลเข้าสู่ตัวแปรเกม
             gameState.name = session.name;
             gameState.surname = session.surname;
+            gameState.nickname = session.nickname || "";
             gameState.number = session.number;
             gameState.room = session.room;
             gameState.selectedChar = session.selectedChar;
