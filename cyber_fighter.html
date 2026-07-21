@@ -18,6 +18,9 @@
   <!-- Supabase JS Client CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+  <!-- html2canvas CDN for image export -->
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
   <!-- คลังโจทย์และชุดคำถามประจำด่าน (แยกไฟล์เพื่อง่ายต่อการแก้ไข) -->
   <script src="game_questions.js"></script>
 
@@ -3816,50 +3819,112 @@
         hiddenDuringCapture.forEach((el) => { el.style.display = 'none'; });
 
         try {
-          const rect = card.getBoundingClientRect();
-          const clone = card.cloneNode(true);
-          clone.querySelectorAll('.no-capture').forEach((el) => el.remove());
-          const pageStyles = Array.from(document.querySelectorAll('style'))
-            .map((style) => style.textContent || '')
-            .join('\n');
+          // 1. Primary method: html2canvas
+          if (typeof html2canvas === 'function') {
+            const canvas = await html2canvas(card, {
+              backgroundColor: '#050812',
+              scale: Math.max(2, window.devicePixelRatio || 1),
+              useCORS: true,
+              logging: false,
+              allowTaint: true
+            });
+            const link = document.createElement('a');
+            link.download = buildVictoryScreenshotFilename();
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            return;
+          }
+        } catch (err) {
+          console.warn('html2canvas capture failed, falling back to Canvas Certificate generator:', err);
+        }
 
-          const wrapper = document.createElement('div');
-          wrapper.setAttribute('xmlns', 'http://www.w3.org/1999/xhtml');
-          wrapper.style.width = `${Math.ceil(rect.width)}px`;
-          wrapper.style.minHeight = `${Math.ceil(rect.height)}px`;
-          wrapper.style.boxSizing = 'border-box';
-          wrapper.style.background = '#050812';
-          wrapper.style.color = '#ffffff';
-          wrapper.style.fontFamily = "'Kanit', Arial, sans-serif";
-          const styleEl = document.createElement('style');
-          styleEl.textContent = pageStyles;
-          wrapper.appendChild(styleEl);
-          wrapper.appendChild(clone);
+        // 2. Fallback: Pure 2D Canvas Certificate Generator (100% immune to SVG Blob taint)
+        try {
+          const width = 800;
+          const height = 620;
+          const canvas = document.createElement('canvas');
+          canvas.width = width * 2;
+          canvas.height = height * 2;
+          const ctx = canvas.getContext('2d');
+          ctx.scale(2, 2);
 
-          const data = new XMLSerializer().serializeToString(wrapper);
-          const svg = `
-            <svg xmlns="http://www.w3.org/2000/svg" width="${Math.ceil(rect.width)}" height="${Math.ceil(rect.height)}">
-              <foreignObject width="100%" height="100%">${data}</foreignObject>
-            </svg>
-          `;
-          const svgUrl = URL.createObjectURL(new Blob([svg], { type: 'image/svg+xml;charset=utf-8' }));
-          const img = new Image();
-          img.decoding = 'async';
+          // Background gradient
+          const bgGrad = ctx.createLinearGradient(0, 0, 0, height);
+          bgGrad.addColorStop(0, '#0a0d18');
+          bgGrad.addColorStop(1, '#050812');
+          ctx.fillStyle = bgGrad;
+          ctx.fillRect(0, 0, width, height);
 
-          await new Promise((resolve, reject) => {
-            img.onload = resolve;
-            img.onerror = reject;
-            img.src = svgUrl;
+          // Neon Border
+          ctx.strokeStyle = '#00f0ff';
+          ctx.lineWidth = 4;
+          ctx.strokeRect(20, 20, width - 40, height - 40);
+
+          ctx.strokeStyle = '#ff007f';
+          ctx.lineWidth = 1;
+          ctx.strokeRect(24, 24, width - 48, height - 48);
+
+          // Header
+          ctx.textAlign = 'center';
+          ctx.fillStyle = '#39ff14';
+          ctx.font = 'bold 28px Kanit, sans-serif';
+          ctx.fillText('MISSION CLEARED', width / 2, 75);
+
+          ctx.fillStyle = '#00f0ff';
+          ctx.font = '16px Kanit, sans-serif';
+          ctx.fillText('CYBER FIGHTER : สรุปผลงานการทดสอบดิจิทัล', width / 2, 105);
+
+          // Separator line
+          ctx.strokeStyle = 'rgba(0, 240, 255, 0.3)';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(40, 125);
+          ctx.lineTo(width - 40, 125);
+          ctx.stroke();
+
+          // Info Box Data
+          const fullName = document.getElementById('summary-fullname')?.innerText || gameState.name;
+          const roomNum = document.getElementById('summary-room-number')?.innerText || '';
+          const attempts = document.getElementById('summary-attempts')?.innerText || '1';
+          const timeText = document.getElementById('summary-play-time')?.innerText || '0 วินาที';
+          const mistakes = document.getElementById('summary-mistakes')?.innerText || '0';
+          const combo = document.getElementById('txt-hud-max-combo')?.innerText || '0';
+          const score = gameState.score || 0;
+
+          // Inner Container Card
+          ctx.fillStyle = 'rgba(14, 20, 36, 0.85)';
+          ctx.fillRect(50, 145, width - 100, 390);
+          ctx.strokeStyle = 'rgba(0, 240, 255, 0.2)';
+          ctx.strokeRect(50, 145, width - 100, 390);
+
+          // Rows
+          ctx.textAlign = 'left';
+          ctx.font = '19px Kanit, sans-serif';
+
+          const rows = [
+            { label: 'สายลับผู้ประลอง:', val: fullName, color: '#ffffff' },
+            { label: 'ห้อง / เลขที่:', val: roomNum, color: '#ffffff' },
+            { label: 'จำนวนรอบการลองเล่น (Attempts):', val: attempts, color: '#ff007f' },
+            { label: 'เวลาที่ใช้ในการเล่น:', val: timeText, color: '#00f0ff' },
+            { label: 'ตอบผิดระหว่างรอบนี้:', val: mistakes, color: '#ffff00' },
+            { label: 'คอมโบสูงสุด:', val: `${combo} COMBO`, color: '#39ff14' },
+            { label: 'คะแนนสะสมสุดท้าย:', val: `${score} คะแนน`, color: '#00f0ff' }
+          ];
+
+          let y = 190;
+          rows.forEach((r) => {
+            ctx.fillStyle = '#8b9bb4';
+            ctx.fillText(r.label, 80, y);
+            ctx.fillStyle = r.color;
+            ctx.fillText(r.val, 420, y);
+            y += 44;
           });
 
-          const scale = Math.max(2, window.devicePixelRatio || 1);
-          const canvas = document.createElement('canvas');
-          canvas.width = Math.ceil(rect.width * scale);
-          canvas.height = Math.ceil(rect.height * scale);
-          const ctx = canvas.getContext('2d');
-          ctx.scale(scale, scale);
-          ctx.drawImage(img, 0, 0);
-          URL.revokeObjectURL(svgUrl);
+          // Footer
+          ctx.textAlign = 'center';
+          ctx.fillStyle = '#8b9bb4';
+          ctx.font = '14px Kanit, sans-serif';
+          ctx.fillText(`บันทึก ณ วันที่: ${new Date().toLocaleDateString('th-TH')} • CYBER FIGHTER DIGITAL ACADEMY`, width / 2, 575);
 
           const link = document.createElement('a');
           link.download = buildVictoryScreenshotFilename();
@@ -3867,7 +3932,7 @@
           link.click();
         } catch (error) {
           console.error('Failed to export victory screenshot', error);
-          alert('บันทึกรูปไม่สำเร็จ กรุณาลองอีกครั้ง');
+          alert('บันทึกรูปไม่สำเร็จ กรุณาลองใหม่อีกครั้ง');
         } finally {
           hiddenDuringCapture.forEach((el, index) => { el.style.display = previousDisplay[index]; });
         }
