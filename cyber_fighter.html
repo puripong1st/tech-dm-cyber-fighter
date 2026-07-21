@@ -891,6 +891,17 @@
       color: var(--neon-yellow);
     }
 
+    .victory-actions {
+      display: grid;
+      gap: 10px;
+      margin: 12px 0 0;
+    }
+
+    .btn-secondary {
+      background: linear-gradient(135deg, var(--neon-cyan), var(--neon-green));
+      color: #001016;
+    }
+
     /* ==========================================================================
        6. TEACHER DASHBOARD & TABLE FILTER
        ========================================================================== */
@@ -1903,6 +1914,81 @@
       font-size: 0.9rem;
     }
 
+    .combo-record-panel {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 14px;
+      margin: 0 0 12px;
+      padding: 10px 16px;
+      border: 1px solid rgba(255, 234, 0, 0.5);
+      border-radius: 12px;
+      background:
+        linear-gradient(90deg, rgba(255, 0, 127, 0.14), rgba(0, 240, 255, 0.12)),
+        rgba(6, 10, 20, 0.92);
+      box-shadow: inset 0 0 18px rgba(255, 234, 0, 0.08), 0 0 18px rgba(0, 240, 255, 0.14);
+    }
+
+    .combo-record-label,
+    .combo-record-note {
+      color: #d6edff;
+      font-weight: 800;
+      line-height: 1.25;
+    }
+
+    .combo-record-label {
+      color: var(--neon-yellow);
+      font-size: 1rem;
+      text-shadow: 0 0 8px rgba(255, 234, 0, 0.28);
+    }
+
+    .combo-record-value {
+      min-width: 132px;
+      display: inline-flex;
+      align-items: baseline;
+      justify-content: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 8px;
+      border: 1px solid rgba(0, 240, 255, 0.55);
+      background: rgba(0, 0, 0, 0.42);
+      color: var(--neon-cyan);
+      font-family: 'Press Start 2P', monospace;
+      box-shadow: 0 0 14px rgba(0, 240, 255, 0.18);
+    }
+
+    .combo-record-value strong {
+      font-size: 1.05rem;
+      color: #fff;
+      text-shadow: 0 0 8px var(--neon-cyan);
+    }
+
+    .combo-record-value span {
+      font-size: 0.55rem;
+      color: var(--neon-green);
+    }
+
+    .combo-record-note {
+      justify-self: end;
+      color: #a9f5ff;
+      font-size: 0.86rem;
+      text-align: right;
+    }
+
+    @media (max-width: 720px) {
+      .combo-record-panel {
+        grid-template-columns: 1fr;
+        justify-items: center;
+        gap: 7px;
+        text-align: center;
+      }
+
+      .combo-record-note {
+        justify-self: center;
+        text-align: center;
+      }
+    }
+
     .stage-roadmap {
       display: grid;
       grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -2438,15 +2524,15 @@
         </div>
       </div>
 
-      <div class="kid-friendly-panel" aria-label="รางวัลและสถานะผู้เล่น">
-        <div class="reward-pill">เหรียญ <strong id="txt-hud-coins">0</strong></div>
-        <div class="reward-pill">ยศ <strong id="txt-hud-rank">Rookie</strong></div>
-        <div class="reward-pill">คอมโบสูงสุด <strong id="txt-hud-max-combo">0</strong></div>
+      <div class="kid-friendly-panel combo-record-panel" aria-label="คอมโบสูงสุด">
+        <div class="combo-record-label">คอมโบสูงสุด</div>
+        <div class="combo-record-value"><strong id="txt-hud-max-combo">0</strong><span>COMBO</span></div>
+        <div class="combo-record-note">ตอบถูกต่อเนื่องเพื่อทำสถิติใหม่</div>
       </div>
 
       <div class="mission-strip">
         <strong id="txt-stage-mission">ภารกิจ: อ่านโจทย์แล้วเลือกคำตอบที่ปลอดภัยที่สุด</strong>
-        <span id="txt-stage-reward">รางวัลด่านนี้: +30 เหรียญเมื่อผ่านบอส</span>
+        <span id="txt-stage-reward">เป้าหมายด่านนี้: ทำคอมโบให้สูงที่สุด</span>
       </div>
 
       <div class="stage-roadmap" id="stage-roadmap" aria-label="ความคืบหน้าด่าน">
@@ -2577,12 +2663,12 @@
             <span id="summary-final-score">0 คะแนน</span>
           </div>
           <div class="score-list-item">
-            <span>เหรียญที่เก็บได้:</span>
-            <span id="summary-coins" style="color: var(--neon-yellow);">0 เหรียญ</span>
+            <span>คะแนนรวม 10:</span>
+            <span id="summary-score-ten" style="color: var(--neon-green);">0/10</span>
           </div>
-          <div class="score-list-item">
-            <span>ยศสุดท้าย:</span>
-            <span id="summary-rank" style="color: var(--neon-green);">Rookie</span>
+          <div class="score-list-item combo-summary-item">
+            <span>คอมโบสูงสุด:</span>
+            <span id="summary-max-combo" style="color: var(--neon-yellow);">0 COMBO</span>
           </div>
           <div class="score-list-item review-summary" id="summary-review-row" hidden>
             <span>หัวข้อที่ควรทบทวน:</span>
@@ -2595,7 +2681,13 @@
           <div class="achievement-badges" id="achievement-badges"></div>
         </section>
 
-        <button class="btn-arcade" onclick="restartGame()">
+        <div class="victory-actions no-capture">
+          <button class="btn-arcade btn-secondary" onclick="downloadVictoryScreenshot()">
+            บันทึกผลเป็น PNG
+          </button>
+        </div>
+
+        <button class="btn-arcade no-capture" onclick="restartGame()">
           กลับสู่หน้าลงทะเบียน 🔄
         </button>
       </div>
@@ -2956,10 +3048,9 @@
         attempts: 1, // ติดตามจำนวนครั้งที่เล่นทั้งหมดรวมถึงรีสตาร์ท
         currentSessionMistakes: 0,
         score: 0,
+        correctAnswers: 0,
         comboCount: 0,
         maxCombo: 0,
-        coins: 0,
-        rank: "Rookie",
         clearedStages: 0,
         ap: 0,
         shieldActive: false,
@@ -3023,14 +3114,6 @@
 
       let currentSessionStages = [];
 
-      const RANK_TIERS = [
-        { min: 0, label: "Rookie" },
-        { min: 80, label: "Scout" },
-        { min: 180, label: "Pro Defender" },
-        { min: 320, label: "Elite Guardian" },
-        { min: 500, label: "Cyber Master" }
-      ];
-
       const STAGE_MISSIONS = [
         "ภารกิจ: แยกระดับการใช้เทคโนโลยีให้ถูก",
         "ภารกิจ: ป้องกันบัญชีจากลิงก์หลอกและรหัสผ่านรั่ว",
@@ -3039,24 +3122,9 @@
         "ภารกิจบอสใหญ่: ตัดสินใจให้ปลอดภัย ถูกกฎหมาย และมีจริยธรรม"
       ];
 
-      function getRankForCoins(coins) {
-        return RANK_TIERS.reduce((rank, tier) => coins >= tier.min ? tier.label : rank, RANK_TIERS[0].label);
-      }
-
       function updateRewardHud() {
-        const previousRank = gameState.rank || "Rookie";
-        gameState.rank = getRankForCoins(gameState.coins || 0);
-
-        const coinsEl = document.getElementById('txt-hud-coins');
-        const rankEl = document.getElementById('txt-hud-rank');
         const maxComboEl = document.getElementById('txt-hud-max-combo');
-        if (coinsEl) coinsEl.innerText = gameState.coins || 0;
-        if (rankEl) rankEl.innerText = gameState.rank;
         if (maxComboEl) maxComboEl.innerText = gameState.maxCombo || 0;
-
-        if (previousRank !== gameState.rank) {
-          showLevelToast(`เลื่อนยศเป็น ${gameState.rank}!`);
-        }
       }
 
       function showLevelToast(text) {
@@ -3075,7 +3143,7 @@
         const missionEl = document.getElementById('txt-stage-mission');
         const rewardEl = document.getElementById('txt-stage-reward');
         if (missionEl) missionEl.innerText = STAGE_MISSIONS[gameState.stageIndex] || "ภารกิจ: เลือกคำตอบที่ปลอดภัยที่สุด";
-        if (rewardEl) rewardEl.innerText = `รางวัลด่านนี้: +${activeStage.stageNum === 5 ? 70 : 30} เหรียญเมื่อผ่านบอส`;
+        if (rewardEl) rewardEl.innerText = 'เป้าหมายด่านนี้: ทำคอมโบให้สูงที่สุด';
       }
 
       function updateStageRoadmap() {
@@ -3159,10 +3227,9 @@
         gameState.enemyHp = 100;
         gameState.currentSessionMistakes = 0;
         gameState.score = 0;
+        gameState.correctAnswers = 0;
         gameState.comboCount = 0;
         gameState.maxCombo = 0;
-        gameState.coins = 0;
-        gameState.rank = "Rookie";
         gameState.clearedStages = 0;
         gameState.ap = 0;
         gameState.shieldActive = false;
@@ -3438,6 +3505,7 @@
         const activeStage = currentSessionStages[gameState.stageIndex];
 
         // Increment Combo and Calculate Multiplier
+        gameState.correctAnswers = (gameState.correctAnswers || 0) + 1;
         gameState.comboCount = (gameState.comboCount || 0) + 1;
         gameState.maxCombo = Math.max(gameState.maxCombo || 0, gameState.comboCount);
         let multiplier = 1.0;
@@ -3449,8 +3517,6 @@
         // Accumulate AP: 10 AP if answered clean, 5 AP if answered after seeing the answer
         const apGain = gameState.questionMissed ? 5 : 10;
         gameState.ap = Math.min(100, (gameState.ap || 0) + apGain);
-        const coinGain = gameState.questionMissed ? 4 : 10 + Math.min(gameState.comboCount, 5);
-        gameState.coins = (gameState.coins || 0) + coinGain;
         gameState.questionMissed = false;
 
         playerWrapper.classList.add('attacker-player');
@@ -3468,8 +3534,6 @@
           
           gameState.enemyHp = Math.max(0, gameState.enemyHp - damage);
           createDamagePopup(`-${damage} HP`, false);
-          createDamagePopup(`+${coinGain} เหรียญ`, true, true);
-
           overlay.classList.add('success-green');
           overlay.style.opacity = 1;
 
@@ -3575,10 +3639,8 @@
 
         setTimeout(() => {
           const clearedStageNum = currentSessionStages[gameState.stageIndex]?.stageNum || gameState.stageIndex + 1;
-          const stageReward = clearedStageNum === 5 ? 70 : 30;
-          gameState.coins = (gameState.coins || 0) + stageReward;
           gameState.clearedStages = Math.max(gameState.clearedStages || 0, gameState.stageIndex + 1);
-          showLevelToast(`ผ่านด่าน! +${stageReward} เหรียญ`);
+          showLevelToast('ผ่านด่าน! เก็บสถิติคอมโบแล้ว');
           updateRewardHud();
           gameState.stageIndex++;
 
@@ -3631,9 +3693,16 @@
       }
 
       function calculateFinalScore() {
+        const totalQuestions = currentSessionStages.reduce((sum, stage) => sum + (stage.questions?.length || 0), 0) || 1;
+        const correctAnswers = Math.min(totalQuestions, gameState.correctAnswers || 0);
+        const answerScore = Math.round((correctAnswers / totalQuestions) * 4500);
         const hpBonus = gameState.playerHp * 5;
         const penalty = gameState.currentSessionMistakes * 50;
-        return Math.max(0, gameState.score + hpBonus - penalty);
+        return Math.min(5000, Math.max(0, answerScore + hpBonus - penalty));
+      }
+
+      function calculateScoreTen(finalScore) {
+        return Math.max(0, Math.min(10, Math.round((finalScore / 5000) * 10)));
       }
 
       function populateSummary(finalScore) {
@@ -3647,10 +3716,10 @@
 
         document.getElementById('summary-mistakes').innerText = `${gameState.currentSessionMistakes} ครั้ง`;
         document.getElementById('summary-final-score').innerText = `${finalScore} คะแนน`;
-        const summaryCoins = document.getElementById('summary-coins');
-        const summaryRank = document.getElementById('summary-rank');
-        if (summaryCoins) summaryCoins.innerText = `${gameState.coins || 0} เหรียญ`;
-        if (summaryRank) summaryRank.innerText = gameState.rank || getRankForCoins(gameState.coins || 0);
+        const summaryScoreTen = document.getElementById('summary-score-ten');
+        if (summaryScoreTen) summaryScoreTen.innerText = `${calculateScoreTen(finalScore)}/10`;
+        const summaryMaxCombo = document.getElementById('summary-max-combo');
+        if (summaryMaxCombo) summaryMaxCombo.innerText = `${gameState.maxCombo || 0} COMBO`;
 
         const reviewRow = document.getElementById('summary-review-row');
         const reviewText = document.getElementById('summary-review');
@@ -3668,8 +3737,7 @@
         if (!badgesEl) return;
 
         const badges = ['🎮 นักสู้ดิจิทัล: เข้าร่วมภารกิจจนจบ'];
-        badges.push(`🪙 นักสะสมเหรียญ: เก็บได้ ${gameState.coins || 0} เหรียญ`);
-        badges.push(`⭐ ยศ ${gameState.rank || getRankForCoins(gameState.coins || 0)}`);
+        badges.push(`⚡ คอมโบสูงสุด: ${gameState.maxCombo || 0} COMBO`);
         if (gameState.currentSessionMistakes === 0) badges.push('🛡️ Perfect Defender: ตอบได้โดยไม่พลาด');
         if ((gameState.maxCombo || 0) >= 3) badges.push(`⚡ Combo Master: ตอบถูกต่อเนื่อง ${gameState.maxCombo} ข้อ`);
         if ((gameState.skillsUsed || 0) > 0) badges.push(`🧠 นักวางแผน: ใช้ทักษะ ${gameState.skillsUsed} ครั้ง`);
@@ -3682,6 +3750,95 @@
           badgeEl.textContent = badge;
           badgesEl.appendChild(badgeEl);
         });
+      }
+
+      function getStudentTitle() {
+        return gameState.selectedChar === 'male' ? 'นาย' : 'นางสาว';
+      }
+
+      function sanitizeFilenamePart(value) {
+        return String(value || '')
+          .trim()
+          .replace(/[\\/:*?"<>|]+/g, '-')
+          .replace(/\s+/g, '')
+          .replace(/-+/g, '-');
+      }
+
+      function buildVictoryScreenshotFilename() {
+        const title = getStudentTitle();
+        const name = sanitizeFilenamePart(gameState.name);
+        const surname = sanitizeFilenamePart(gameState.surname);
+        const number = sanitizeFilenamePart(gameState.number);
+        const roomText = String(gameState.room || '').trim();
+        const roomSuffix = roomText.includes('/') ? roomText.split('/').pop() : roomText.replace(/^ม\.?3\/?/i, '');
+        const room = sanitizeFilenamePart(roomSuffix);
+        return `${title}-${name}-${surname}-เลขที่${number}-ม3-${room}.png`;
+      }
+
+      async function downloadVictoryScreenshot() {
+        const card = document.querySelector('#screen-victory .victory-card');
+        if (!card) return;
+
+        const hiddenDuringCapture = card.querySelectorAll('.no-capture');
+        const previousDisplay = Array.from(hiddenDuringCapture, (el) => el.style.display);
+        hiddenDuringCapture.forEach((el) => { el.style.display = 'none'; });
+
+        try {
+          const rect = card.getBoundingClientRect();
+          const clone = card.cloneNode(true);
+          clone.querySelectorAll('.no-capture').forEach((el) => el.remove());
+          const pageStyles = Array.from(document.querySelectorAll('style'))
+            .map((style) => style.textContent || '')
+            .join('\n');
+
+          const wrapper = document.createElement('div');
+          wrapper.setAttribute('xmlns', 'http://www.w3.org/1999/xhtml');
+          wrapper.style.width = `${Math.ceil(rect.width)}px`;
+          wrapper.style.minHeight = `${Math.ceil(rect.height)}px`;
+          wrapper.style.boxSizing = 'border-box';
+          wrapper.style.background = '#050812';
+          wrapper.style.color = '#ffffff';
+          wrapper.style.fontFamily = "'Kanit', Arial, sans-serif";
+          const styleEl = document.createElement('style');
+          styleEl.textContent = pageStyles;
+          wrapper.appendChild(styleEl);
+          wrapper.appendChild(clone);
+
+          const data = new XMLSerializer().serializeToString(wrapper);
+          const svg = `
+            <svg xmlns="http://www.w3.org/2000/svg" width="${Math.ceil(rect.width)}" height="${Math.ceil(rect.height)}">
+              <foreignObject width="100%" height="100%">${data}</foreignObject>
+            </svg>
+          `;
+          const svgUrl = URL.createObjectURL(new Blob([svg], { type: 'image/svg+xml;charset=utf-8' }));
+          const img = new Image();
+          img.decoding = 'async';
+
+          await new Promise((resolve, reject) => {
+            img.onload = resolve;
+            img.onerror = reject;
+            img.src = svgUrl;
+          });
+
+          const scale = Math.max(2, window.devicePixelRatio || 1);
+          const canvas = document.createElement('canvas');
+          canvas.width = Math.ceil(rect.width * scale);
+          canvas.height = Math.ceil(rect.height * scale);
+          const ctx = canvas.getContext('2d');
+          ctx.scale(scale, scale);
+          ctx.drawImage(img, 0, 0);
+          URL.revokeObjectURL(svgUrl);
+
+          const link = document.createElement('a');
+          link.download = buildVictoryScreenshotFilename();
+          link.href = canvas.toDataURL('image/png');
+          link.click();
+        } catch (error) {
+          console.error('Failed to export victory screenshot', error);
+          alert('บันทึกรูปไม่สำเร็จ กรุณาลองอีกครั้ง');
+        } finally {
+          hiddenDuringCapture.forEach((el, index) => { el.style.display = previousDisplay[index]; });
+        }
       }
 
       async function syncScoreToDatabase(finalScore) {
@@ -3905,10 +4062,9 @@
           attempts: gameState.attempts,
           currentSessionMistakes: gameState.currentSessionMistakes,
           score: gameState.score,
+          correctAnswers: gameState.correctAnswers || 0,
           comboCount: gameState.comboCount || 0,
           maxCombo: gameState.maxCombo || 0,
-          coins: gameState.coins || 0,
-          rank: gameState.rank || "Rookie",
           clearedStages: gameState.clearedStages || 0,
           ap: gameState.ap || 0,
           shieldActive: gameState.shieldActive || false,
@@ -3968,10 +4124,9 @@
             gameState.attempts = session.attempts;
             gameState.currentSessionMistakes = session.currentSessionMistakes;
             gameState.score = session.score;
+            gameState.correctAnswers = session.correctAnswers || 0;
             gameState.comboCount = session.comboCount || 0;
             gameState.maxCombo = session.maxCombo || 0;
-            gameState.coins = session.coins || 0;
-            gameState.rank = session.rank || getRankForCoins(gameState.coins || 0);
             gameState.clearedStages = session.clearedStages || 0;
             gameState.ap = session.ap || 0;
             gameState.shieldActive = session.shieldActive || false;
