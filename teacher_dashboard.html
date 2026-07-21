@@ -619,11 +619,10 @@
             <th style="width: 8%;">ห้อง</th>
             <th style="width: 8%;">เลขที่</th>
             <th style="width: 8%;">เพศ</th>
-            <th style="width: 26%;">ชื่อผู้เล่น (นามแฝง/ชื่อจริง)</th>
-            <th style="width: 12%;">คะแนนรวม (5,000)</th>
-            <th style="width: 15%;">คะแนนเก็บ (เต็ม 10)</th>
-            <th style="width: 11%;">รอบที่เล่น</th>
-            <th style="width: 12%;">เวลาที่ใช้</th>
+            <th style="width: 33%;">ชื่อผู้เล่น (นามแฝง/ชื่อจริง)</th>
+            <th style="width: 15%;">คะแนนรวม (5,000)</th>
+            <th style="width: 13%;">รอบที่เล่น</th>
+            <th style="width: 15%;">เวลาที่ใช้</th>
           </tr>
         </thead>
         <tbody id="score-table-body">
@@ -918,7 +917,7 @@
 
       // แสดงผลทางหน้าจอ
       if (filtered.length === 0) {
-        tableBody.innerHTML = '<tr><td colspan="8" style="text-align: center; color: var(--text-gray); padding: 30px;">ไม่มีข้อมูลสถิติคะแนนของนักเรียนตามเงื่อนไขที่เลือก</td></tr>';
+        tableBody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: var(--text-gray); padding: 30px;">ไม่มีข้อมูลสถิติคะแนนของนักเรียนตามเงื่อนไขที่เลือก</td></tr>';
         populatePdfTemplate([]);
         return;
       }
@@ -926,8 +925,6 @@
       tableBody.innerHTML = '';
       filtered.forEach(item => {
         const durationStr = item.play_time !== undefined && item.play_time !== null ? formatTime(item.play_time) + ' นาที' : '-';
-        const scaledScore = Math.max(0, Math.min(10, (item.score / 5000) * 10)).toFixed(1);
-
         const hasNickname = item.nickname && item.nickname.trim() !== '';
         const nameDisplay = hasNickname 
           ? `<strong>${item.nickname.trim()}</strong> <span style="font-size: 0.75rem; color: var(--neon-yellow); opacity: 0.85; margin-left: 4px;">(นามแฝง)</span>`
@@ -946,7 +943,6 @@
           <td style="text-align: center;">${genderTag}</td>
           <td>${nameDisplay}</td>
           <td><span class="score-tag">${item.score}</span></td>
-          <td style="text-align: center; font-weight: bold; color: var(--neon-cyan);">${scaledScore} / 10</td>
           <td style="text-align: center; font-weight: bold; color: var(--neon-magenta);">${item.attempts}</td>
           <td style="color: #00f0ff; font-weight: bold;">${durationStr}</td>
         `;

@@ -1,5 +1,7 @@
 *.png
 *.txt
+skills-lock.json
 .env
+.windsurf/
 node_modules/
 dist/
