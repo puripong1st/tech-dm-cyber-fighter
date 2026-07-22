@@ -22,6 +22,7 @@
       --neon-magenta: #ff007f;
       --neon-yellow: #ffea00;
       --neon-green: #39ff14;
+      --neon-orange: #ff9900;
       --text-main: #f0f4f8;
       --text-gray: #8b9bb4;
       
@@ -29,6 +30,7 @@
       --glow-magenta: 0 0 15px rgba(255, 0, 127, 0.4);
       --glow-green: 0 0 15px rgba(57, 255, 20, 0.4);
       --glow-yellow: 0 0 15px rgba(255, 234, 0, 0.4);
+      --glow-orange: 0 0 15px rgba(255, 153, 0, 0.4);
     }
 
     * {
@@ -179,6 +181,14 @@
       background: linear-gradient(90deg, transparent, var(--neon-yellow), transparent);
     }
 
+    .card-questions:hover {
+      border-color: var(--neon-orange);
+      box-shadow: var(--glow-orange), 0 15px 40px rgba(0, 0, 0, 0.6);
+    }
+    .card-questions::before {
+      background: linear-gradient(90deg, transparent, var(--neon-orange), transparent);
+    }
+
     /* Icon Container */
     .icon-container {
       width: 100px;
@@ -228,6 +238,19 @@
       border-color: var(--neon-yellow);
       color: #000;
       box-shadow: 0 0 15px rgba(255, 234, 0, 0.5);
+    }
+
+    .card-questions:hover .icon-container {
+      border-color: var(--neon-orange);
+      background: rgba(255, 153, 0, 0.05);
+      color: #fff;
+      text-shadow: 0 0 10px var(--neon-orange);
+    }
+    .card-questions:hover .btn-portal-action {
+      background: var(--neon-orange);
+      border-color: var(--neon-orange);
+      color: #000;
+      box-shadow: 0 0 15px rgba(255, 153, 0, 0.5);
     }
 
     /* Card Details */
@@ -405,6 +428,20 @@
       </p>
       <div class="btn-portal-action">
         ดูคู่มือระบบ <i class="fa-solid fa-chevron-right"></i>
+      </div>
+    </a>
+
+    <!-- Card 5: Question Bank & Answers -->
+    <a href="questions_bank" class="portal-card card-questions">
+      <div class="icon-container">
+        <i class="fa-solid fa-list-check"></i>
+      </div>
+      <h2 class="card-title" style="color: var(--neon-orange);">5. คลังข้อสอบ & เฉลย</h2>
+      <p class="card-description">
+        รวบรวมโจทย์คำถามและตัวเลือกทั้งหมด 75 ข้อ จัดกลุ่มตามด่านและ Bloom's Taxonomy พร้อมระบบแสดงเฉลยและคำอธิบายสำหรับครู
+      </p>
+      <div class="btn-portal-action">
+        ดูคลังข้อสอบ <i class="fa-solid fa-chevron-right"></i>
       </div>
     </a>
 

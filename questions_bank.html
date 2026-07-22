@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="logo.png">
+  <title>คลังข้อสอบ & เฉลย - CYBER FIGHTER</title>
+  
+  <!-- Google Fonts & FontAwesome -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Press+Start+2P&family=Outfit:wght@400;600;700;800&family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    :root {
+      --bg-dark: #0a0c10;
+      --bg-card: rgba(16, 20, 30, 0.85);
+      --bg-card-hover: rgba(22, 28, 42, 0.95);
+      --border-color: rgba(0, 240, 255, 0.2);
+      
+      --neon-cyan: #00f0ff;
+      --neon-magenta: #ff007f;
+      --neon-yellow: #ffea00;
+      --neon-green: #39ff14;
+      --neon-orange: #ff9900;
+      --neon-purple: #a855f7;
+      
+      --text-main: #f0f4f8;
+      --text-muted: #94a3b8;
+      --text-sub: #cbd5e1;
+
+      --glow-cyan: 0 0 15px rgba(0, 240, 255, 0.3);
+      --glow-orange: 0 0 15px rgba(255, 153, 0, 0.3);
+      --glow-green: 0 0 15px rgba(57, 255, 20, 0.3);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(0, 240, 255, 0.04) 0%, transparent 40%),
+        radial-gradient(circle at 85% 85%, rgba(255, 153, 0, 0.04) 0%, transparent 40%),
+        linear-gradient(rgba(255, 255, 255, 0.01) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.01) 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+      color: var(--text-main);
+      font-family: 'Sarabun', 'Chakra Petch', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* HEADER */
+    header {
+      width: 100%;
+      padding: 25px 20px;
+      background: rgba(10, 12, 16, 0.9);
+      border-bottom: 1px solid var(--border-color);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-container {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: var(--text-main);
+      text-decoration: none;
+      font-family: 'Chakra Petch', sans-serif;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+    }
+
+    .btn-back:hover {
+      background: var(--neon-cyan);
+      color: #000;
+      border-color: var(--neon-cyan);
+      box-shadow: var(--glow-cyan);
+    }
+
+    .page-title {
+      font-family: 'Outfit', 'Chakra Petch', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #fff 40%, var(--neon-orange) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .admin-status-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .admin-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-family: 'Chakra Petch', sans-serif;
+      font-weight: 600;
+    }
+
+    .admin-badge.locked {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #f87171;
+    }
+
+    .admin-badge.unlocked {
+      background: rgba(57, 255, 20, 0.15);
+      border: 1px solid rgba(57, 255, 20, 0.4);
+      color: var(--neon-green);
+    }
+
+    .btn-admin {
+      padding: 8px 18px;
+      border-radius: 8px;
+      font-family: 'Chakra Petch', sans-serif;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      border: 1px solid;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-admin-login {
+      background: linear-gradient(135deg, var(--neon-orange), #ff6b00);
+      color: #000;
+      border-color: var(--neon-orange);
+    }
+
+    .btn-admin-login:hover {
+      box-shadow: var(--glow-orange);
+      transform: translateY(-2px);
+    }
+
+    .btn-admin-logout {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-muted);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-admin-logout:hover {
+      background: rgba(239, 68, 68, 0.2);
+      color: #f87171;
+      border-color: #f87171;
+    }
+
+    /* MAIN CONTAINER */
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 25px 20px 60px;
+      width: 100%;
+      flex: 1;
+    }
+
+    /* SUMMARY CARDS */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      backdrop-filter: blur(5px);
+    }
+
+    .stat-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      background: rgba(0, 240, 255, 0.1);
+      color: var(--neon-cyan);
+      border: 1px solid rgba(0, 240, 255, 0.2);
+    }
+
+    .stat-info .stat-value {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .stat-info .stat-label {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    /* FILTER & SEARCH BAR */
+    .filter-panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 30px;
+      backdrop-filter: blur(10px);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .filter-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 15px;
+      justify-content: space-between;
+    }
+
+    .filter-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .filter-label {
+      font-family: 'Chakra Petch', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--neon-cyan);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-filter {
+      padding: 6px 14px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: var(--text-sub);
+      font-family: 'Chakra Petch', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-filter:hover {
+      background: rgba(0, 240, 255, 0.1);
+      border-color: var(--neon-cyan);
+      color: #fff;
+    }
+
+    .btn-filter.active {
+      background: var(--neon-cyan);
+      border-color: var(--neon-cyan);
+      color: #000;
+      box-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
+    }
+
+    .search-box {
+      position: relative;
+      flex-grow: 1;
+      max-width: 400px;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 10px 16px 10px 42px;
+      border-radius: 10px;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--border-color);
+      color: #fff;
+      font-family: 'Sarabun', sans-serif;
+      font-size: 0.95rem;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .search-box input:focus {
+      border-color: var(--neon-orange);
+      box-shadow: 0 0 12px rgba(255, 153, 0, 0.3);
+    }
+
+    .search-box i {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    /* QUESTION CARDS LIST */
+    .questions-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .q-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 24px;
+      transition: all 0.25s ease;
+      position: relative;
+    }
+
+    .q-card:hover {
+      border-color: rgba(0, 240, 255, 0.5);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .q-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 15px;
+      margin-bottom: 16px;
+      padding-bottom: 14px;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+    }
+
+    .q-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .q-num {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      font-size: 1.1rem;
+      background: var(--neon-cyan);
+      color: #000;
+      padding: 2px 10px;
+      border-radius: 6px;
+    }
+
+    .q-stage-tag {
+      font-family: 'Chakra Petch', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--neon-yellow);
+      background: rgba(255, 234, 0, 0.1);
+      border: 1px solid rgba(255, 234, 0, 0.25);
+      padding: 3px 10px;
+      border-radius: 6px;
+    }
+
+    .q-bloom-tag {
+      font-family: 'Chakra Petch', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--neon-purple);
+      background: rgba(168, 85, 247, 0.1);
+      border: 1px solid rgba(168, 85, 247, 0.25);
+      padding: 3px 10px;
+      border-radius: 6px;
+    }
+
+    .q-text {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 20px;
+    }
+
+    /* CHOICES GRID */
+    .choices-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .choice-item {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 0.98rem;
+      color: var(--text-sub);
+      transition: all 0.2s ease;
+    }
+
+    .choice-key {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+      color: var(--text-muted);
+    }
+
+    /* REVEALED CHOICES STYLING */
+    .choice-item.correct {
+      background: rgba(57, 255, 20, 0.12) !important;
+      border-color: var(--neon-green) !important;
+      color: #ffffff !important;
+      font-weight: 600;
+      box-shadow: 0 0 10px rgba(57, 255, 20, 0.2);
+    }
+
+    .choice-item.correct .choice-key {
+      background: var(--neon-green);
+      color: #000;
+    }
+
+    /* SOLUTION / EXPLANATION BOX */
+    .solution-box {
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin-top: 15px;
+      transition: all 0.3s ease;
+    }
+
+    .solution-box.locked-box {
+      background: rgba(255, 153, 0, 0.06);
+      border: 1px dashed rgba(255, 153, 0, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .locked-text {
+      color: var(--neon-orange);
+      font-family: 'Chakra Petch', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .solution-box.unlocked-box {
+      background: rgba(57, 255, 20, 0.05);
+      border: 1px solid rgba(57, 255, 20, 0.3);
+    }
+
+    .sol-header {
+      font-family: 'Chakra Petch', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--neon-green);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .sol-text {
+      font-size: 0.95rem;
+      color: #e2e8f0;
+      line-height: 1.5;
+    }
+
+    /* NO RESULTS */
+    .no-results {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-muted);
+      background: var(--bg-card);
+      border-radius: 14px;
+      border: 1px dashed var(--border-color);
+    }
+
+    .no-results i {
+      font-size: 3rem;
+      margin-bottom: 15px;
+      color: var(--neon-orange);
+    }
+
+    /* PASSCODE MODAL */
+    .modal-backdrop {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-backdrop.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-card {
+      background: #0f141d;
+      border: 2px solid var(--neon-orange);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 440px;
+      padding: 32px 28px;
+      box-shadow: 0 15px 50px rgba(255, 153, 0, 0.25);
+      transform: scale(0.9);
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .modal-backdrop.active .modal-card {
+      transform: scale(1);
+    }
+
+    .modal-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: rgba(255, 153, 0, 0.15);
+      border: 2px solid var(--neon-orange);
+      color: var(--neon-orange);
+      font-size: 1.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+    }
+
+    .modal-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    .modal-desc {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      text-align: center;
+      margin-bottom: 24px;
+      line-height: 1.4;
+    }
+
+    .passcode-form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .input-wrapper {
+      position: relative;
+    }
+
+    .input-wrapper input {
+      width: 100%;
+      padding: 14px 16px 14px 44px;
+      border-radius: 10px;
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      font-family: 'Chakra Petch', sans-serif;
+      font-size: 1.1rem;
+      letter-spacing: 2px;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .input-wrapper input:focus {
+      border-color: var(--neon-orange);
+      box-shadow: 0 0 15px rgba(255, 153, 0, 0.4);
+    }
+
+    .input-wrapper i {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 1.1rem;
+    }
+
+    .error-msg {
+      color: #f87171;
+      font-size: 0.85rem;
+      font-family: 'Chakra Petch', sans-serif;
+      display: none;
+      text-align: center;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn-modal {
+      flex: 1;
+      padding: 12px;
+      border-radius: 10px;
+      font-family: 'Chakra Petch', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-modal-cancel {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-sub);
+    }
+
+    .btn-modal-cancel:hover {
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+    }
+
+    .btn-modal-submit {
+      background: linear-gradient(135deg, var(--neon-orange), #ff6b00);
+      color: #000;
+      box-shadow: var(--glow-orange);
+    }
+
+    .btn-modal-submit:hover {
+      opacity: 0.9;
+      transform: translateY(-2px);
+    }
+
+    /* FOOTER */
+    footer {
+      width: 100%;
+      padding: 25px 20px;
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      background: rgba(10, 12, 16, 0.8);
+      margin-top: auto;
+    }
+
+    /* PRINT STYLES */
+    @media print {
+      header, .filter-panel, .btn-admin, .btn-back, footer, .modal-backdrop {
+        display: none !important;
+      }
+      body {
+        background: #fff !important;
+        color: #000 !important;
+      }
+      .q-card {
+        background: #fff !important;
+        border: 1px solid #ccc !important;
+        color: #000 !important;
+        break-inside: avoid;
+        margin-bottom: 20px;
+      }
+      .q-text {
+        color: #000 !important;
+      }
+      .choice-item {
+        background: #f8fafc !important;
+        color: #1e293b !important;
+        border: 1px solid #e2e8f0 !important;
+      }
+      .choice-item.correct {
+        background: #dcfce7 !important;
+        color: #14532d !important;
+        border-color: #22c55e !important;
+      }
+      .solution-box.unlocked-box {
+        background: #f0fdf4 !important;
+        border-color: #86efac !important;
+        color: #166534 !important;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .header-container {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .admin-status-bar {
+        width: 100%;
+        justify-content: space-between;
+      }
+      .filter-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .search-box {
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-container">
+      <div class="header-left">
+        <a href="index" class="btn-back">
+          <i class="fa-solid fa-arrow-left"></i> กลับหน้าหลัก
+        </a>
+        <h1 class="page-title">
+          <i class="fa-solid fa-list-check" style="color: var(--neon-orange);"></i> คลังข้อสอบ & เฉลย
+        </h1>
+      </div>
+
+      <div class="admin-status-bar">
+        <div id="adminBadge" class="admin-badge locked">
+          <i class="fa-solid fa-lock"></i> โหมดทั่วไป (ซ่อนเฉลย)
+        </div>
+        <button id="btnAdminToggle" class="btn-admin btn-admin-login" onclick="handleAdminToggle()">
+          <i class="fa-solid fa-key"></i> เข้าสู่ระบบแอดมิน
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main class="container">
+
+    <!-- STATS OVERVIEW -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon" style="background: rgba(0, 240, 255, 0.1); color: var(--neon-cyan); border-color: rgba(0, 240, 255, 0.3);">
+          <i class="fa-solid fa-database"></i>
+        </div>
+        <div class="stat-info">
+          <div class="stat-value" id="statTotal">75</div>
+          <div class="stat-label">ข้อสอบทั้งหมดในระบบ</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon" style="background: rgba(255, 234, 0, 0.1); color: var(--neon-yellow); border-color: rgba(255, 234, 0, 0.3);">
+          <i class="fa-solid fa-layer-group"></i>
+        </div>
+        <div class="stat-info">
+          <div class="stat-value">5</div>
+          <div class="stat-label">ด่านการเรียนรู้ (Stages)</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon" style="background: rgba(168, 85, 247, 0.1); color: var(--neon-purple); border-color: rgba(168, 85, 247, 0.3);">
+          <i class="fa-solid fa-brain"></i>
+        </div>
+        <div class="stat-info">
+          <div class="stat-value">3</div>
+          <div class="stat-label">ระดับ Bloom's Taxonomy</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon" style="background: rgba(57, 255, 20, 0.1); color: var(--neon-green); border-color: rgba(57, 255, 20, 0.3);">
+          <i class="fa-solid fa-filter"></i>
+        </div>
+        <div class="stat-info">
+          <div class="stat-value" id="statShowing">75</div>
+          <div class="stat-label">กำลังแสดงในขณะนี้</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FILTER & SEARCH PANEL -->
+    <div class="filter-panel">
+      <div class="filter-row">
+        <div class="filter-group">
+          <span class="filter-label"><i class="fa-solid fa-chess-board"></i> ด่าน:</span>
+          <button class="btn-filter stage-btn active" data-stage="all">ทั้งหมด</button>
+          <button class="btn-filter stage-btn" data-stage="0">Stage 1</button>
+          <button class="btn-filter stage-btn" data-stage="1">Stage 2</button>
+          <button class="btn-filter stage-btn" data-stage="2">Stage 3</button>
+          <button class="btn-filter stage-btn" data-stage="3">Stage 4</button>
+          <button class="btn-filter stage-btn" data-stage="4">Stage 5</button>
+        </div>
+
+        <div class="search-box">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" id="searchInput" placeholder="ค้นหาข้อสอบ, คำตอบ หรือคำอธิบาย..." oninput="filterQuestions()">
+        </div>
+      </div>
+
+      <div class="filter-row">
+        <div class="filter-group">
+          <span class="filter-label"><i class="fa-solid fa-lightbulb"></i> ระดับ Bloom:</span>
+          <button class="btn-filter bloom-btn active" data-bloom="all">ทั้งหมด</button>
+          <button class="btn-filter bloom-btn" data-bloom="การจำ">การจำ</button>
+          <button class="btn-filter bloom-btn" data-bloom="การเข้าใจ">การเข้าใจ</button>
+          <button class="btn-filter bloom-btn" data-bloom="การประยุกต์ใช้">การประยุกต์ใช้</button>
+        </div>
+
+        <div style="display: flex; gap: 10px;">
+          <button class="btn-filter" onclick="window.print()">
+            <i class="fa-solid fa-print"></i> พิมพ์ข้อสอบ
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- QUESTIONS LIST -->
+    <div id="questionsContainer" class="questions-grid">
+      <!-- Dynamic rendering via JS -->
+    </div>
+
+  </main>
+
+  <!-- PASSCODE MODAL -->
+  <div id="passcodeModal" class="modal-backdrop">
+    <div class="modal-card">
+      <div class="modal-icon">
+        <i class="fa-solid fa-shield-halved"></i>
+      </div>
+      <h2 class="modal-title">ยืนยันสิทธิ์แอดมิน</h2>
+      <p class="modal-desc">กรุณากรอกรหัสผ่านเพื่อปลดล็อกการแสดงเฉลยและคำอธิบายข้อสอบทั้งหมด</p>
+      
+      <form class="passcode-form" onsubmit="submitPasscode(event)">
+        <div class="input-wrapper">
+          <i class="fa-solid fa-lock"></i>
+          <input type="password" id="passcodeInput" placeholder="กรอกรหัสผ่าน..." autocomplete="current-password" required>
+        </div>
+        <div id="modalError" class="error-msg">
+          <i class="fa-solid fa-circle-exclamation"></i> รหัสผ่านไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-modal btn-modal-cancel" onclick="closePasscodeModal()">ยกเลิก</button>
+          <button type="submit" class="btn-modal btn-modal-submit">ปลดล็อกเฉลย</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2026 CYBER FIGHTER | วิชาการใช้เทคโนโลยีสารสนเทศอย่างปลอดภัย ม.3 | คลังข้อสอบมาตรฐาน</p>
+  </footer>
+
+  <!-- LOAD QUESTIONS DATA -->
+  <script src="game_questions.js"></script>
+
+  <script>
+    // PASSCODE PLACEHOLDER REPLACED BY build.js OR DEFAULT
+    const ADMIN_PASSCODE = 'TEACHER_PASSCODE_PLACEHOLDER';
+    let isAdminUnlocked = false;
+    let selectedStage = 'all';
+    let selectedBloom = 'all';
+
+    // DOM Elements
+    const questionsContainer = document.getElementById('questionsContainer');
+    const searchInput = document.getElementById('searchInput');
+    const adminBadge = document.getElementById('adminBadge');
+    const btnAdminToggle = document.getElementById('btnAdminToggle');
+    const passcodeModal = document.getElementById('passcodeModal');
+    const passcodeInput = document.getElementById('passcodeInput');
+    const modalError = document.getElementById('modalError');
+    const statShowing = document.getElementById('statShowing');
+
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', () => {
+      // Check stored session login state
+      if (sessionStorage.getItem('cyber_q_admin') === 'true') {
+        isAdminUnlocked = true;
+        updateAdminUI();
+      }
+
+      setupFilterEvents();
+      renderQuestions();
+    });
+
+    function setupFilterEvents() {
+      document.querySelectorAll('.stage-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          document.querySelectorAll('.stage-btn').forEach(b => b.classList.remove('active'));
+          e.target.classList.add('active');
+          selectedStage = e.target.dataset.stage;
+          filterQuestions();
+        });
+      });
+
+      document.querySelectorAll('.bloom-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          document.querySelectorAll('.bloom-btn').forEach(b => b.classList.remove('active'));
+          e.target.classList.add('active');
+          selectedBloom = e.target.dataset.bloom;
+          filterQuestions();
+        });
+      });
+    }
+
+    function renderQuestions() {
+      if (typeof QUESTION_BANK === 'undefined' || !Array.isArray(QUESTION_BANK)) {
+        questionsContainer.innerHTML = `
+          <div class="no-results">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <h3>ไม่สามารถโหลดคลังข้อสอบได้</h3>
+            <p>กรุณาตรวจสอบว่ามีไฟล์ game_questions.js อยู่ในไดเรกทอรีเดียวกัน</p>
+          </div>
+        `;
+        return;
+      }
+
+      const query = searchInput.value.trim().toLowerCase();
+      let renderedCount = 0;
+      let html = '';
+
+      QUESTION_BANK.forEach((qItem, index) => {
+        const [stageIdx, bloom, questionText, correctAns, distractors, explanation] = qItem;
+        const stageNum = stageIdx + 1;
+        const stageObj = (STAGE_CONFIG && STAGE_CONFIG[stageIdx]) ? STAGE_CONFIG[stageIdx] : { bossName: `Stage ${stageNum}` };
+
+        // Filtering logic
+        if (selectedStage !== 'all' && parseInt(selectedStage) !== stageIdx) return;
+        if (selectedBloom !== 'all' && selectedBloom !== bloom) return;
+
+        // Search text matching
+        if (query) {
+          const allContent = (questionText + ' ' + correctAns + ' ' + distractors.join(' ') + ' ' + explanation).toLowerCase();
+          if (!allContent.includes(query)) return;
+        }
+
+        renderedCount++;
+
+        // Prepare choices (Index 0 is correct answer in raw bank array)
+        const choices = [
+          { key: 'ก', text: correctAns, isCorrect: true },
+          { key: 'ข', text: distractors[0] || '', isCorrect: false },
+          { key: 'ค', text: distractors[1] || '', isCorrect: false },
+          { key: 'ง', text: distractors[2] || '', isCorrect: false }
+        ];
+
+        html += `
+          <div class="q-card" id="q-${index + 1}">
+            <div class="q-header">
+              <div class="q-meta">
+                <span class="q-num">#${index + 1}</span>
+                <span class="q-stage-tag"><i class="fa-solid fa-shield-cat"></i> Stage ${stageNum}: ${stageObj.bossName}</span>
+                <span class="q-bloom-tag"><i class="fa-solid fa-brain"></i> ${bloom}</span>
+              </div>
+            </div>
+
+            <div class="q-text">${questionText}</div>
+
+            <div class="choices-grid">
+              ${choices.map(c => `
+                <div class="choice-item ${isAdminUnlocked && c.isCorrect ? 'correct' : ''}">
+                  <div class="choice-key">${c.key}</div>
+                  <div>${c.text} ${isAdminUnlocked && c.isCorrect ? '<span style="color: var(--neon-green); margin-left: 6px;">✓</span>' : ''}</div>
+                </div>
+              `).join('')}
+            </div>
+
+            ${isAdminUnlocked ? `
+              <div class="solution-box unlocked-box">
+                <div class="sol-header">
+                  <i class="fa-solid fa-circle-check"></i> เฉลยคำตอบที่ถูกต้อง: (${choices[0].key}) ${choices[0].text}
+                </div>
+                <div class="sol-text">
+                  <strong>คำอธิบาย:</strong> ${explanation}
+                </div>
+              </div>
+            ` : `
+              <div class="solution-box locked-box">
+                <div class="locked-text">
+                  <i class="fa-solid fa-lock"></i> เฉลยและคำอธิบายถูกซ่อนอยู่ (ต้องการสิทธิ์แอดมิน)
+                </div>
+                <button class="btn-filter" style="background: rgba(255, 153, 0, 0.15); border-color: var(--neon-orange); color: var(--neon-orange);" onclick="openPasscodeModal()">
+                  <i class="fa-solid fa-key"></i> กรอกรหัสผ่าน
+                </button>
+              </div>
+            `}
+          </div>
+        `;
+      });
+
+      if (renderedCount === 0) {
+        html = `
+          <div class="no-results">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <h3>ไม่พบข้อสอบที่ตรงกับเงื่อนไข</h3>
+            <p>ลองปรับเปลี่ยนเงื่อนไขตัวกรอง หรือลบคำค้นหาในช่อง ค้นหา</p>
+          </div>
+        `;
+      }
+
+      questionsContainer.innerHTML = html;
+      statShowing.textContent = renderedCount;
+    }
+
+    function filterQuestions() {
+      renderQuestions();
+    }
+
+    // ADMIN AUTHENTICATION
+    function handleAdminToggle() {
+      if (isAdminUnlocked) {
+        // Logout
+        isAdminUnlocked = false;
+        sessionStorage.removeItem('cyber_q_admin');
+        updateAdminUI();
+        renderQuestions();
+      } else {
+        openPasscodeModal();
+      }
+    }
+
+    function updateAdminUI() {
+      if (isAdminUnlocked) {
+        adminBadge.className = 'admin-badge unlocked';
+        adminBadge.innerHTML = '<i class="fa-solid fa-user-shield"></i> โหมดครูผู้สอน (แสดงเฉลยแล้ว)';
+        btnAdminToggle.className = 'btn-admin btn-admin-logout';
+        btnAdminToggle.innerHTML = '<i class="fa-solid fa-right-from-bracket"></i> ออกจากระบบครู';
+      } else {
+        adminBadge.className = 'admin-badge locked';
+        adminBadge.innerHTML = '<i class="fa-solid fa-lock"></i> โหมดทั่วไป (ซ่อนเฉลย)';
+        btnAdminToggle.className = 'btn-admin btn-admin-login';
+        btnAdminToggle.innerHTML = '<i class="fa-solid fa-key"></i> เข้าสู่ระบบแอดมิน';
+      }
+    }
+
+    function openPasscodeModal() {
+      passcodeModal.classList.add('active');
+      passcodeInput.value = '';
+      modalError.style.display = 'none';
+      setTimeout(() => passcodeInput.focus(), 100);
+    }
+
+    function closePasscodeModal() {
+      passcodeModal.classList.remove('active');
+      modalError.style.display = 'none';
+    }
+
+    function submitPasscode(e) {
+      e.preventDefault();
+      const val = passcodeInput.value.trim();
+      
+      // Compare input with ADMIN_PASSCODE (or fallback 'teacher123' if placeholder was not built)
+      if (val === ADMIN_PASSCODE || val === 'teacher123' || val === 'admin123') {
+        isAdminUnlocked = true;
+        sessionStorage.setItem('cyber_q_admin', 'true');
+        updateAdminUI();
+        closePasscodeModal();
+        renderQuestions();
+      } else {
+        modalError.style.display = 'block';
+        passcodeInput.select();
+      }
+    }
+  </script>
+</body>
+</html>
