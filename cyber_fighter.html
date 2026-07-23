@@ -3567,12 +3567,12 @@
           const baseDamage = Math.round(100 / activeStage.questions.length);
           const damage = Math.round(baseDamage * multiplier);
           
-          gameState.enemyHp = Math.max(0, gameState.enemyHp - damage);
+          gameState.questionIndex++;
+          gameState.enemyHp = Math.max(0, Math.round(100 * (1 - (gameState.questionIndex / activeStage.questions.length))));
           createDamagePopup(`-${damage} HP`, false);
           overlay.classList.add('success-green');
           overlay.style.opacity = 1;
 
-          gameState.questionIndex++;
           gameState.score += Math.round(150 * multiplier);
           updateRewardHud();
           updateHpBars();
@@ -3585,7 +3585,7 @@
           overlay.style.opacity = 0;
           overlay.classList.remove('success-green');
 
-          if (gameState.enemyHp <= 0) {
+          if (gameState.questionIndex >= activeStage.questions.length) {
             stageClearedTransition();
           } else {
             loadQuestion();
@@ -3889,7 +3889,7 @@
           const timeText = document.getElementById('summary-play-time')?.innerText || '0 วินาที';
           const mistakes = document.getElementById('summary-mistakes')?.innerText || '0';
           const combo = document.getElementById('txt-hud-max-combo')?.innerText || '0';
-          const score = gameState.score || 0;
+          const score = calculateFinalScore();
 
           // Inner Container Card
           ctx.fillStyle = 'rgba(14, 20, 36, 0.85)';
@@ -3954,8 +3954,10 @@
           item.student_number === parseInt(gameState.number)
         );
 
+        let existingScore = 0;
         if (existingLocal) {
           attemptsCount = (existingLocal.attempts || 1) + 1;
+          existingScore = existingLocal.score || 0;
         }
 
         // 2. ดึงสถิติรอบการเล่นสะสมจาก Supabase Cloud
@@ -3963,7 +3965,7 @@
           try {
             const { data, error } = await supabaseClient
               .from('cyber_fighter_scores')
-              .select('id, attempts')
+              .select('id, attempts, score')
               .eq('name', gameState.name)
               .eq('surname', gameState.surname)
               .eq('room', gameState.room)
@@ -3973,6 +3975,9 @@
             if (!error && data) {
               existingRecordId = data.id;
               attemptsCount = (data.attempts || 1) + 1;
+              if (data.score && data.score > existingScore) {
+                existingScore = data.score;
+              }
             }
           } catch (e) {
             console.error("Failed to query existing score in database:", e);
@@ -3990,7 +3995,7 @@
           student_number: parseInt(gameState.number),
           room: gameState.room,
           gender: gameState.selectedChar === 'male' ? 'ชาย' : 'หญิง',
-          score: finalScore,
+          score: Math.max(finalScore, existingScore),
           attempts: attemptsCount,
           play_time: elapsedTime, // ระยะเวลาเล่นจริงหน่วยเป็นวินาที
           created_at: new Date().toISOString()

@@ -5,148 +5,222 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/png" href="logo.png">
   <title>IT SURVIVAL MISSION: เอาชีวิตรอดในโลกดิจิทัล!</title>
-  <!-- Import Roblox-styled fonts -->
+  
+  <!-- Import Modern & Gaming Fonts (Sarabun for body readability, Chakra Petch for Gaming HUD) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=Press+Start+2P&family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
   
   <style>
-    /* RESET & BASE STYLES */
+    /* ==========================================================================
+       RESET & BASE DESIGN SYSTEM
+       ========================================================================== */
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      user-select: none;
-      -webkit-user-select: none;
+    }
+
+    :root {
+      --bg-dark: #0B0F17;
+      --bg-card: rgba(18, 25, 41, 0.85);
+      --bg-header: rgba(13, 19, 33, 0.9);
+      
+      --accent-cyan: #00F0FF;
+      --accent-green: #00FF9D;
+      --accent-gold: #FFD700;
+      --accent-red: #FF3366;
+      --accent-purple: #9D4EDD;
+      --accent-orange: #FF6B00;
+      
+      --text-main: #F8FAFC;
+      --text-muted: #94A3B8;
+      
+      --border-glow: rgba(0, 240, 255, 0.25);
+      
+      --font-display: 'Chakra Petch', sans-serif;
+      --font-body: 'Sarabun', 'Chakra Petch', sans-serif;
+      --font-pixel: 'Press Start 2P', cursive;
     }
 
     body {
-      background-color: #191B1D;
-      background-image: linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-                        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-      background-size: 30px 30px;
-      color: #F2F4F5;
-      font-family: 'Chakra Petch', sans-serif;
-      overflow: hidden;
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(0, 240, 255, 0.12) 0%, transparent 70%),
+        radial-gradient(circle at 85% 90%, rgba(157, 78, 221, 0.1) 0%, transparent 60%),
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 36px 36px, 36px 36px;
+      color: var(--text-main);
+      font-family: var(--font-body);
       height: 100vh;
+      overflow: hidden;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: space-between;
-      padding: 15px;
+      padding: 16px;
     }
 
-    /* CUSTOM SCROLLBARS FOR INTERNAL TEXTS */
+    /* CUSTOM SCROLLBARS FOR READABILITY */
     ::-webkit-scrollbar {
-      width: 8px;
+      width: 6px;
     }
     ::-webkit-scrollbar-track {
-      background: #232527;
-      border: 2px solid #000;
+      background: rgba(11, 15, 23, 0.6);
+      border-radius: 4px;
     }
     ::-webkit-scrollbar-thumb {
-      background: #393B3D;
-      border: 2px solid #000;
+      background: rgba(0, 240, 255, 0.3);
+      border-radius: 4px;
+      border: 1px solid rgba(0, 240, 255, 0.1);
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--accent-cyan);
     }
 
-    /* UTILITIES */
+    /* SELECTION STYLING */
+    ::selection {
+      background-color: rgba(0, 240, 255, 0.3);
+      color: #FFFFFF;
+    }
+
     .press-start {
-      font-family: 'Press Start 2P', cursive;
+      font-family: var(--font-pixel);
     }
 
-    /* ROBLOX UI STYLES */
-    .blocky-box {
-      background-color: #2C2F33;
-      border: 4px solid #000;
-      box-shadow: 6px 6px 0px #000;
-      padding: 20px;
-      position: relative;
-    }
-
-    .roblox-btn {
-      font-family: 'Chakra Petch', sans-serif;
+    /* ==========================================================================
+       BUTTONS & INTERACTIVE ELEMENTS
+       ========================================================================== */
+    .cyber-btn {
+      font-family: var(--font-display);
       font-weight: 700;
-      font-size: 1.1rem;
+      font-size: 1rem;
       text-transform: uppercase;
-      color: #fff;
-      background-color: #00A2FF; /* Roblox Blue */
-      border: 4px solid #000;
-      box-shadow: 0 4px 0 #000;
-      padding: 10px 20px;
+      color: #FFFFFF;
+      background: linear-gradient(135deg, rgba(0, 240, 255, 0.2), rgba(0, 162, 255, 0.4));
+      border: 1px solid var(--accent-cyan);
+      border-radius: 8px;
+      padding: 10px 22px;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 10px;
-      transition: transform 0.05s ease, box-shadow 0.05s ease;
       position: relative;
+      overflow: hidden;
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.2), inset 0 0 10px rgba(0, 240, 255, 0.1);
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      user-select: none;
+      -webkit-user-select: none;
     }
 
-    .roblox-btn:hover {
-      filter: brightness(1.1);
+    .cyber-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .cyber-btn:hover::before {
+      left: 100%;
+    }
+
+    .cyber-btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 0 #000;
+      box-shadow: 0 0 25px rgba(0, 240, 255, 0.5), inset 0 0 15px rgba(0, 240, 255, 0.3);
+      border-color: #FFFFFF;
     }
 
-    .roblox-btn:active {
-      transform: translateY(4px);
-      box-shadow: 0 0 0 #000;
+    .cyber-btn:active {
+      transform: translateY(1px);
+      box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
     }
 
-    .roblox-btn.green {
-      background-color: #00E676; /* Roblox Green */
+    .cyber-btn.green {
+      background: linear-gradient(135deg, rgba(0, 255, 157, 0.25), rgba(0, 200, 115, 0.45));
+      border-color: var(--accent-green);
+      box-shadow: 0 0 15px rgba(0, 255, 157, 0.2);
+    }
+    .cyber-btn.green:hover {
+      box-shadow: 0 0 25px rgba(0, 255, 157, 0.5);
     }
 
-    .roblox-btn.red {
-      background-color: #F13B3B; /* Roblox Red */
+    .cyber-btn.red {
+      background: linear-gradient(135deg, rgba(255, 51, 102, 0.25), rgba(220, 20, 70, 0.45));
+      border-color: var(--accent-red);
+      box-shadow: 0 0 15px rgba(255, 51, 102, 0.2);
+    }
+    .cyber-btn.red:hover {
+      box-shadow: 0 0 25px rgba(255, 51, 102, 0.5);
     }
 
-    .roblox-btn.orange {
-      background-color: #FF5722;
+    .cyber-btn.orange {
+      background: linear-gradient(135deg, rgba(255, 107, 0, 0.25), rgba(220, 80, 0, 0.45));
+      border-color: var(--accent-orange);
+      box-shadow: 0 0 15px rgba(255, 107, 0, 0.2);
+    }
+    .cyber-btn.orange:hover {
+      box-shadow: 0 0 25px rgba(255, 107, 0, 0.5);
     }
 
-    .roblox-btn.yellow {
-      background-color: #FFD600;
-      color: #000;
+    .cyber-btn.yellow {
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.25), rgba(220, 180, 0, 0.45));
+      border-color: var(--accent-gold);
+      color: #FFFFFF;
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+    }
+    .cyber-btn.yellow:hover {
+      box-shadow: 0 0 25px rgba(255, 215, 0, 0.5);
     }
 
-    .roblox-btn.disabled {
-      background-color: #555 !important;
-      color: #888 !important;
-      cursor: not-allowed;
-      box-shadow: 0 4px 0 #000 !important;
+    .cyber-btn.disabled {
+      opacity: 0.4 !important;
+      cursor: not-allowed !important;
       transform: none !important;
-      filter: none !important;
+      box-shadow: none !important;
+      border-color: #475569 !important;
+      background: rgba(30, 41, 59, 0.5) !important;
     }
 
-    /* APP HUD HEADER */
+    /* ==========================================================================
+       HEADER HUD BAR
+       ========================================================================== */
     header {
       width: 100%;
-      max-width: 1200px;
+      max-width: 1240px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background-color: #232527;
-      border: 4px solid #000;
-      padding: 10px 20px;
-      box-shadow: 4px 4px 0 #000;
-      z-index: 10;
+      background: var(--bg-header);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border-glow);
+      border-radius: 12px;
+      padding: 10px 24px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(0, 240, 255, 0.05);
+      z-index: 20;
     }
 
     .header-logo {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 14px;
     }
 
     .roblox-tilt-logo {
-      width: 28px;
-      height: 28px;
-      background-color: #F13B3B;
-      border: 4px solid #000;
-      transform: rotate(-15deg);
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #FF3366, #FF6B00);
+      border: 2px solid #FFFFFF;
+      border-radius: 6px;
+      transform: rotate(-12deg);
       display: inline-block;
       position: relative;
+      box-shadow: 0 0 12px rgba(255, 51, 102, 0.5);
     }
 
     .roblox-tilt-logo::after {
@@ -154,54 +228,72 @@
       position: absolute;
       width: 8px;
       height: 8px;
-      background-color: #232527;
+      background-color: var(--bg-dark);
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      border: 2px solid #000;
+      border: 1px solid #FFFFFF;
+      border-radius: 2px;
     }
 
     .header-title {
-      font-size: 1.2rem;
+      font-family: var(--font-display);
+      font-size: 1.15rem;
       font-weight: 700;
       letter-spacing: 1px;
-      text-shadow: 2px 2px 0 #000;
+      color: var(--accent-cyan);
+      text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
     }
 
     .header-info {
       display: flex;
       align-items: center;
-      gap: 15px;
+      gap: 16px;
     }
 
     .level-badge {
-      background-color: #FFD600;
-      color: #000;
+      font-family: var(--font-display);
+      background: linear-gradient(135deg, var(--accent-gold), #FF8C00);
+      color: #000000;
       font-weight: 700;
-      padding: 4px 10px;
-      border: 2px solid #000;
-      font-size: 0.85rem;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      letter-spacing: 1px;
+      box-shadow: 0 0 12px rgba(255, 215, 0, 0.4);
     }
 
     .mute-btn {
-      background: none;
-      border: none;
-      color: #F2F4F5;
-      font-size: 1.3rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-glow);
+      border-radius: 8px;
+      color: var(--text-main);
+      font-size: 1.2rem;
+      padding: 6px 12px;
       cursor: pointer;
-      transition: transform 0.1s ease;
+      transition: all 0.2s ease;
     }
 
     .mute-btn:hover {
-      transform: scale(1.1);
+      background: rgba(0, 240, 255, 0.2);
+      border-color: var(--accent-cyan);
+      transform: scale(1.05);
     }
 
-    /* GAME BOARD (SLIDE VIEW) */
+    .portal-link {
+      text-decoration: none;
+      font-size: 0.85rem;
+      padding: 6px 14px;
+    }
+
+    /* ==========================================================================
+       MAIN VIEWPORT GRID
+       ========================================================================== */
     .game-viewport {
       flex: 1;
       width: 100%;
-      max-width: 1200px;
-      margin: 15px 0;
+      max-width: 1240px;
+      margin: 12px 0;
       display: grid;
       grid-template-columns: 1fr 280px;
       gap: 20px;
@@ -209,7 +301,7 @@
       overflow: hidden;
     }
 
-    @media (max-width: 900px) {
+    @media (max-width: 920px) {
       .game-viewport {
         grid-template-columns: 1fr;
       }
@@ -218,14 +310,16 @@
       }
     }
 
-    /* SLIDE STAGES */
+    /* SLIDE STAGES CONTAINER */
     .slides-container {
       width: 100%;
       height: 100%;
       position: relative;
-      background-color: #1F2124;
-      border: 4px solid #000;
-      box-shadow: 6px 6px 0 #000;
+      background: var(--bg-card);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border-glow);
+      border-radius: 16px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6), inset 0 0 20px rgba(0, 240, 255, 0.03);
       overflow: hidden;
     }
 
@@ -235,14 +329,14 @@
       left: 0;
       width: 100%;
       height: 100%;
-      padding: 20px 25px;
+      padding: 24px 28px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       opacity: 0;
       pointer-events: none;
-      transform: translateX(100px);
-      transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+      transform: translateX(60px);
+      transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .slide.active {
@@ -253,25 +347,25 @@
     }
 
     .slide.exit-left {
-      transform: translateX(-100px);
+      transform: translateX(-60px);
       opacity: 0;
       z-index: 1;
     }
 
     .slide.enter-left {
-      transform: translateX(-100px);
+      transform: translateX(-60px);
       opacity: 0;
     }
 
-    /* SLIDE CONTENTS styling */
+    /* SLIDE HEADER & TITLES */
     .slide-header-bar {
       display: flex;
       justify-content: space-between;
-      align-items: flex-start;
-      gap: 15px;
-      margin-bottom: 10px;
-      border-bottom: 3px solid #000;
-      padding-bottom: 10px;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 12px;
     }
 
     .slide-header-text {
@@ -279,39 +373,47 @@
     }
 
     .slide-level-lbl {
+      font-family: var(--font-display);
       font-size: 0.75rem;
-      color: #FFD600;
-      margin-bottom: 3px;
+      color: var(--accent-cyan);
+      margin-bottom: 4px;
       letter-spacing: 1px;
+      text-transform: uppercase;
     }
 
     .slide-title {
-      font-size: 1.6rem;
+      font-family: var(--font-display);
+      font-size: 1.5rem;
       font-weight: 700;
-      color: #fff;
-      text-shadow: 2px 2px 0 #000;
-      line-height: 1.2;
+      color: #FFFFFF;
+      line-height: 1.3;
     }
 
+    /* QUESTION PANEL */
     .question-panel {
-      background-color: #2C2F33;
-      border: 3px solid #000;
-      border-left: 8px solid #FFD600;
-      padding: 10px 15px;
-      margin-bottom: 12px;
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 107, 0, 0.05));
+      border: 1px solid rgba(255, 215, 0, 0.3);
+      border-left: 5px solid var(--accent-gold);
+      border-radius: 10px;
+      padding: 14px 18px;
+      margin-bottom: 16px;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 14px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     }
 
     .question-panel .q-icon {
-      font-size: 1.6rem;
+      font-size: 1.8rem;
+      line-height: 1;
     }
 
     .question-text {
+      font-family: var(--font-body);
       font-size: 1.15rem;
       font-weight: 600;
-      color: #FFD600;
+      color: var(--accent-gold);
+      line-height: 1.6;
     }
 
     .content-area {
@@ -321,13 +423,15 @@
       justify-content: flex-start;
       position: relative;
       overflow-y: auto;
-      padding-right: 5px;
+      padding-right: 6px;
     }
 
-    /* LOOT BOX / ACCORDION GRID SYSTEM */
+    /* ==========================================================================
+       LOOT BOX & ACCORDION SYSTEM (CLEAN NO-OVERLAP CARDS)
+       ========================================================================== */
     .loot-grid {
       display: grid;
-      gap: 10px;
+      gap: 14px;
       width: 100%;
     }
 
@@ -346,92 +450,121 @@
     }
 
     .loot-box {
-      background-color: #2C2F33;
-      border: 3px solid #000;
-      box-shadow: 3px 3px 0 #000;
+      background: rgba(22, 30, 49, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 12px;
       display: flex;
       flex-direction: column;
       cursor: pointer;
       overflow: hidden;
-      transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+      transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     }
 
     .loot-box:hover {
       transform: translateY(-2px);
-      box-shadow: 3px 5px 0 #000;
-      border-color: #555;
+      border-color: rgba(0, 240, 255, 0.4);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), 0 0 15px rgba(0, 240, 255, 0.15);
+      background: rgba(30, 42, 68, 0.9);
     }
 
     .loot-box-header {
-      padding: 10px 12px;
-      background-color: #232527;
+      padding: 14px 18px;
+      background: rgba(15, 23, 42, 0.7);
+      font-family: var(--font-display);
       font-weight: 700;
-      font-size: 0.95rem;
+      font-size: 1.05rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 3px solid #000;
-      transition: background-color 0.2s ease;
+      border-bottom: 1px solid transparent;
+      transition: all 0.2s ease;
+      user-select: none;
+      -webkit-user-select: none;
     }
 
     .loot-box-title {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
+      color: #F1F5F9;
     }
 
     .loot-box-status {
-      font-size: 1rem;
-      transition: transform 0.2s ease;
+      font-size: 1.2rem;
+      transition: transform 0.3s ease;
+      filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.3));
     }
 
     .loot-box-content {
       max-height: 0;
       opacity: 0;
       overflow: hidden;
-      background-color: #1A1C1E;
-      font-size: 0.9rem;
-      line-height: 1.4;
-      color: #DFE2E5;
-      padding: 0 12px;
-      transition: max-height 0.3s ease, opacity 0.3s ease, padding 0.3s ease;
+      background: rgba(11, 16, 27, 0.95);
+      font-family: var(--font-body);
+      font-size: 1.1rem;
+      line-height: 1.9; /* Generous line height for Thai text */
+      color: #E2E8F0;
+      padding: 0 18px;
+      transition: max-height 0.4s ease, opacity 0.3s ease, padding 0.35s ease;
+      user-select: text;
+      -webkit-user-select: text;
     }
 
     /* Expanded loot box state */
     .loot-box.expanded {
-      border-color: #00A2FF;
-      box-shadow: 3px 3px 0 #00A2FF;
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.25);
+      background: rgba(18, 26, 45, 0.95);
     }
 
     .loot-box.expanded .loot-box-header {
-      background-color: #1A1C1E;
-      border-bottom-color: #00A2FF;
-      color: #00A2FF;
+      background: rgba(0, 240, 255, 0.1);
+      border-bottom-color: rgba(0, 240, 255, 0.2);
+      color: var(--accent-cyan);
+    }
+
+    .loot-box.expanded .loot-box-header .loot-box-title {
+      color: var(--accent-cyan);
     }
 
     .loot-box.expanded .loot-box-content {
-      max-height: 200px;
+      max-height: 1000px; /* Allow full expansion without clipping */
       opacity: 1;
-      padding: 12px;
-      border-top: none;
+      padding: 16px 18px;
     }
 
-    .loot-box.expanded .loot-box-status {
-      transform: rotate(360deg);
+    /* PERFECT INLINE HIGHLIGHT TEXT (NO OVERLAP) */
+    .highlight-text {
+      color: var(--accent-green);
+      background: rgba(0, 255, 157, 0.16);
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-weight: 700;
+      border: 1px solid rgba(0, 255, 157, 0.4);
+      display: inline;
+      -webkit-box-decoration-break: clone;
+      box-decoration-break: clone;
+      line-height: 2;
+      margin: 0 3px;
     }
 
     .ref-tag {
       display: inline-block;
-      background-color: #333;
-      color: #888;
-      font-size: 0.75rem;
-      padding: 1px 4px;
-      margin-left: 5px;
-      border: 1px solid #444;
+      background: rgba(148, 163, 184, 0.15);
+      color: #94A3B8;
+      font-size: 0.82rem;
+      padding: 2px 7px;
+      margin-left: 6px;
+      border-radius: 4px;
       font-family: monospace;
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      vertical-align: middle;
     }
 
-    /* SLIDE 1 (START) SPECIFICS */
+    /* ==========================================================================
+       START SCREEN & BOSS FIGHT SPECIFICS
+       ========================================================================== */
     .start-screen {
       display: flex;
       flex-direction: column;
@@ -444,56 +577,58 @@
 
     .logo-container {
       position: relative;
-      margin-bottom: 5px;
+      margin-bottom: 10px;
     }
 
     .logo-block-3d {
-      width: 120px;
-      height: 120px;
-      background-color: #F13B3B;
-      border: 8px solid #000;
-      transform: rotate(-12deg);
-      box-shadow: 8px 8px 0 #000;
+      width: 110px;
+      height: 110px;
+      background: linear-gradient(135deg, var(--accent-red), var(--accent-orange));
+      border: 3px solid #FFFFFF;
+      border-radius: 20px;
+      transform: rotate(-10deg);
+      box-shadow: 0 0 35px rgba(255, 51, 102, 0.5);
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 3.5rem;
       font-weight: 900;
-      color: #fff;
+      color: #FFFFFF;
     }
 
     .logo-block-3d::after {
       content: '';
       position: absolute;
-      width: 40px;
-      height: 40px;
-      background-color: #1F2124;
-      border: 8px solid #000;
+      width: 36px;
+      height: 36px;
+      background-color: var(--bg-dark);
+      border: 3px solid #FFFFFF;
+      border-radius: 8px;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
     }
 
     .pulse-btn {
-      animation: pulse 1.5s infinite;
+      animation: pulse-glow 2s infinite;
     }
 
-    @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.03); }
-      100% { transform: scale(1); }
+    @keyframes pulse-glow {
+      0% { box-shadow: 0 0 15px rgba(0, 255, 157, 0.3); }
+      50% { box-shadow: 0 0 35px rgba(0, 255, 157, 0.7); transform: scale(1.03); }
+      100% { box-shadow: 0 0 15px rgba(0, 255, 157, 0.3); }
     }
 
-    /* SLIDE 5 (BOSS FIGHT) SPECIFICS */
+    /* SLIDE 5 BOSS FIGHT ARENA */
     .boss-arena {
       display: grid;
-      grid-template-columns: 240px 1fr;
-      gap: 15px;
-      align-items: center;
+      grid-template-columns: 220px 1fr;
+      gap: 16px;
+      align-items: start;
       width: 100%;
     }
 
-    @media (max-width: 800px) {
+    @media (max-width: 820px) {
       .boss-arena {
         grid-template-columns: 1fr;
       }
@@ -507,20 +642,24 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      background-color: #141517;
-      border: 4px solid #000;
-      border-radius: 8px;
-      padding: 15px;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(255, 51, 102, 0.4);
+      border-radius: 12px;
+      padding: 16px;
       height: 250px;
       position: relative;
+      box-shadow: 0 0 25px rgba(255, 51, 102, 0.15);
+      position: sticky;
+      top: 0;
     }
 
     .boss-hp-bar-outer {
       width: 100%;
-      height: 20px;
-      background-color: #222;
-      border: 3px solid #000;
-      margin-bottom: 12px;
+      height: 22px;
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      margin-bottom: 14px;
       position: relative;
       overflow: hidden;
     }
@@ -528,8 +667,10 @@
     .boss-hp-bar-inner {
       width: 100%;
       height: 100%;
-      background-color: #F13B3B;
+      background: linear-gradient(90deg, #FF3366, #FF6B00);
+      border-radius: 10px;
       transition: width 0.3s ease;
+      box-shadow: 0 0 12px rgba(255, 51, 102, 0.8);
     }
 
     .boss-hp-text {
@@ -538,17 +679,19 @@
       left: 50%;
       transform: translate(-50%, -50%);
       font-weight: 700;
-      font-size: 0.7rem;
-      color: #fff;
-      text-shadow: 1px 1px 0 #000;
+      font-size: 0.72rem;
+      color: #FFFFFF;
+      text-shadow: 0 0 5px #000000;
     }
 
     .boss-sprite {
       width: 100px;
       height: 100px;
-      background-color: #8C14FF;
-      border: 5px solid #000;
+      background: linear-gradient(135deg, #9D4EDD, #5A189A);
+      border: 3px solid #FFFFFF;
+      border-radius: 20px;
       position: relative;
+      box-shadow: 0 0 25px rgba(157, 78, 221, 0.6);
       transition: transform 0.1s ease;
     }
 
@@ -563,12 +706,13 @@
 
     .boss-sprite.hurt {
       animation: shake 0.2s 2;
-      background-color: #F13B3B;
+      background: #FF3366;
+      box-shadow: 0 0 35px #FF3366;
     }
 
     .boss-sprite.dead {
       animation: explode 0.5s forwards;
-      background-color: #555;
+      background: #475569;
     }
 
     .boss-sprite.dead::before {
@@ -578,21 +722,22 @@
     .victory-badge {
       display: none;
       position: absolute;
-      background-color: #00E676;
-      color: #000;
-      border: 4px solid #000;
-      box-shadow: 4px 4px 0 #000;
-      padding: 8px 15px;
-      font-size: 1.5rem;
+      background: linear-gradient(135deg, var(--accent-green), var(--accent-cyan));
+      color: #000000;
+      border: 2px solid #FFFFFF;
+      box-shadow: 0 0 25px rgba(0, 255, 157, 0.8);
+      padding: 8px 18px;
+      border-radius: 30px;
+      font-size: 1.4rem;
       font-weight: 800;
       transform: rotate(-5deg);
       z-index: 6;
-      animation: bounce 1s infinite alternate;
+      animation: float-bounce 1s infinite alternate ease-in-out;
     }
 
     @keyframes shake {
-      0% { transform: translate(2px, 2px); }
-      50% { transform: translate(-2px, -2px); }
+      0% { transform: translate(3px, 3px); }
+      50% { transform: translate(-3px, -3px); }
       100% { transform: translate(0, 0); }
     }
 
@@ -601,39 +746,58 @@
       100% { transform: scale(0); opacity: 0; }
     }
 
-    /* SIDEBAR (ROBLOX CHARACTER PREVIEW) */
+    @keyframes float-bounce {
+      0% { transform: translateY(0) rotate(-5deg); }
+      100% { transform: translateY(-8px) rotate(-5deg); }
+    }
+
+    /* Special rule for Slide 5 Item 5 span */
+    #loot-grid-5 .loot-box:nth-child(5) {
+      grid-column: span 2;
+    }
+    @media (max-width: 768px) {
+      #loot-grid-5 .loot-box:nth-child(5) {
+        grid-column: span 1;
+      }
+    }
+
+    /* ==========================================================================
+       SIDEBAR: CHARACTER AVATAR HUD
+       ========================================================================== */
     .avatar-sidebar {
-      background-color: #232527;
-      border: 4px solid #000;
-      box-shadow: 6px 6px 0px #000;
+      background: var(--bg-card);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border-glow);
+      border-radius: 16px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(0, 240, 255, 0.03);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: space-between;
-      padding: 15px;
+      padding: 18px;
     }
 
     .avatar-title {
-      font-size: 0.9rem;
+      font-family: var(--font-display);
+      font-size: 0.8rem;
       font-weight: 700;
-      color: #A3A8AF;
-      border-bottom: 2px solid #000;
+      color: var(--accent-cyan);
+      letter-spacing: 1px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       width: 100%;
       text-align: center;
-      padding-bottom: 8px;
+      padding-bottom: 10px;
     }
 
-    /* DYNAMIC AVATAR WRAPPER */
     .avatar-frame {
       width: 180px;
-      height: 220px;
+      height: 210px;
       position: relative;
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
-    /* CSS BLOCKY AVATAR */
     .roblox-avatar {
       position: relative;
       width: 90px;
@@ -643,20 +807,22 @@
     }
 
     @keyframes idle-float {
-      0% { transform: translateY(0px) rotateY(5deg); }
-      50% { transform: translateY(-6px) rotateY(-5deg); }
-      100% { transform: translateY(0px) rotateY(5deg); }
+      0% { transform: translateY(0px) rotateY(4deg); }
+      50% { transform: translateY(-8px) rotateY(-4deg); }
+      100% { transform: translateY(0px) rotateY(4deg); }
     }
 
     .char-head {
       position: absolute;
-      width: 28px;
-      height: 28px;
-      background-color: #FFD600; /* Yellow skin */
-      border: 3px solid #000;
-      top: 15px;
-      left: 31px;
+      width: 30px;
+      height: 30px;
+      background-color: #FFD600;
+      border: 2px solid #000;
+      border-radius: 4px;
+      top: 14px;
+      left: 30px;
       z-index: 3;
+      box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
     }
 
     .char-face {
@@ -667,44 +833,42 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      gap: 2px;
+      gap: 3px;
     }
 
     .char-eyes {
       display: flex;
-      gap: 4px;
+      gap: 5px;
     }
 
     .char-eyes::before, .char-eyes::after {
       content: '';
       width: 3px;
-      height: 3px;
-      background-color: #000;
+      height: 4px;
+      background-color: #000000;
+      border-radius: 1px;
     }
 
     .char-mouth {
       width: 12px;
       height: 4px;
-      border: 2px dashed #000;
+      border: 2px solid #000;
       border-top: none;
       border-radius: 0 0 8px 8px;
       background-color: transparent;
       transition: all 0.2s ease;
     }
 
-    /* Face States */
     .face-confused .char-mouth {
-      width: 6px;
+      width: 7px;
       height: 2px;
       border-radius: 0;
       border: 2px solid #000;
       border-bottom: none;
-      border-left: none;
-      border-right: none;
     }
 
     .face-battle .char-mouth {
-      width: 8px;
+      width: 10px;
       height: 2px;
       border: 2px solid #000;
       border-radius: 0;
@@ -721,12 +885,13 @@
 
     .char-torso {
       position: absolute;
-      width: 42px;
-      height: 52px;
-      background-color: #00A2FF; /* Blue torso */
-      border: 3px solid #000;
+      width: 44px;
+      height: 54px;
+      background: linear-gradient(135deg, #00A2FF, #0066FF);
+      border: 2px solid #000;
+      border-radius: 4px;
       top: 46px;
-      left: 24px;
+      left: 23px;
       z-index: 2;
     }
 
@@ -734,42 +899,44 @@
       position: absolute;
       width: 16px;
       height: 48px;
-      background-color: #FFD600; /* Yellow arms */
-      border: 3px solid #000;
+      background-color: #FFD600;
+      border: 2px solid #000;
+      border-radius: 4px;
       top: 46px;
       z-index: 1;
       transform-origin: top center;
     }
 
     .char-arm-l {
-      left: 5px;
+      left: 4px;
       animation: arm-swing-l 3s infinite ease-in-out;
     }
 
     .char-arm-r {
-      right: 5px;
+      right: 4px;
       animation: arm-swing-r 3s infinite ease-in-out;
     }
 
     @keyframes arm-swing-l {
-      0% { transform: rotate(5deg); }
-      50% { transform: rotate(-5deg); }
-      100% { transform: rotate(5deg); }
+      0% { transform: rotate(6deg); }
+      50% { transform: rotate(-6deg); }
+      100% { transform: rotate(6deg); }
     }
 
     @keyframes arm-swing-r {
-      0% { transform: rotate(-5deg); }
-      50% { transform: rotate(5deg); }
-      100% { transform: rotate(-5deg); }
+      0% { transform: rotate(-6deg); }
+      50% { transform: rotate(6deg); }
+      100% { transform: rotate(-6deg); }
     }
 
     .char-leg-l, .char-leg-r {
       position: absolute;
       width: 18px;
       height: 44px;
-      background-color: #00E676; /* Green legs */
-      border: 3px solid #000;
-      top: 100px;
+      background-color: #00E676;
+      border: 2px solid #000;
+      border-radius: 4px;
+      top: 102px;
       z-index: 1;
     }
 
@@ -779,34 +946,34 @@
     /* ACCESSORIES */
     .char-shield {
       position: absolute;
-      width: 30px;
-      height: 36px;
-      background-color: #DFE2E5;
-      border: 3px solid #000;
-      border-radius: 0 0 12px 12px;
+      width: 32px;
+      height: 38px;
+      background: linear-gradient(135deg, #E2E8F0, #94A3B8);
+      border: 2px solid #000;
+      border-radius: 0 0 14px 14px;
       top: 55px;
-      left: -8px;
+      left: -10px;
       z-index: 4;
       display: none;
       align-items: center;
       justify-content: center;
     }
-    .char-shield::after { content: '🛡️'; font-size: 1rem; }
+    .char-shield::after { content: '🛡️'; font-size: 1.1rem; }
 
     .char-goggles {
       position: absolute;
-      width: 32px;
-      height: 10px;
+      width: 34px;
+      height: 11px;
       background-color: #FFD600;
       border: 2px solid #000;
-      top: 24px;
-      left: 29px;
+      top: 22px;
+      left: 28px;
       z-index: 5;
       display: none;
-      opacity: 0.9;
+      border-radius: 3px;
     }
     .char-goggles::before, .char-goggles::after {
-      content: ''; position: absolute; width: 12px; height: 8px; background-color: #00E676; border: 1px solid #000;
+      content: ''; position: absolute; width: 12px; height: 7px; background-color: #00E676; border: 1px solid #000; border-radius: 2px;
     }
     .char-goggles::before { left: 2px; }
     .char-goggles::after { right: 2px; }
@@ -814,28 +981,28 @@
     .char-sword {
       position: absolute;
       width: 8px;
-      height: 50px;
-      background-color: #E0E0E0;
+      height: 52px;
+      background-color: #E2E8F0;
       border: 2px solid #000;
-      top: 20px;
-      right: -2px;
+      top: 18px;
+      right: -4px;
       z-index: 4;
       transform-origin: bottom center;
       transform: rotate(45deg);
       display: none;
     }
     .char-sword::after {
-      content: ''; position: absolute; width: 16px; height: 5px; background-color: #795548; border: 2px solid #000; bottom: 8px; left: -6px;
+      content: ''; position: absolute; width: 18px; height: 6px; background-color: #78350F; border: 1px solid #000; bottom: 8px; left: -6px; border-radius: 2px;
     }
 
     .char-crown {
       position: absolute;
-      width: 32px;
+      width: 34px;
       height: 14px;
-      background-color: #FFD600;
+      background-color: #FFD700;
       border: 2px solid #000;
-      top: 3px;
-      left: 29px;
+      top: 0px;
+      left: 28px;
       z-index: 5;
       display: none;
       clip-path: polygon(0% 100%, 100% 100%, 100% 0%, 75% 50%, 50% 0%, 25% 50%, 0% 0%);
@@ -847,125 +1014,146 @@
     .has-crown .char-crown { display: block; }
 
     .equip-label {
-      background-color: #1A1C1E;
-      border: 2px solid #000;
-      color: #FFD600;
-      padding: 4px 8px;
+      font-family: var(--font-display);
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid var(--border-glow);
+      border-radius: 20px;
+      color: var(--accent-gold);
+      padding: 6px 12px;
       font-size: 0.75rem;
-      font-family: 'Press Start 2P', cursive;
+      letter-spacing: 1px;
       text-align: center;
       width: 100%;
+      box-shadow: 0 0 10px rgba(0, 240, 255, 0.15);
+      user-select: none;
+      -webkit-user-select: none;
     }
 
-    /* BOTTOM HUD NAVIGATION */
+    /* ==========================================================================
+       BOTTOM HUD NAVIGATION & HOTBAR
+       ========================================================================== */
     .bottom-hud {
       width: 100%;
-      max-width: 1200px;
+      max-width: 1240px;
       display: flex;
       flex-direction: column;
-      gap: 8px;
-      z-index: 10;
+      gap: 10px;
+      z-index: 20;
     }
 
     .nav-bar-container {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 15px;
+      gap: 16px;
     }
 
     .side-nav-btn {
-      min-width: 100px;
+      min-width: 120px;
     }
 
     .hotbar {
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 8px;
-      background-color: rgba(30,30,30,0.85);
-      border: 4px solid #000;
-      padding: 6px;
-      border-radius: 4px;
+      gap: 10px;
+      background: var(--bg-header);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border-glow);
+      padding: 8px 16px;
+      border-radius: 14px;
       flex: 1;
-      max-width: 700px;
+      max-width: 720px;
       margin: 0 auto;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     }
 
     .hotbar-slot {
-      width: 60px;
-      height: 60px;
-      background-color: rgba(60, 60, 60, 0.7);
-      border: 3px solid #555;
+      width: 65px;
+      height: 62px;
+      background: rgba(30, 41, 59, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
       position: relative;
       cursor: pointer;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      transition: all 0.15s ease;
+      transition: all 0.2s ease;
+      user-select: none;
+      -webkit-user-select: none;
     }
 
     .hotbar-slot:hover {
-      background-color: rgba(80, 80, 80, 0.9);
-      border-color: #aaa;
+      background: rgba(51, 65, 85, 0.8);
+      border-color: var(--accent-cyan);
+      transform: translateY(-2px);
     }
 
     .hotbar-slot.active {
-      background-color: rgba(0, 162, 255, 0.2);
-      border-color: #00A2FF;
-      box-shadow: inset 0 0 10px #00A2FF;
+      background: linear-gradient(135deg, rgba(0, 240, 255, 0.25), rgba(0, 102, 255, 0.2));
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.4), inset 0 0 10px rgba(0, 240, 255, 0.2);
     }
 
     .hotbar-slot-num {
       position: absolute;
-      top: 2px;
-      left: 4px;
-      font-size: 0.6rem;
-      font-family: 'Press Start 2P', cursive;
-      color: #999;
+      top: 3px;
+      left: 6px;
+      font-size: 0.62rem;
+      color: #64748B;
     }
 
     .hotbar-slot.active .hotbar-slot-num {
-      color: #00A2FF;
+      color: var(--accent-cyan);
     }
 
     .hotbar-slot-icon {
-      font-size: 1.4rem;
-      margin-top: 3px;
+      font-size: 1.3rem;
+      margin-top: 2px;
     }
 
     .hotbar-slot-title {
-      font-size: 0.6rem;
+      font-family: var(--font-display);
+      font-size: 0.68rem;
       font-weight: 700;
-      color: #ccc;
+      color: #94A3B8;
       text-align: center;
-      margin-top: 1px;
+      margin-top: 2px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
       width: 100%;
-      padding: 0 2px;
+      padding: 0 4px;
     }
 
-    /* KEYBOARD SHORTCUTS PANEL */
+    .hotbar-slot.active .hotbar-slot-title {
+      color: #FFFFFF;
+    }
+
+    /* SHORTCUTS BAR */
     .shortcuts-bar {
       text-align: center;
-      font-size: 0.7rem;
-      color: #70757D;
+      font-size: 0.85rem;
+      color: #94A3B8;
       display: flex;
       justify-content: center;
-      gap: 15px;
+      align-items: center;
+      gap: 16px;
+      user-select: none;
+      -webkit-user-select: none;
     }
 
     .key-cap {
-      background-color: #333;
-      color: #ddd;
-      border: 1px solid #555;
-      border-bottom: 2px solid #111;
-      padding: 1px 4px;
-      border-radius: 3px;
+      background: rgba(30, 41, 59, 0.9);
+      color: var(--accent-cyan);
+      border: 1px solid rgba(0, 240, 255, 0.3);
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-size: 0.75rem;
       font-weight: bold;
+      box-shadow: 0 2px 0 rgba(0, 0, 0, 0.5);
     }
   </style>
 </head>
@@ -980,7 +1168,7 @@
     <div class="header-info">
       <div class="level-badge press-start" id="hud-level-badge">STAGE 01</div>
       <button class="mute-btn" id="sound-toggle-btn" title="เปิด/ปิดเสียง">🔊</button>
-      <a href="index" class="roblox-btn red" style="font-size: 0.8rem; padding: 4px 10px; border-width: 2px; box-shadow: 0 2px 0 #000; text-decoration: none; margin-left: 10px; display: inline-flex; align-items: center; justify-content: center; height: auto;">Portal 🏠</a>
+      <a href="index.html" class="cyber-btn red portal-link">Portal 🏠</a>
     </div>
   </header>
 
@@ -996,19 +1184,19 @@
           <div class="logo-container">
             <div class="logo-block-3d">IT</div>
           </div>
-          <h1 class="slide-title press-start" style="font-size: 1.8rem; color: #FFD600; text-align: center;">
+          <h1 class="slide-title press-start" style="font-size: 1.8rem; color: var(--accent-gold); text-align: center;">
             MISSION: เอาชีวิตรอดในโลกดิจิทัล!
           </h1>
-          <p style="font-size: 1.15rem; color: #A3A8AF; max-width: 650px; text-align: center; line-height: 1.6;">
+          <p style="font-size: 1.2rem; color: #CBD5E1; max-width: 680px; text-align: center; line-height: 1.7;">
             บทเรียนการใช้เทคโนโลยีสารสนเทศอย่างปลอดภัยและมีความรับผิดชอบสำหรับนักเรียนชั้น ม.3 <br>
-            <span style="color: #FF5722; font-weight: bold;">[เวอร์ชันเจาะลึกเนื้อหา - โหมด Click to Expand]</span>
+            <span style="color: var(--accent-orange); font-weight: bold;">[เวอร์ชันเจาะลึกเนื้อหา - โหมด Click to Expand]</span>
           </p>
-          <div style="margin: 5px 0;">
-            <span style="font-size: 0.85rem; background-color: #232527; padding: 6px 12px; border: 2px solid #000; color: #00E676; font-weight: bold;">
+          <div style="margin: 6px 0;">
+            <span style="font-size: 0.95rem; background: rgba(0, 255, 157, 0.1); padding: 8px 16px; border: 1px solid rgba(0, 255, 157, 0.3); border-radius: 20px; color: var(--accent-green); font-weight: bold;">
               💡 ครูอธิบายเจาะลึกทีละประเด็นได้ง่ายขึ้นด้วยกล่องสมบัติความรู้
             </span>
           </div>
-          <button class="roblox-btn green pulse-btn" id="start-game-btn" style="font-size: 1.4rem; padding: 12px 36px; margin-top: 10px;">
+          <button class="cyber-btn green pulse-btn" id="start-game-btn" style="font-size: 1.25rem; padding: 14px 40px; margin-top: 12px;">
             🎮 PRESS START TO PLAY
           </button>
         </div>
@@ -1021,7 +1209,7 @@
             <div class="slide-level-lbl press-start">LEVEL 1 - โลกของเรากับเทคโนโลยี</div>
             <h2 class="slide-title">เทคโนโลยีเข้าไปซ่อนอยู่ในระดับไหนบ้าง?</h2>
           </div>
-          <button class="roblox-btn yellow reveal-all-btn" data-slide="2">🔓 REVEAL ALL ITEMS</button>
+          <button class="cyber-btn yellow reveal-all-btn" data-slide="2">🔓 REVEAL ALL ITEMS</button>
         </div>
         
         <div class="content-area">
@@ -1072,7 +1260,7 @@
             <div class="slide-level-lbl press-start">LEVEL 2 - ปกป้องกระเป๋าตังค์ (Mobile Banking)</div>
             <h2 class="slide-title">8 กฎเหล็ก ป้องกันแฮกเกอร์ขโมยเงินในแอปมือถือ?</h2>
           </div>
-          <button class="roblox-btn green reveal-all-btn" data-slide="3">🔓 REVEAL ALL ITEMS</button>
+          <button class="cyber-btn green reveal-all-btn" data-slide="3">🔓 REVEAL ALL ITEMS</button>
         </div>
 
         <div class="content-area">
@@ -1173,7 +1361,7 @@
             <div class="slide-level-lbl press-start">LEVEL 3 - ช้อปปิ้งออนไลน์ไม่ให้โดนสแกม</div>
             <h2 class="slide-title">6 ไอเทมเช็กความชัวร์ ก่อนกดยอมรับการโอนซื้อของ?</h2>
           </div>
-          <button class="roblox-btn orange reveal-all-btn" data-slide="4">🔓 REVEAL ALL ITEMS</button>
+          <button class="cyber-btn orange reveal-all-btn" data-slide="4">🔓 REVEAL ALL ITEMS</button>
         </div>
 
         <div class="content-area">
@@ -1251,10 +1439,10 @@
       <div class="slide" id="slide-5" data-level="5">
         <div class="slide-header-bar">
           <div class="slide-header-text">
-            <div class="slide-level-lbl press-start" style="color: #F13B3B;">🔥 BOSS FIGHT (FINAL STAGE) 🔥</div>
+            <div class="slide-level-lbl press-start" style="color: var(--accent-red);">🔥 BOSS FIGHT (FINAL STAGE) 🔥</div>
             <h2 class="slide-title">ความรับผิดชอบ 5 ด้าน สู่การเป็น Pro Player?</h2>
           </div>
-          <button class="roblox-btn red reveal-all-btn" id="boss-fight-btn" data-slide="5">⚔️ ATTACK BOSS (REVEAL ALL)</button>
+          <button class="cyber-btn red reveal-all-btn" id="boss-fight-btn" data-slide="5">⚔️ ATTACK BOSS (REVEAL ALL)</button>
         </div>
 
         <div class="content-area">
@@ -1276,8 +1464,8 @@
               <div class="boss-sprite" id="boss-character"></div>
             </div>
 
-            <!-- Right: 5 Areas of Responsibility (Loot Box style) -->
-            <div class="loot-grid" id="loot-grid-5">
+            <!-- Right: 5 Areas of Responsibility (Grid 2 cols layout) -->
+            <div class="loot-grid grid-2-cols" id="loot-grid-5">
               <!-- Item 1 -->
               <div class="loot-box" data-boss-dmg="20" data-item-idx="1">
                 <div class="loot-box-header">
@@ -1364,7 +1552,7 @@
       </div>
 
       <!-- EQUIP LABELS -->
-      <div class="equip-label" id="player-equip-status">LVL 1: NOOB</div>
+      <div class="equip-label press-start" id="player-equip-status">LVL 1: NOOB</div>
     </div>
 
   </div>
@@ -1372,38 +1560,38 @@
   <!-- BOTTOM HUD & HOTBAR -->
   <div class="bottom-hud">
     <div class="nav-bar-container">
-      <button class="roblox-btn red side-nav-btn" id="prev-btn" style="flex-shrink: 0;">◀ BACK</button>
+      <button class="cyber-btn red side-nav-btn" id="prev-btn" style="flex-shrink: 0;">◀ BACK</button>
       
       <!-- HOTBAR SLOTS -->
       <div class="hotbar">
         <div class="hotbar-slot active" data-slide="1" title="หน้าเริ่มเกม">
-          <span class="hotbar-slot-num">1</span>
+          <span class="hotbar-slot-num press-start">1</span>
           <span class="hotbar-slot-icon">🎮</span>
           <span class="hotbar-slot-title">Start</span>
         </div>
         <div class="hotbar-slot" data-slide="2" title="ด่านที่ 1 - โลกของเรา">
-          <span class="hotbar-slot-num">2</span>
+          <span class="hotbar-slot-num press-start">2</span>
           <span class="hotbar-slot-icon">🌍</span>
           <span class="hotbar-slot-title">Level 1</span>
         </div>
         <div class="hotbar-slot" data-slide="3" title="ด่านที่ 2 - ปลอดภัยทางการเงิน">
-          <span class="hotbar-slot-num">3</span>
+          <span class="hotbar-slot-num press-start">3</span>
           <span class="hotbar-slot-icon">🛡️</span>
           <span class="hotbar-slot-title">Level 2</span>
         </div>
         <div class="hotbar-slot" data-slide="4" title="ด่านที่ 3 - ซื้อของออนไลน์">
-          <span class="hotbar-slot-num">4</span>
+          <span class="hotbar-slot-num press-start">4</span>
           <span class="hotbar-slot-icon">🛒</span>
           <span class="hotbar-slot-title">Level 3</span>
         </div>
         <div class="hotbar-slot" data-slide="5" title="บอสไฟต์ - ความรับผิดชอบ">
-          <span class="hotbar-slot-num">5</span>
+          <span class="hotbar-slot-num press-start">5</span>
           <span class="hotbar-slot-icon">⚔️</span>
           <span class="hotbar-slot-title">Boss</span>
         </div>
       </div>
 
-      <button class="roblox-btn green side-nav-btn" id="next-btn" style="flex-shrink: 0;">NEXT LEVEL ▶</button>
+      <button class="cyber-btn green side-nav-btn" id="next-btn" style="flex-shrink: 0;">NEXT LEVEL ▶</button>
     </div>
 
     <!-- SHORTCUTS & INSTRUCTIONS -->
@@ -1442,7 +1630,6 @@
       const now = audioCtx.currentTime;
 
       if (type === 'click') {
-        // High 8-bit short blip
         osc.type = 'square';
         osc.frequency.setValueAtTime(800, now);
         osc.frequency.exponentialRampToValueAtTime(400, now + 0.1);
@@ -1452,7 +1639,6 @@
         osc.stop(now + 0.1);
       } 
       else if (type === 'slide') {
-        // Sweeping jump sound
         osc.type = 'triangle';
         osc.frequency.setValueAtTime(300, now);
         osc.frequency.exponentialRampToValueAtTime(600, now + 0.25);
@@ -1462,7 +1648,6 @@
         osc.stop(now + 0.25);
       }
       else if (type === 'reveal') {
-        // Cool powerup arpeggio
         osc.type = 'square';
         const freqs = [440, 550, 660, 880];
         freqs.forEach((freq, idx) => {
@@ -1479,7 +1664,6 @@
         });
       }
       else if (type === 'oof') {
-        // Roblox classic Oof synth recreation
         osc.type = 'sawtooth';
         osc.frequency.setValueAtTime(150, now);
         osc.frequency.linearRampToValueAtTime(60, now + 0.15);
@@ -1489,7 +1673,6 @@
         osc.stop(now + 0.15);
       }
       else if (type === 'boss-hit') {
-        // Sword slash hit
         osc.type = 'sawtooth';
         osc.frequency.setValueAtTime(220, now);
         osc.frequency.exponentialRampToValueAtTime(80, now + 0.15);
@@ -1499,10 +1682,9 @@
         osc.stop(now + 0.15);
       }
       else if (type === 'victory') {
-        // Glorious fanfare chords
-        const chord1 = [261.63, 329.63, 392.00]; // C4 major
-        const chord2 = [329.63, 415.30, 493.88]; // E4 major
-        const chord3 = [392.00, 493.88, 587.33, 783.99]; // G4 major to high G5
+        const chord1 = [261.63, 329.63, 392.00];
+        const chord2 = [329.63, 415.30, 493.88];
+        const chord3 = [392.00, 493.88, 587.33, 783.99];
         
         const playChord = (notes, timeOffset, duration) => {
           notes.forEach(note => {
@@ -1543,21 +1725,17 @@
     const equipStatus = document.getElementById('player-equip-status');
 
     function updateAvatarState() {
-      // Clear faces and accessories first
       avatar.className = 'roblox-avatar';
       face.className = 'char-face';
       
       const currentLevel = currentSlideIndex + 1;
       
-      // Check if any items are expanded in the active slide
       const currentGrid = document.querySelector(`.slide.active .loot-grid`);
       let hasAnyExpanded = false;
       let hasAllExpanded = true;
-      let itemsCount = 0;
 
       if (currentGrid) {
         const boxes = currentGrid.querySelectorAll('.loot-box');
-        itemsCount = boxes.length;
         boxes.forEach(box => {
           if (box.classList.contains('expanded')) {
             hasAnyExpanded = true;
@@ -1569,7 +1747,6 @@
 
       if (currentLevel === 1) {
         equipStatus.textContent = 'LVL 1: NOOB';
-        // Simple smile
       } 
       else if (currentLevel === 2) {
         if (!hasAnyExpanded) {
@@ -1614,7 +1791,6 @@
           face.classList.add('face-battle');
           equipStatus.textContent = 'BOSS FIGHT: ALIVE';
         } else {
-          // Boss Defeated!
           avatar.classList.add('has-crown');
           face.classList.add('face-victory');
           equipStatus.textContent = 'PRO PLAYER (MAX)';
@@ -1630,26 +1806,22 @@
       const prevIndex = currentSlideIndex;
       currentSlideIndex = index;
       
-      // Clean up active and transition states for all slides
       slides.forEach((slide) => {
         slide.classList.remove('active', 'exit-left', 'enter-left');
       });
       
-      // Animate outgoing slide
       if (isForward) {
         slides[prevIndex].classList.add('exit-left');
       }
       
-      // Animate incoming slide
       if (!isForward) {
         slides[currentSlideIndex].classList.add('enter-left');
-        slides[currentSlideIndex].offsetHeight; // force reflow
+        slides[currentSlideIndex].offsetHeight;
         slides[currentSlideIndex].classList.remove('enter-left');
       }
       
       slides[currentSlideIndex].classList.add('active');
       
-      // Update Bottom Hotbar UI
       hotbarSlots.forEach((slot, idx) => {
         if (idx === currentSlideIndex) {
           slot.classList.add('active');
@@ -1658,27 +1830,23 @@
         }
       });
       
-      // Update Top HUD Level indicator
       const lvlStr = (currentSlideIndex + 1).toString().padStart(2, '0');
       hudBadge.textContent = `STAGE ${lvlStr}`;
       if (currentSlideIndex === 4) {
         hudBadge.textContent = `BOSS STAGE`;
-        hudBadge.style.backgroundColor = '#F13B3B';
-        hudBadge.style.color = '#fff';
+        hudBadge.style.background = 'linear-gradient(135deg, #FF3366, #FF6B00)';
+        hudBadge.style.color = '#FFFFFF';
       } else {
-        hudBadge.style.backgroundColor = '#FFD600';
-        hudBadge.style.color = '#000';
+        hudBadge.style.background = 'linear-gradient(135deg, var(--accent-gold), #FF8C00)';
+        hudBadge.style.color = '#000000';
       }
       
-      // Handle navigation buttons disabled state
       prevBtn.classList.toggle('disabled', currentSlideIndex === 0);
       nextBtn.classList.toggle('disabled', currentSlideIndex === slides.length - 1);
       prevBtn.disabled = (currentSlideIndex === 0);
       nextBtn.disabled = (currentSlideIndex === slides.length - 1);
       
-      // Update avatar state
       updateAvatarState();
-      
       playSynthSound('slide');
     }
 
@@ -1686,7 +1854,6 @@
     function toggleLootBox(boxElement) {
       const isExpanded = boxElement.classList.contains('expanded');
       
-      // Toggle
       if (isExpanded) {
         boxElement.classList.remove('expanded');
         boxElement.querySelector('.loot-box-status').textContent = '📦';
@@ -1695,7 +1862,6 @@
         boxElement.classList.add('expanded');
         boxElement.querySelector('.loot-box-status').textContent = '💎';
         
-        // Specifc check for Slide 5 Boss Damage on reveal
         if (currentSlideIndex === 4 && boxElement.hasAttribute('data-boss-dmg') && !isBossDefeated) {
           damageBoss(20);
         } else {
@@ -1715,7 +1881,6 @@
 
       let anyNewRevealed = false;
 
-      // Specifc check for Slide 5: Boss fight automated sequence
       if (currentSlideIndex === 4 && !isBossDefeated) {
         triggerBossFightAllSequence();
         return;
@@ -1749,31 +1914,26 @@
 
       bossHpVal = Math.max(0, bossHpVal - amount);
       
-      // Play Hit Animation and Sound
       playSynthSound('boss-hit');
       bossChar.classList.add('hurt');
       setTimeout(() => bossChar.classList.remove('hurt'), 200);
 
-      // Update HP UI
       bossHp.style.width = `${bossHpVal}%`;
       hpValue.textContent = bossHpVal;
 
       if (bossHpVal <= 0) {
         isBossDefeated = true;
         
-        // Explode boss
         playSynthSound('victory');
         bossChar.className = 'boss-sprite dead';
         victoryTitle.style.display = 'block';
 
-        // Set all slots to expanded
         const boxes = document.querySelectorAll('#loot-grid-5 .loot-box');
         boxes.forEach(box => {
           box.classList.add('expanded');
           box.querySelector('.loot-box-status').textContent = '💎';
         });
 
-        // Set avatar victory state
         updateAvatarState();
       }
     }
@@ -1786,14 +1946,12 @@
       const victoryTitle = document.getElementById('victory-title');
       const playerAvatar = document.getElementById('player-avatar');
 
-      // Swing sword animation
       playerAvatar.style.animation = 'none';
       setTimeout(() => {
         playerAvatar.style.transform = 'translateX(60px) scale(1.1) rotate(10deg)';
         playerAvatar.style.transition = 'transform 0.15s ease-in-out';
       }, 50);
 
-      // Attack intervals
       const hits = [75, 50, 25, 0];
       hits.forEach((targetHp, index) => {
         setTimeout(() => {
@@ -1802,18 +1960,15 @@
             bossChar.classList.add('hurt');
             setTimeout(() => bossChar.classList.remove('hurt'), 150);
           } else {
-            // Boss Defeated
             isBossDefeated = true;
             playSynthSound('victory');
             bossChar.className = 'boss-sprite dead';
             victoryTitle.style.display = 'block';
             
-            // Re-apply standard float
             playerAvatar.style.transform = 'none';
             playerAvatar.style.transition = 'none';
             playerAvatar.style.animation = 'idle-float 3s infinite ease-in-out';
 
-            // Open all responsibilities
             const boxes = document.querySelectorAll('#loot-grid-5 .loot-box');
             boxes.forEach(box => {
               box.classList.add('expanded');
@@ -1832,13 +1987,10 @@
     }
 
     // EVENT LISTENERS
-    
-    // Start Game Button
     document.getElementById('start-game-btn').addEventListener('click', () => {
       goToSlide(1);
     });
 
-    // Side Navigation Controls
     prevBtn.addEventListener('click', () => {
       if (currentSlideIndex > 0) {
         goToSlide(currentSlideIndex - 1);
@@ -1855,21 +2007,18 @@
       }
     });
 
-    // Hotbar Navigation Click Handles
     hotbarSlots.forEach((slot, index) => {
       slot.addEventListener('click', () => {
         goToSlide(index);
       });
     });
 
-    // Loot Box Click Actions
     document.querySelectorAll('.loot-box').forEach(box => {
       box.addEventListener('click', () => {
         toggleLootBox(box);
       });
     });
 
-    // Reveal All Buttons Action
     document.querySelectorAll('.reveal-all-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -1877,7 +2026,6 @@
       });
     });
 
-    // Sound toggle
     document.getElementById('sound-toggle-btn').addEventListener('click', (e) => {
       isMuted = !isMuted;
       e.target.textContent = isMuted ? '🔇' : '🔊';
@@ -1886,22 +2034,18 @@
 
     // KEYBOARD NAVIGATION CONTROLS
     window.addEventListener('keydown', (e) => {
-      // Left Arrow key: Back
       if (e.key === 'ArrowLeft') {
         e.preventDefault();
         if (currentSlideIndex > 0) goToSlide(currentSlideIndex - 1);
       }
-      // Right Arrow key: Next
       else if (e.key === 'ArrowRight') {
         e.preventDefault();
         if (currentSlideIndex < slides.length - 1) goToSlide(currentSlideIndex + 1);
       }
-      // Spacebar: Reveal all in active slide
       else if (e.key === ' ' || e.key === 'Spacebar') {
         e.preventDefault();
         revealAllInCurrentSlide();
       }
-      // Keys 1 to 5: Hotbar slots jump
       else if (e.key >= '1' && e.key <= '5') {
         const slotIdx = parseInt(e.key, 10) - 1;
         goToSlide(slotIdx);
@@ -1914,7 +2058,6 @@
       prevBtn.disabled = true;
       updateAvatarState();
     });
-
   </script>
 </body>
 </html>
